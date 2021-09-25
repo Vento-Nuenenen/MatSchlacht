@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 8.55.0.
+ * Generated for Laravel 8.61.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -129,7 +129,7 @@
                     /**
          * Get the base path of the Laravel installation.
          *
-         * @param string $path Optionally, a path to append to the base path
+         * @param string $path
          * @return string 
          * @static 
          */ 
@@ -141,7 +141,7 @@
                     /**
          * Get the path to the bootstrap directory.
          *
-         * @param string $path Optionally, a path to append to the bootstrap path
+         * @param string $path
          * @return string 
          * @static 
          */ 
@@ -153,7 +153,7 @@
                     /**
          * Get the path to the application configuration files.
          *
-         * @param string $path Optionally, a path to append to the config path
+         * @param string $path
          * @return string 
          * @static 
          */ 
@@ -165,7 +165,7 @@
                     /**
          * Get the path to the database directory.
          *
-         * @param string $path Optionally, a path to append to the database path
+         * @param string $path
          * @return string 
          * @static 
          */ 
@@ -6741,7 +6741,7 @@
      * @method static \Illuminate\Http\Client\PendingRequest contentType(string $contentType)
      * @method static \Illuminate\Http\Client\PendingRequest dd()
      * @method static \Illuminate\Http\Client\PendingRequest dump()
-     * @method static \Illuminate\Http\Client\PendingRequest retry(int $times, int $sleep = 0)
+     * @method static \Illuminate\Http\Client\PendingRequest retry(int $times, int $sleep = 0, ?callable $when = null)
      * @method static \Illuminate\Http\Client\PendingRequest sink(string|resource $to)
      * @method static \Illuminate\Http\Client\PendingRequest stub(callable $callback)
      * @method static \Illuminate\Http\Client\PendingRequest timeout(int $seconds)
@@ -7331,7 +7331,7 @@
                     /**
          * Get the default log driver name.
          *
-         * @return string 
+         * @return string|null 
          * @static 
          */ 
         public static function getDefaultDriver()
@@ -9051,6 +9051,18 @@
         {
                         /** @var \Illuminate\Http\Request $instance */
                         return $instance->fullUrlWithQuery($query);
+        }
+                    /**
+         * Get the full URL for the request without the given query string parameters.
+         *
+         * @param array|string $query
+         * @return string 
+         * @static 
+         */ 
+        public static function fullUrlWithoutQuery($keys)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->fullUrlWithoutQuery($keys);
         }
                     /**
          * Get the current path info for the request.
@@ -10997,7 +11009,7 @@
                     /**
          * Create a new response instance.
          *
-         * @param string $content
+         * @param mixed $content
          * @param int $status
          * @param array $headers
          * @return \Illuminate\Http\Response 
@@ -14937,14 +14949,14 @@
          *
          * @param string $name
          * @param string|null $content
+         * @param array $attributes
          * @return void 
-         * @throws \InvalidArgumentException
          * @static 
          */ 
-        public static function slot($name, $content = null)
+        public static function slot($name, $content = null, $attributes = [])
         {
                         /** @var \Illuminate\View\Factory $instance */
-                        $instance->slot($name, $content);
+                        $instance->slot($name, $content, $attributes);
         }
                     /**
          * Save the slot content for rendering.
@@ -17770,6 +17782,20 @@ namespace  {
             }
              
                 /**
+             * Get a single column's value from the first result of the query or throw an exception.
+             *
+             * @param string|\Illuminate\Database\Query\Expression $column
+             * @return mixed 
+             * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+             * @static 
+             */ 
+            public static function valueOrFail($column)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->valueOrFail($column);
+            }
+             
+                /**
              * Execute the query as a "select" statement.
              *
              * @param array|string $columns
@@ -18410,6 +18436,100 @@ namespace  {
             {
                                 /** @var \Illuminate\Database\Eloquent\Builder $instance */
                                 return $instance->orWhereDoesntHaveMorph($relation, $types, $callback);
+            }
+             
+                /**
+             * Add a basic where clause to a relationship query.
+             *
+             * @param string $relation
+             * @param \Closure|string|array|\Illuminate\Database\Query\Expression $column
+             * @param mixed $operator
+             * @param mixed $value
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function whereRelation($relation, $column, $operator = null, $value = null)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->whereRelation($relation, $column, $operator, $value);
+            }
+             
+                /**
+             * Add an "or where" clause to a relationship query.
+             *
+             * @param string $relation
+             * @param \Closure|string|array|\Illuminate\Database\Query\Expression $column
+             * @param mixed $operator
+             * @param mixed $value
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function orWhereRelation($relation, $column, $operator = null, $value = null)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->orWhereRelation($relation, $column, $operator, $value);
+            }
+             
+                /**
+             * Add a polymorphic relationship condition to the query with a where clause.
+             *
+             * @param \Illuminate\Database\Eloquent\Relations\MorphTo|string $relation
+             * @param string|array $types
+             * @param \Closure|string|array|\Illuminate\Database\Query\Expression $column
+             * @param mixed $operator
+             * @param mixed $value
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function whereMorphRelation($relation, $types, $column, $operator = null, $value = null)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->whereMorphRelation($relation, $types, $column, $operator, $value);
+            }
+             
+                /**
+             * Add a polymorphic relationship condition to the query with an "or where" clause.
+             *
+             * @param \Illuminate\Database\Eloquent\Relations\MorphTo|string $relation
+             * @param string|array $types
+             * @param \Closure|string|array|\Illuminate\Database\Query\Expression $column
+             * @param mixed $operator
+             * @param mixed $value
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function orWhereMorphRelation($relation, $types, $column, $operator = null, $value = null)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->orWhereMorphRelation($relation, $types, $column, $operator, $value);
+            }
+             
+                /**
+             * Add a morph-to relationship condition to the query.
+             *
+             * @param \Illuminate\Database\Eloquent\Relations\MorphTo|string $relation
+             * @param \Illuminate\Database\Eloquent\Model|string $model
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function whereMorphedTo($relation, $model, $boolean = 'and')
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->whereMorphedTo($relation, $model, $boolean);
+            }
+             
+                /**
+             * Add a morph-to relationship condition to the query with an "or where" clause.
+             *
+             * @param \Illuminate\Database\Eloquent\Relations\MorphTo|string $relation
+             * @param \Illuminate\Database\Eloquent\Model|string $model
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function orWhereMorphedTo($relation, $model)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->orWhereMorphedTo($relation, $model);
             }
              
                 /**
