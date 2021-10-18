@@ -10,7 +10,7 @@
         "production": "mix --production"
     },
     "devDependencies": {
-        "axios": "0.22.0",
+        "axios": "0.23.0",
         "bootstrap": "4.6.0",
         "bootstrap-select": "1.13.18",
         "bootstrap4-toggle": "3.6.1",
