@@ -14,7 +14,7 @@
         "guzzlehttp/guzzle": "7.4.0",
         "laravel/framework": "8.68.1",
         "laravel/tinker": "2.6.2",
-        "laravel/ui": "3.3.0",
+        "laravel/ui": "3.3.2",
         "laravelcollective/html": "6.2.1"
     },
     "require-dev": {
