@@ -1,5 +1,5 @@
 {
-    "name": "vento/materialverwaltung",
+    "name": "vento/matschlacht",
     "type": "project",
     "description": "Die Materialverwaltung.",
     "keywords": [
@@ -7,34 +7,27 @@
         "laravel"
     ],
     "require": {
-        "php": "^7.3 || ^8.0",
-        "appstract/laravel-opcache": "4.0.2",
-        "fideloper/proxy": "4.4.1",
-        "fruitcake/laravel-cors": "2.0.4",
-        "guzzlehttp/guzzle": "7.4.0",
-        "laravel/framework": "8.69.0",
-        "laravel/tinker": "2.6.2",
-        "laravel/ui": "3.3.2",
-        "laravelcollective/html": "6.2.1"
+        "php": "^7.3|^8.0",
+        "elibyy/tcpdf-laravel": "^8.1",
+        "fruitcake/laravel-cors": "^2.0",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "kouz/laravel-airbrake": "^0.7.0",
+        "laravel/framework": "^8.65",
+        "laravel/sanctum": "^2.11",
+        "laravel/tinker": "^2.5",
+        "laravel/ui": "^3.3",
+        "laravelcollective/html": "^6.2",
+        "milon/barcode": "^8.0"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "3.6.4",
-        "barryvdh/laravel-ide-helper": "2.10.0",
-        "facade/ignition": "2.16.0",
-        "fzaninotto/faker": "1.9.2",
-        "mockery/mockery": "1.4.4",
-        "nunomaduro/collision": "5.10.0",
-        "phpunit/phpunit": "9.5.10"
-    },
-    "config": {
-        "optimize-autoloader": true,
-        "preferred-install": "dist",
-        "sort-packages": true
-    },
-    "extra": {
-        "laravel": {
-            "dont-discover": []
-        }
+        "barryvdh/laravel-debugbar": "^3.6",
+        "barryvdh/laravel-ide-helper": "^2.10",
+        "facade/ignition": "^2.5",
+        "fakerphp/faker": "^1.9.1",
+        "laravel/sail": "^1.0.1",
+        "mockery/mockery": "^1.4.4",
+        "nunomaduro/collision": "^5.10",
+        "phpunit/phpunit": "^9.5.10"
     },
     "autoload": {
         "psr-4": {
@@ -48,8 +41,6 @@
             "Tests\\": "tests/"
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "scripts": {
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
@@ -66,5 +57,17 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ]
-    }
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
