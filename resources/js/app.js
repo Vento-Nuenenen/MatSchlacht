@@ -1,5 +1,5 @@
 require('./bootstrap');
 
-$(document).ready(function () {
+$(document).ready(function (){
     $('select').selectpicker();
 });
