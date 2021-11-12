@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\OverwatchController;
 use Illuminate\Support\Facades\Route;
 
 /*
