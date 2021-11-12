@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 8.69.0.
+ * Generated for Laravel 8.70.2.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -4370,6 +4370,141 @@
             /**
      * 
      *
+     * @see https://carbon.nesbot.com/docs/
+     * @see https://github.com/briannesbitt/Carbon/blob/master/src/Carbon/Factory.php
+     * @method static \Illuminate\Support\Carbon create($year = 0, $month = 1, $day = 1, $hour = 0, $minute = 0, $second = 0, $tz = null)
+     * @method static \Illuminate\Support\Carbon createFromDate($year = null, $month = null, $day = null, $tz = null)
+     * @method static \Illuminate\Support\Carbon createFromTime($hour = 0, $minute = 0, $second = 0, $tz = null)
+     * @method static \Illuminate\Support\Carbon createFromTimeString($time, $tz = null)
+     * @method static \Illuminate\Support\Carbon createFromTimestamp($timestamp, $tz = null)
+     * @method static \Illuminate\Support\Carbon createFromTimestampMs($timestamp, $tz = null)
+     * @method static \Illuminate\Support\Carbon createFromTimestampUTC($timestamp)
+     * @method static \Illuminate\Support\Carbon createMidnightDate($year = null, $month = null, $day = null, $tz = null)
+     * @method static \Illuminate\Support\Carbon disableHumanDiffOption($humanDiffOption)
+     * @method static \Illuminate\Support\Carbon enableHumanDiffOption($humanDiffOption)
+     * @method static \Illuminate\Support\Carbon fromSerialized($value)
+     * @method static \Illuminate\Support\Carbon getLastErrors()
+     * @method static \Illuminate\Support\Carbon getTestNow()
+     * @method static \Illuminate\Support\Carbon instance($date)
+     * @method static \Illuminate\Support\Carbon isMutable()
+     * @method static \Illuminate\Support\Carbon maxValue()
+     * @method static \Illuminate\Support\Carbon minValue()
+     * @method static \Illuminate\Support\Carbon now($tz = null)
+     * @method static \Illuminate\Support\Carbon parse($time = null, $tz = null)
+     * @method static \Illuminate\Support\Carbon setHumanDiffOptions($humanDiffOptions)
+     * @method static \Illuminate\Support\Carbon setTestNow($testNow = null)
+     * @method static \Illuminate\Support\Carbon setUtf8($utf8)
+     * @method static \Illuminate\Support\Carbon today($tz = null)
+     * @method static \Illuminate\Support\Carbon tomorrow($tz = null)
+     * @method static \Illuminate\Support\Carbon useStrictMode($strictModeEnabled = true)
+     * @method static \Illuminate\Support\Carbon yesterday($tz = null)
+     * @method static \Illuminate\Support\Carbon|false createFromFormat($format, $time, $tz = null)
+     * @method static \Illuminate\Support\Carbon|false createSafe($year = null, $month = null, $day = null, $hour = null, $minute = null, $second = null, $tz = null)
+     * @method static \Illuminate\Support\Carbon|null make($var)
+     * @method static \Symfony\Component\Translation\TranslatorInterface getTranslator()
+     * @method static array getAvailableLocales()
+     * @method static array getDays()
+     * @method static array getIsoUnits()
+     * @method static array getWeekendDays()
+     * @method static bool hasFormat($date, $format)
+     * @method static bool hasMacro($name)
+     * @method static bool hasRelativeKeywords($time)
+     * @method static bool hasTestNow()
+     * @method static bool isImmutable()
+     * @method static bool isModifiableUnit($unit)
+     * @method static bool isStrictModeEnabled()
+     * @method static bool localeHasDiffOneDayWords($locale)
+     * @method static bool localeHasDiffSyntax($locale)
+     * @method static bool localeHasDiffTwoDayWords($locale)
+     * @method static bool localeHasPeriodSyntax($locale)
+     * @method static bool localeHasShortUnits($locale)
+     * @method static bool setLocale($locale)
+     * @method static bool shouldOverflowMonths()
+     * @method static bool shouldOverflowYears()
+     * @method static int getHumanDiffOptions()
+     * @method static int getMidDayAt()
+     * @method static int getWeekEndsAt()
+     * @method static int getWeekStartsAt()
+     * @method static mixed executeWithLocale($locale, $func)
+     * @method static string getLocale()
+     * @method static string pluralUnit(string $unit)
+     * @method static string singularUnit(string $unit)
+     * @method static void macro($name, $macro)
+     * @method static void mixin($mixin)
+     * @method static void resetMonthsOverflow()
+     * @method static void resetToStringFormat()
+     * @method static void resetYearsOverflow()
+     * @method static void serializeUsing($callback)
+     * @method static void setMidDayAt($hour)
+     * @method static void setToStringFormat($format)
+     * @method static void setTranslator(\Symfony\Component\Translation\TranslatorInterface $translator)
+     * @method static void setWeekEndsAt($day)
+     * @method static void setWeekStartsAt($day)
+     * @method static void setWeekendDays($days)
+     * @method static void useMonthsOverflow($monthsOverflow = true)
+     * @method static void useYearsOverflow($yearsOverflow = true)
+     */ 
+        class Date {
+                    /**
+         * Use the given handler when generating dates (class name, callable, or factory).
+         *
+         * @param mixed $handler
+         * @return mixed 
+         * @throws \InvalidArgumentException
+         * @static 
+         */ 
+        public static function use($handler)
+        {
+                        return \Illuminate\Support\DateFactory::use($handler);
+        }
+                    /**
+         * Use the default date class when generating dates.
+         *
+         * @return void 
+         * @static 
+         */ 
+        public static function useDefault()
+        {
+                        \Illuminate\Support\DateFactory::useDefault();
+        }
+                    /**
+         * Execute the given callable on each date creation.
+         *
+         * @param callable $callable
+         * @return void 
+         * @static 
+         */ 
+        public static function useCallable($callable)
+        {
+                        \Illuminate\Support\DateFactory::useCallable($callable);
+        }
+                    /**
+         * Use the given date type (class) when generating dates.
+         *
+         * @param string $dateClass
+         * @return void 
+         * @static 
+         */ 
+        public static function useClass($dateClass)
+        {
+                        \Illuminate\Support\DateFactory::useClass($dateClass);
+        }
+                    /**
+         * Use the given Carbon factory when generating dates.
+         *
+         * @param object $factory
+         * @return void 
+         * @static 
+         */ 
+        public static function useFactory($factory)
+        {
+                        \Illuminate\Support\DateFactory::useFactory($factory);
+        }
+         
+    }
+            /**
+     * 
+     *
      * @see \Illuminate\Database\DatabaseManager
      * @see \Illuminate\Database\Connection
      */ 
@@ -7277,6 +7412,17 @@
                         $instance->setParsedKey($key, $parsed);
         }
                     /**
+         * Flush the cache of parsed keys.
+         *
+         * @return void 
+         * @static 
+         */ 
+        public static function flushParsedKeys()
+        {            //Method inherited from \Illuminate\Support\NamespacedItemResolver         
+                        /** @var \Illuminate\Translation\Translator $instance */
+                        $instance->flushParsedKeys();
+        }
+                    /**
          * Register a custom macro.
          *
          * @param string $name
@@ -8795,6 +8941,166 @@
         {            //Method inherited from \Illuminate\Queue\Queue         
                         /** @var \Illuminate\Queue\SyncQueue $instance */
                         $instance->setContainer($container);
+        }
+         
+    }
+            /**
+     * 
+     *
+     * @see \Illuminate\Cache\RateLimiter
+     */ 
+        class RateLimiter {
+                    /**
+         * Register a named limiter configuration.
+         *
+         * @param string $name
+         * @param \Closure $callback
+         * @return \Illuminate\Cache\RateLimiter 
+         * @static 
+         */ 
+        public static function for($name, $callback)
+        {
+                        /** @var \Illuminate\Cache\RateLimiter $instance */
+                        return $instance->for($name, $callback);
+        }
+                    /**
+         * Get the given named rate limiter.
+         *
+         * @param string $name
+         * @return \Closure 
+         * @static 
+         */ 
+        public static function limiter($name)
+        {
+                        /** @var \Illuminate\Cache\RateLimiter $instance */
+                        return $instance->limiter($name);
+        }
+                    /**
+         * Attempts to execute a callback if it's not limited.
+         *
+         * @param string $key
+         * @param int $maxAttempts
+         * @param \Closure $callback
+         * @param int $decaySeconds
+         * @return mixed 
+         * @static 
+         */ 
+        public static function attempt($key, $maxAttempts, $callback, $decaySeconds = 60)
+        {
+                        /** @var \Illuminate\Cache\RateLimiter $instance */
+                        return $instance->attempt($key, $maxAttempts, $callback, $decaySeconds);
+        }
+                    /**
+         * Determine if the given key has been "accessed" too many times.
+         *
+         * @param string $key
+         * @param int $maxAttempts
+         * @return bool 
+         * @static 
+         */ 
+        public static function tooManyAttempts($key, $maxAttempts)
+        {
+                        /** @var \Illuminate\Cache\RateLimiter $instance */
+                        return $instance->tooManyAttempts($key, $maxAttempts);
+        }
+                    /**
+         * Increment the counter for a given key for a given decay time.
+         *
+         * @param string $key
+         * @param int $decaySeconds
+         * @return int 
+         * @static 
+         */ 
+        public static function hit($key, $decaySeconds = 60)
+        {
+                        /** @var \Illuminate\Cache\RateLimiter $instance */
+                        return $instance->hit($key, $decaySeconds);
+        }
+                    /**
+         * Get the number of attempts for the given key.
+         *
+         * @param string $key
+         * @return mixed 
+         * @static 
+         */ 
+        public static function attempts($key)
+        {
+                        /** @var \Illuminate\Cache\RateLimiter $instance */
+                        return $instance->attempts($key);
+        }
+                    /**
+         * Reset the number of attempts for the given key.
+         *
+         * @param string $key
+         * @return mixed 
+         * @static 
+         */ 
+        public static function resetAttempts($key)
+        {
+                        /** @var \Illuminate\Cache\RateLimiter $instance */
+                        return $instance->resetAttempts($key);
+        }
+                    /**
+         * Get the number of retries left for the given key.
+         *
+         * @param string $key
+         * @param int $maxAttempts
+         * @return int 
+         * @static 
+         */ 
+        public static function remaining($key, $maxAttempts)
+        {
+                        /** @var \Illuminate\Cache\RateLimiter $instance */
+                        return $instance->remaining($key, $maxAttempts);
+        }
+                    /**
+         * Get the number of retries left for the given key.
+         *
+         * @param string $key
+         * @param int $maxAttempts
+         * @return int 
+         * @static 
+         */ 
+        public static function retriesLeft($key, $maxAttempts)
+        {
+                        /** @var \Illuminate\Cache\RateLimiter $instance */
+                        return $instance->retriesLeft($key, $maxAttempts);
+        }
+                    /**
+         * Clear the hits and lockout timer for the given key.
+         *
+         * @param string $key
+         * @return void 
+         * @static 
+         */ 
+        public static function clear($key)
+        {
+                        /** @var \Illuminate\Cache\RateLimiter $instance */
+                        $instance->clear($key);
+        }
+                    /**
+         * Get the number of seconds until the "key" is accessible again.
+         *
+         * @param string $key
+         * @return int 
+         * @static 
+         */ 
+        public static function availableIn($key)
+        {
+                        /** @var \Illuminate\Cache\RateLimiter $instance */
+                        return $instance->availableIn($key);
+        }
+                    /**
+         * Clean the rate limiter key from unicode characters.
+         *
+         * @param string $key
+         * @return string 
+         * @static 
+         */ 
+        public static function cleanRateLimiterKey($key)
+        {
+                        /** @var \Illuminate\Cache\RateLimiter $instance */
+                        return $instance->cleanRateLimiterKey($key);
         }
          
     }
@@ -15455,6 +15761,13 @@
      * 
      *
      */ 
+        class Js {
+         
+    }
+            /**
+     * 
+     *
+     */ 
         class Str {
          
     }
@@ -16009,6 +16322,56 @@
         {            //Method inherited from \DebugBar\DebugBar         
                         /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
                         return $instance->offsetUnset($key);
+        }
+         
+    }
+     
+}
+
+    namespace Elibyy\TCPDF\Facades { 
+            /**
+     * 
+     *
+     */ 
+        class TCPDF {
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function reset()
+        {
+                        /** @var \Elibyy\TCPDF\TCPDF $instance */
+                        return $instance->reset();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function changeFormat($format)
+        {
+                        return \Elibyy\TCPDF\TCPDF::changeFormat($format);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setHeaderCallback($headerCallback)
+        {
+                        /** @var \Elibyy\TCPDF\TCPDF $instance */
+                        return $instance->setHeaderCallback($headerCallback);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setFooterCallback($footerCallback)
+        {
+                        /** @var \Elibyy\TCPDF\TCPDF $instance */
+                        return $instance->setFooterCallback($footerCallback);
         }
          
     }
@@ -17419,6 +17782,152 @@
      
 }
 
+    namespace Milon\Barcode\Facades { 
+            /**
+     * 
+     *
+     */ 
+        class DNS1DFacade {
+                    /**
+         * Return a SVG string representation of barcode.
+         *
+         * @param $code (string) code to print
+         * @param $type (string) type of barcode: <ul><li>C39 : CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9.</li><li>C39+ : CODE 39 with checksum</li><li>C39E : CODE 39 EXTENDED</li><li>C39E+ : CODE 39 EXTENDED + CHECKSUM</li><li>C93 : CODE 93 - USS-93</li><li>S25 : Standard 2 of 5</li><li>S25+ : Standard 2 of 5 + CHECKSUM</li><li>I25 : Interleaved 2 of 5</li><li>I25+ : Interleaved 2 of 5 + CHECKSUM</li><li>C128 : CODE 128</li><li>C128A : CODE 128 A</li><li>C128B : CODE 128 B</li><li>C128C : CODE 128 C</li><li>EAN2 : 2-Digits UPC-Based Extention</li><li>EAN5 : 5-Digits UPC-Based Extention</li><li>EAN8 : EAN 8</li><li>EAN13 : EAN 13</li><li>UPCA : UPC-A</li><li>UPCE : UPC-E</li><li>MSI : MSI (Variation of Plessey code)</li><li>MSI+ : MSI + CHECKSUM (modulo 11)</li><li>POSTNET : POSTNET</li><li>PLANET : PLANET</li><li>RMS4CC : RMS4CC (Royal Mail 4-state Customer Code) - CBC (Customer Bar Code)</li><li>KIX : KIX (Klant index - Customer index)</li><li>IMB: Intelligent Mail Barcode - Onecode - USPS-B-3200</li><li>CODABAR : CODABAR</li><li>CODE11 : CODE 11</li><li>PHARMA : PHARMACODE</li><li>PHARMA2T : PHARMACODE TWO-TRACKS</li></ul>
+         * @param $w (int) Minimum width of a single bar in user units.
+         * @param $h (int) Height of barcode in user units.
+         * @param $color (string) Foreground color (in SVG format) for bar elements (background is transparent).
+         * @return string SVG code.
+         * @protected 
+         * @static 
+         */ 
+        public static function getBarcodeSVG($code, $type, $w = 2, $h = 30, $color = 'black', $showCode = true, $inline = false)
+        {
+                        /** @var \Milon\Barcode\DNS1D $instance */
+                        return $instance->getBarcodeSVG($code, $type, $w, $h, $color, $showCode, $inline);
+        }
+                    /**
+         * Return an HTML representation of barcode.
+         *
+         * @param $code (string) code to print
+         * @param $type (string) type of barcode: <ul><li>C39 : CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9.</li><li>C39+ : CODE 39 with checksum</li><li>C39E : CODE 39 EXTENDED</li><li>C39E+ : CODE 39 EXTENDED + CHECKSUM</li><li>C93 : CODE 93 - USS-93</li><li>S25 : Standard 2 of 5</li><li>S25+ : Standard 2 of 5 + CHECKSUM</li><li>I25 : Interleaved 2 of 5</li><li>I25+ : Interleaved 2 of 5 + CHECKSUM</li><li>C128 : CODE 128</li><li>C128A : CODE 128 A</li><li>C128B : CODE 128 B</li><li>C128C : CODE 128 C</li><li>EAN2 : 2-Digits UPC-Based Extention</li><li>EAN5 : 5-Digits UPC-Based Extention</li><li>EAN8 : EAN 8</li><li>EAN13 : EAN 13</li><li>UPCA : UPC-A</li><li>UPCE : UPC-E</li><li>MSI : MSI (Variation of Plessey code)</li><li>MSI+ : MSI + CHECKSUM (modulo 11)</li><li>POSTNET : POSTNET</li><li>PLANET : PLANET</li><li>RMS4CC : RMS4CC (Royal Mail 4-state Customer Code) - CBC (Customer Bar Code)</li><li>KIX : KIX (Klant index - Customer index)</li><li>IMB: Intelligent Mail Barcode - Onecode - USPS-B-3200</li><li>CODABAR : CODABAR</li><li>CODE11 : CODE 11</li><li>PHARMA : PHARMACODE</li><li>PHARMA2T : PHARMACODE TWO-TRACKS</li></ul>
+         * @param $w (int) Width of a single bar element in pixels.
+         * @param $h (int) Height of a single bar element in pixels.
+         * @param $color (string) Foreground color for bar elements (background is transparent).
+         * @return string HTML code.
+         * @protected 
+         * @static 
+         */ 
+        public static function getBarcodeHTML($code, $type, $w = 2, $h = 30, $color = 'black', $showCode = false)
+        {
+                        /** @var \Milon\Barcode\DNS1D $instance */
+                        return $instance->getBarcodeHTML($code, $type, $w, $h, $color, $showCode);
+        }
+                    /**
+         * Return a PNG image representation of barcode (requires GD or Imagick library).
+         *
+         * @param $code (string) code to print
+         * @param $type (string) type of barcode: <ul><li>C39 : CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9.</li><li>C39+ : CODE 39 with checksum</li><li>C39E : CODE 39 EXTENDED</li><li>C39E+ : CODE 39 EXTENDED + CHECKSUM</li><li>C93 : CODE 93 - USS-93</li><li>S25 : Standard 2 of 5</li><li>S25+ : Standard 2 of 5 + CHECKSUM</li><li>I25 : Interleaved 2 of 5</li><li>I25+ : Interleaved 2 of 5 + CHECKSUM</li><li>C128 : CODE 128</li><li>C128A : CODE 128 A</li><li>C128B : CODE 128 B</li><li>C128C : CODE 128 C</li><li>EAN2 : 2-Digits UPC-Based Extention</li><li>EAN5 : 5-Digits UPC-Based Extention</li><li>EAN8 : EAN 8</li><li>EAN13 : EAN 13</li><li>UPCA : UPC-A</li><li>UPCE : UPC-E</li><li>MSI : MSI (Variation of Plessey code)</li><li>MSI+ : MSI + CHECKSUM (modulo 11)</li><li>POSTNET : POSTNET</li><li>PLANET : PLANET</li><li>RMS4CC : RMS4CC (Royal Mail 4-state Customer Code) - CBC (Customer Bar Code)</li><li>KIX : KIX (Klant index - Customer index)</li><li>IMB: Intelligent Mail Barcode - Onecode - USPS-B-3200</li><li>CODABAR : CODABAR</li><li>CODE11 : CODE 11</li><li>PHARMA : PHARMACODE</li><li>PHARMA2T : PHARMACODE TWO-TRACKS</li></ul>
+         * @param $w (int) Width of a single bar element in pixels.
+         * @param $h (int) Height of a single bar element in pixels.
+         * @param $color (array) RGB (0-255) foreground color for bar elements (background is transparent).
+         * @return \Milon\Barcode\image or false in case of error.
+         * @protected 
+         * @static 
+         */ 
+        public static function getBarcodePNG($code, $type, $w = 2, $h = 30, $color = [], $showCode = false)
+        {
+                        /** @var \Milon\Barcode\DNS1D $instance */
+                        return $instance->getBarcodePNG($code, $type, $w, $h, $color, $showCode);
+        }
+                    /**
+         * Get the array representation of last generated barcode.
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function getBarcodeArray()
+        {
+                        /** @var \Milon\Barcode\DNS1D $instance */
+                        return $instance->getBarcodeArray();
+        }
+         
+    }
+            /**
+     * 
+     *
+     */ 
+        class DNS2DFacade {
+                    /**
+         * Return a SVG string representation of barcode.
+         * 
+         * <li>$arrcode['code'] code to be printed on text label</li>
+         * <li>$arrcode['num_rows'] required number of rows</li>
+         * <li>$arrcode['num_cols'] required number of columns</li>
+         * <li>$arrcode['bcode'][$r][$c] value of the cell is $r row and $c column (0 = transparent, 1 = black)</li></ul>
+         *
+         * @param $code (string) code to print
+         * @param $type (string) type of barcode: <ul><li>DATAMATRIX : Datamatrix (ISO/IEC 16022)</li><li>PDF417 : PDF417 (ISO/IEC 15438:2006)</li><li>PDF417,a,e,t,s,f,o0,o1,o2,o3,o4,o5,o6 : PDF417 with parameters: a = aspect ratio (width/height); e = error correction level (0-8); t = total number of macro segments; s = macro segment index (0-99998); f = file ID; o0 = File Name (text); o1 = Segment Count (numeric); o2 = Time Stamp (numeric); o3 = Sender (text); o4 = Addressee (text); o5 = File Size (numeric); o6 = Checksum (numeric). NOTES: Parameters t, s and f are required for a Macro Control Block, all other parametrs are optional. To use a comma character ',' on text options, replace it with the character 255: "\xff".</li><li>QRCODE : QRcode Low error correction</li><li>QRCODE,L : QRcode Low error correction</li><li>QRCODE,M : QRcode Medium error correction</li><li>QRCODE,Q : QRcode Better error correction</li><li>QRCODE,H : QR-CODE Best error correction</li><li>RAW: raw mode - comma-separad list of array rows</li><li>RAW2: raw mode - array rows are surrounded by square parenthesis.</li><li>TEST : Test matrix</li></ul>
+         * @param $w (int) Width of a single rectangle element in user units.
+         * @param $h (int) Height of a single rectangle element in user units.
+         * @param $color (string) Foreground color (in SVG format) for bar elements (background is transparent).
+         * @return string SVG code.
+         * @protected 
+         * @static 
+         */ 
+        public static function getBarcodeSVG($code, $type, $w = 3, $h = 3, $color = 'black')
+        {
+                        /** @var \Milon\Barcode\DNS2D $instance */
+                        return $instance->getBarcodeSVG($code, $type, $w, $h, $color);
+        }
+                    /**
+         * Return an HTML representation of barcode.
+         * 
+         * <li>$arrcode['code'] code to be printed on text label</li>
+         * <li>$arrcode['num_rows'] required number of rows</li>
+         * <li>$arrcode['num_cols'] required number of columns</li>
+         * <li>$arrcode['bcode'][$r][$c] value of the cell is $r row and $c column (0 = transparent, 1 = black)</li></ul>
+         *
+         * @param $code (string) code to print
+         * @param $type (string) type of barcode: <ul><li>DATAMATRIX : Datamatrix (ISO/IEC 16022)</li><li>PDF417 : PDF417 (ISO/IEC 15438:2006)</li><li>PDF417,a,e,t,s,f,o0,o1,o2,o3,o4,o5,o6 : PDF417 with parameters: a = aspect ratio (width/height); e = error correction level (0-8); t = total number of macro segments; s = macro segment index (0-99998); f = file ID; o0 = File Name (text); o1 = Segment Count (numeric); o2 = Time Stamp (numeric); o3 = Sender (text); o4 = Addressee (text); o5 = File Size (numeric); o6 = Checksum (numeric). NOTES: Parameters t, s and f are required for a Macro Control Block, all other parametrs are optional. To use a comma character ',' on text options, replace it with the character 255: "\xff".</li><li>QRCODE : QRcode Low error correction</li><li>QRCODE,L : QRcode Low error correction</li><li>QRCODE,M : QRcode Medium error correction</li><li>QRCODE,Q : QRcode Better error correction</li><li>QRCODE,H : QR-CODE Best error correction</li><li>RAW: raw mode - comma-separad list of array rows</li><li>RAW2: raw mode - array rows are surrounded by square parenthesis.</li><li>TEST : Test matrix</li></ul>
+         * @param $w (int) Width of a single rectangle element in pixels.
+         * @param $h (int) Height of a single rectangle element in pixels.
+         * @param $color (string) Foreground color for bar elements (background is transparent).
+         * @return string HTML code.
+         * @protected 
+         * @static 
+         */ 
+        public static function getBarcodeHTML($code, $type, $w = 10, $h = 10, $color = 'black')
+        {
+                        /** @var \Milon\Barcode\DNS2D $instance */
+                        return $instance->getBarcodeHTML($code, $type, $w, $h, $color);
+        }
+                    /**
+         * Return a PNG image representation of barcode (requires GD or Imagick library).
+         * 
+         * <li>$arrcode['code'] code to be printed on text label</li>
+         * <li>$arrcode['num_rows'] required number of rows</li>
+         * <li>$arrcode['num_cols'] required number of columns</li>
+         * <li>$arrcode['bcode'][$r][$c] value of the cell is $r row and $c column (0 = transparent, 1 = black)</li></ul>
+         *
+         * @param $code (string) code to print
+         * @param $type (string) type of barcode: <ul><li>DATAMATRIX : Datamatrix (ISO/IEC 16022)</li><li>PDF417 : PDF417 (ISO/IEC 15438:2006)</li><li>PDF417,a,e,t,s,f,o0,o1,o2,o3,o4,o5,o6 : PDF417 with parameters: a = aspect ratio (width/height); e = error correction level (0-8); t = total number of macro segments; s = macro segment index (0-99998); f = file ID; o0 = File Name (text); o1 = Segment Count (numeric); o2 = Time Stamp (numeric); o3 = Sender (text); o4 = Addressee (text); o5 = File Size (numeric); o6 = Checksum (numeric). NOTES: Parameters t, s and f are required for a Macro Control Block, all other parametrs are optional. To use a comma character ',' on text options, replace it with the character 255: "\xff".</li><li>QRCODE : QRcode Low error correction</li><li>QRCODE,L : QRcode Low error correction</li><li>QRCODE,M : QRcode Medium error correction</li><li>QRCODE,Q : QRcode Better error correction</li><li>QRCODE,H : QR-CODE Best error correction</li><li>RAW: raw mode - comma-separad list of array rows</li><li>RAW2: raw mode - array rows are surrounded by square parenthesis.</li><li>TEST : Test matrix</li></ul>
+         * @param $w (int) Width of a single rectangle element in pixels.
+         * @param $h (int) Height of a single rectangle element in pixels.
+         * @param $color (array) RGB (0-255) foreground color for bar elements (background is transparent).
+         * @return \Milon\Barcode\path or false in case of error.
+         * @protected 
+         * @static 
+         */ 
+        public static function getBarcodePNG($code, $type, $w = 3, $h = 3, $color = [])
+        {
+                        /** @var \Milon\Barcode\DNS2D $instance */
+                        return $instance->getBarcodePNG($code, $type, $w, $h, $color);
+        }
+         
+    }
+     
+}
+
     namespace Illuminate\Http { 
             /**
      * 
@@ -17542,6 +18051,7 @@ namespace  {
             class Config extends \Illuminate\Support\Facades\Config {}
             class Cookie extends \Illuminate\Support\Facades\Cookie {}
             class Crypt extends \Illuminate\Support\Facades\Crypt {}
+            class Date extends \Illuminate\Support\Facades\Date {}
             class DB extends \Illuminate\Support\Facades\DB {}
             class Eloquent extends \Illuminate\Database\Eloquent\Model {             
                 /**
@@ -20760,6 +21270,19 @@ namespace  {
             }
              
                 /**
+             * Cast the given binding value.
+             *
+             * @param mixed $value
+             * @return mixed 
+             * @static 
+             */ 
+            public static function castBinding($value)
+            {
+                                /** @var \Illuminate\Database\Query\Builder $instance */
+                                return $instance->castBinding($value);
+            }
+             
+                /**
              * Merge an array of bindings into our bindings.
              *
              * @param \Illuminate\Database\Query\Builder $query
@@ -20918,12 +21441,14 @@ namespace  {
             class Gate extends \Illuminate\Support\Facades\Gate {}
             class Hash extends \Illuminate\Support\Facades\Hash {}
             class Http extends \Illuminate\Support\Facades\Http {}
+            class Js extends \Illuminate\Support\Js {}
             class Lang extends \Illuminate\Support\Facades\Lang {}
             class Log extends \Illuminate\Support\Facades\Log {}
             class Mail extends \Illuminate\Support\Facades\Mail {}
             class Notification extends \Illuminate\Support\Facades\Notification {}
             class Password extends \Illuminate\Support\Facades\Password {}
             class Queue extends \Illuminate\Support\Facades\Queue {}
+            class RateLimiter extends \Illuminate\Support\Facades\RateLimiter {}
             class Redirect extends \Illuminate\Support\Facades\Redirect {}
             class Request extends \Illuminate\Support\Facades\Request {}
             class Response extends \Illuminate\Support\Facades\Response {}
@@ -20936,9 +21461,12 @@ namespace  {
             class Validator extends \Illuminate\Support\Facades\Validator {}
             class View extends \Illuminate\Support\Facades\View {}
             class Debugbar extends \Barryvdh\Debugbar\Facade {}
+            class PDF extends \Elibyy\TCPDF\Facades\TCPDF {}
             class Flare extends \Facade\Ignition\Facades\Flare {}
             class Form extends \Collective\Html\FormFacade {}
             class Html extends \Collective\Html\HtmlFacade {}
+            class DNS1D extends \Milon\Barcode\Facades\DNS1DFacade {}
+            class DNS2D extends \Milon\Barcode\Facades\DNS2DFacade {}
      
 }
 
