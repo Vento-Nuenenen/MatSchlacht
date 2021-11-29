@@ -2283,10 +2283,10 @@ dotenv@^10.0.0:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-10.0.0.tgz#3d4227b8fb95f81096cdd2b66653fb2c7085ba81"
   integrity sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==
 
-dropzone@^6.0.0-beta.1:
-  version "6.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/dropzone/-/dropzone-6.0.0-beta.1.tgz#4e59a904676e3766f4adc32fed0ab9a445bd470f"
-  integrity sha512-j6882YI4oa0vxV6nFdW7/0QiWBp0DKdtLC/J2GUz4v6FIz3SNLtZbXl43lUTIs+FrwixnfIsCSjQuTpaGNDeLQ==
+dropzone@^6.0.0-beta.2:
+  version "6.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/dropzone/-/dropzone-6.0.0-beta.2.tgz#098be8fa84bdc08674cf0b74f4c889e2679083d6"
+  integrity sha512-k44yLuFFhRk53M8zP71FaaNzJYIzr99SKmpbO/oZKNslDjNXQsBTdfLs+iONd0U0L94zzlFzRnFdqbLcs7h9fQ==
   dependencies:
     "@swc/helpers" "^0.2.13"
     just-extend "^5.0.0"
