@@ -18,6 +18,6 @@
         "postcss": "^8.4.19",
         "resolve-url-loader": "^5.0.0",
         "sass": "^1.56.1",
-        "vite": "^3.2.4"
+        "vite": "^3.2.5"
     }
 }
