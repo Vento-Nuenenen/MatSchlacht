@@ -355,11 +355,12 @@ just-extend@^5.0.0:
   resolved "https://registry.yarnpkg.com/just-extend/-/just-extend-5.1.1.tgz#4f33b1fc719964f816df55acc905776694b713ab"
   integrity sha512-b+z6yF1d4EOyDgylzQo5IminlUmzSeqR1hs/bzjBNjuGras4FXq/6TrzjxfN0j+TmI0ltJzTNlqXUMCniciwKQ==
 
-laravel-vite-plugin@^0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/laravel-vite-plugin/-/laravel-vite-plugin-0.7.1.tgz#86293247a234ede0c75eca92191559bc854c5528"
-  integrity sha512-nz2slMkGyabfEnXYsQnDJHCefQBdIJgeTkm2wgWEYbAaddwLzTSjmhT1diRm9TUYwIrNqlbuPNVD3VYy/kP9Wg==
+laravel-vite-plugin@^0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/laravel-vite-plugin/-/laravel-vite-plugin-0.7.2.tgz#b317f8345d9afc2344d51fa8054e4389984d9650"
+  integrity sha512-MEAGEEOrDk46PnoUPLAhHxM1ATEdRYKyDtN8DT/PLTDnO/HY6JZpRZpeC+Q0fiYzbzg+6OH0nlhuSRKbBaCLcw==
   dependencies:
+    picocolors "^1.0.0"
     vite-plugin-full-reload "^1.0.1"
 
 loader-utils@^2.0.0:
