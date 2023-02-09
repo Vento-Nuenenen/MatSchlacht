@@ -8,7 +8,7 @@
     ],
     "require": {
         "php": "^7.3|^8.0",
-        "elibyy/tcpdf-laravel": "^9.0",
+        "elibyy/tcpdf-laravel": "^10.0",
         "fruitcake/laravel-cors": "^3.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "kouz/laravel-airbrake": "^0.8.0",
