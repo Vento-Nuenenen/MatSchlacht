@@ -17,7 +17,7 @@
         "popper.js": "^1.16.1",
         "postcss": "^8.4.28",
         "resolve-url-loader": "^5.0.0",
-        "sass": "^1.66.0",
+        "sass": "^1.66.1",
         "vite": "^4.4.9"
     }
 }
