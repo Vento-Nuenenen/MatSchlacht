@@ -5,7 +5,7 @@
         "build": "vite build"
     },
     "devDependencies": {
-        "axios": "^1.6",
+        "axios": "^1.7",
         "bootstrap": "^4.6.2",
         "bootstrap-select": "^1.13.18",
         "bootstrap4-toggle": "^3.6.1",
