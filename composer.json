@@ -12,7 +12,8 @@
         "elibyy/tcpdf-laravel": "^11.2",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
-        "laravel/ui": "^4.6"
+        "laravel/ui": "^4.6",
+        "spatie/laravel-permission": "^6.12"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",
