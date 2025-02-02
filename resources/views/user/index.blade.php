@@ -35,7 +35,7 @@
                                         <td>
                                             <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
                                             &nbsp;
-                                            <a href="{{ route('users.edit', $user->id) }}" class="btn btn-danger btn-sm">Löschen</a>
+                                            <a href="{{ route('users.destroy', $user->id) }}" class="btn btn-danger btn-sm">Löschen</a>
                                         </td>
                                     </tr>
                                 @endforeach
