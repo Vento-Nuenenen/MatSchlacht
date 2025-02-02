@@ -1,15 +1,29 @@
+/.phpunit.cache
 /node_modules
+/public/build
 /public/hot
 /public/storage
 /storage/*.key
+/storage/pail
 /vendor
+.env
 .env.backup
-docker-compose.override.yml
+.env.production
+.phpactor.json
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/auth.json
+/.fleet
 /.idea
+/.nova
 /.vscode
+/.zed
 
-# Created by https://www.toptal.com/developers/gitignore/api/node,macos,windows,laravel,composer,phpstorm+all
-# Edit at https://www.toptal.com/developers/gitignore?templates=node,macos,windows,laravel,composer,phpstorm+all
+# Created by https://www.toptal.com/developers/gitignore/api/node,macos,windows,linux,laravel,composer,phpstorm+all,yarn,vue
+# Edit at https://www.toptal.com/developers/gitignore?templates=node,macos,windows,linux,laravel,composer,phpstorm+all,yarn,vue
 
 ### Composer ###
 composer.phar
@@ -43,6 +57,21 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 
+### Linux ###
+*~
+
+# temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
+
+# KDE directory preferences
+.directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+# .nfs files are created when an open file is removed but is still being accessed
+.nfs*
+
 ### macOS ###
 # General
 .DS_Store
@@ -51,6 +80,7 @@ Homestead.json
 
 # Icon must end with two \r
 Icon
+
 
 # Thumbnails
 ._*
@@ -70,6 +100,10 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+### macOS Patch ###
+# iCloud generated files
+*.icloud
 
 ### Node ###
 # Logs
@@ -127,6 +161,9 @@ web_modules/
 # Optional eslint cache
 .eslintcache
 
+# Optional stylelint cache
+.stylelintcache
+
 # Microbundle cache
 .rpt2_cache/
 .rts2_cache_cjs/
@@ -142,9 +179,11 @@ web_modules/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variables file
-.env.test
-.env.production
+# dotenv environment variable files
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -166,6 +205,12 @@ dist
 
 # vuepress build output
 .vuepress/dist
+
+# vuepress v2.x temp and cache directory
+.temp
+
+# Docusaurus cache and generated files
+.docusaurus
 
 # Serverless directories
 .serverless/
@@ -194,7 +239,6 @@ dist
 .webpack/
 
 # Optional stylelint cache
-.stylelintcache
 
 # SvelteKit build / generate output
 .svelte-kit
@@ -263,6 +307,9 @@ atlassian-ide-plugin.xml
 # Cursive Clojure plugin
 .idea/replstate.xml
 
+# SonarLint plugin
+.idea/sonarlint/
+
 # Crashlytics plugin (for Android Studio and IntelliJ)
 com_crashlytics_export_strings.xml
 crashlytics.properties
@@ -276,20 +323,24 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 ### PhpStorm+all Patch ###
-# Ignores the whole .idea folder and all .iml files
-# See https://github.com/joeblau/gitignore.io/issues/186 and https://github.com/joeblau/gitignore.io/issues/360
+# Ignore everything but code style settings and run configurations
+# that are supposed to be shared within teams.
 
-.idea/
+.idea/*
 
-# Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-249601023
+!.idea/codeStyles
+!.idea/runConfigurations
 
-*.iml
-modules.xml
-.idea/misc.xml
-*.ipr
+### Vue ###
+# gitignore template for Vue.js projects
+#
+# Recommended template: Node.gitignore
 
-# Sonarlint plugin
-.idea/sonarlint
+# TODO: where does this rule come from?
+docs/_book
+
+# TODO: where does this rule come from?
+test/
 
 ### Windows ###
 # Windows thumbnail cache files
@@ -317,4 +368,21 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/node,macos,windows,laravel,composer,phpstorm+all
+### yarn ###
+# https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+
+.yarn/*
+!.yarn/releases
+!.yarn/patches
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+
+# if you are NOT using Zero-installs, then:
+# comment the following lines
+!.yarn/cache
+
+# and uncomment the following lines
+# .pnp.*
+
+# End of https://www.toptal.com/developers/gitignore/api/node,macos,windows,linux,laravel,composer,phpstorm+all,yarn,vue
