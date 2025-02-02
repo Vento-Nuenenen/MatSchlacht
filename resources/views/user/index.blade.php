@@ -28,14 +28,17 @@
                             <tbody>
                                 @foreach($users as $user)
                                     <tr>
-                                        <td>{{ $user->pfadiname }}</td>
-                                        <td>{{ $user->vorname . " " . $user->nachname }}</td>
+                                        <td>{{ $user->scoutname }}</td>
+                                        <td>{{ $user->firstname . " " . $user->lastname }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->aktiv }}</td>
                                         <td>
                                             <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
                                             &nbsp;
-                                            <a href="{{ route('users.destroy', $user->id) }}" class="btn btn-danger btn-sm">Löschen</a>
+                                            @include('components.delete', [
+                                                'route' => 'users.destroy',
+                                                'id' => $user->id
+                                            ])
                                         </td>
                                     </tr>
                                 @endforeach
