@@ -18,13 +18,32 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('home') }}">Verwalten</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('home') }}">Stammdaten</a>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                        Stammdaten
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" href="{{ route('items.index') }}">Material</a>
+                        <a class="dropdown-item" href="{{ route('itemgroups.index') }}">Materialgruppen</a>
+
+                    </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('users.index') }}">Benutzer</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                        Benutzer
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" href="{{ route('users.index') }}">Benutzer</a>
+                        <a class="dropdown-item" href="{{ route('units.index') }}">Rollen</a>
+
+                    </div>
                 </li>
             </ul>
+
+
+
+
 
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ms-auto">
@@ -56,18 +75,6 @@
                                 @csrf
                             </form>
                         </div>
-                    </li>
-
-
-
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button class="nav-link btn btn-link" type="submit">Logout</button>
-                        </form>
                     </li>
                 @endguest
             </ul>
