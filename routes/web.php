@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\ItemGroupController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
@@ -13,6 +14,7 @@ Auth::routes();
 Route::get('/overwatch', [App\Http\Controllers\OverwatchController::class, 'index'])->name('home');
 
 Route::resource('users', UserController::class);
+Route::resource('units', UnitController::class);
+Route::resource('itemgroups', ItemGroupController::class);
 Route::resource('items', ItemController::class);
 Route::resource('orders', OrderController::class);
-Route::resource('units', UnitController::class);
