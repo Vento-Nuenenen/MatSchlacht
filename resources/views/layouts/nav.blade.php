@@ -35,8 +35,8 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-end">
                         <a class="dropdown-item" href="{{ route('users.index') }}">Benutzer</a>
+                        <a class="dropdown-item" href="{{ route('units.index') }}">Einheiten</a>
                         <a class="dropdown-item" href="{{ route('units.index') }}">Rollen</a>
-
                     </div>
                 </li>
             </ul>
