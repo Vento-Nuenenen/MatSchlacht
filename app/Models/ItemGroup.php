@@ -10,7 +10,7 @@ class ItemGroup extends Model
 {
     /** @use HasFactory<ItemGroupFactory> */
     use HasFactory;
-    
+
     protected $fillable = [
         'name',
         'position',
