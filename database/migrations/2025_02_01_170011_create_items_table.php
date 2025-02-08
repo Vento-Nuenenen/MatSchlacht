@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('stock');
-            $table->integer('available');
-            $table->integer('repair');
-            $table->integer('lot');
-            $table->integer('consumable');
-            $table->integer('purch_price_cents');
+            $table->integer('stock')->default(1)->nullable();
+            $table->integer('available')->default(0)->nullable();
+            $table->integer('repair')->default(0)->nullable();
+            $table->integer('lot')->default(1)->nullable();
+            $table->boolean('consumable')->default(false)->nullable();
+            $table->integer('purch_price_cents')->default(0)->nullable();
 
             $table->foreignId('item_group_id');
 
