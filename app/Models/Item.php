@@ -5,7 +5,7 @@ namespace App\Models;
 use Database\Factories\ItemFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Item extends Model
 {
@@ -19,10 +19,11 @@ class Item extends Model
         'repair',
         'consumable',
         'purchase_price_cents',
+        'item_group_id'
     ];
 
-    public function itemGroup(): HasOne
+    public function itemGroup(): BelongsTo
     {
-        return $this->hasOne(ItemGroup::class);
+        return $this->belongsTo(ItemGroup::class);
     }
 }
