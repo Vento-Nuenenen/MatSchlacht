@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Models\Item;
+use App\Models\ItemGroup;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -25,7 +26,7 @@ class ItemController extends Controller
      */
     public function create(): Application|Factory|View
     {
-        return view('item.create');
+        return view('item.create', ['itemGroups' => ItemGroup::all()]);
     }
 
     /**
@@ -51,7 +52,8 @@ class ItemController extends Controller
      */
     public function edit(Item $item): Application|Factory|View
     {
-        return view('item.edit', compact('item'));
+        $itemGroups = ItemGroup::all();
+        return view('item.edit', compact('item', 'itemGroups'));
     }
 
     /**
