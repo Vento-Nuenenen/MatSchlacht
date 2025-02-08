@@ -1,42 +1,8 @@
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.bunny.net/css?family=Nunito');
 
 // Variables
 @import 'variables';
 
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
-
-// Bootstrap extensions
-@import "bootstrap-select/sass/bootstrap-select";
-@import "bootstrap4-toggle/css/bootstrap4-toggle.min.css";
-
-// Font Awesome
-@import 'font-awesome';
-
-.navbar-laravel {
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-}
-
-.text-color-positiv{
-    background-color: rgba(0, 255, 0, 1.0);
-
-    &:hover{
-        background-color: rgb(0, 125, 0, 1.0);
-    }
-}
-
-.text-color-negativ{
-    background-color: rgba(255, 0, 0, 1.0);
-
-    &:hover{
-        background-color: rgb(200, 20, 0, 1.0);
-    }
-}
-
-.dropdown-item{
-    &:hover{
-        background-color: #b7dbff;
-    }
-}
