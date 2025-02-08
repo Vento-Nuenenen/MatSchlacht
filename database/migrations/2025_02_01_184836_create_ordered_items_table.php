@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('repair');
             $table->integer('broken');
 
-            $table->foreignId('item_order_id');
+            $table->foreignId('order_id');
             $table->foreignId('item_id');
 
             $table->timestamps();
