@@ -15,14 +15,14 @@ return new class extends Migration
             $table->foreign('item_group_id')->references('id')->on('item_groups');
         });
 
-        Schema::table('item_orders', function (Blueprint $table) {
+        Schema::table('orders', function (Blueprint $table) {
             $table->foreign('unit_id')->references('id')->on('units');
             $table->foreign('user_id')->references('id')->on('users');
         });
 
         Schema::table('ordered_items', function (Blueprint $table) {
             $table->foreign('item_id')->references('id')->on('items');
-            $table->foreign('item_order_id')->references('id')->on('item_orders');
+            $table->foreign('order_id')->references('id')->on('orders');
         });
     }
 
