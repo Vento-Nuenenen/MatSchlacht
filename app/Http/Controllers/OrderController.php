@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreOrderRequest;
+use App\Models\Item;
 use App\Models\Order;
 use App\Models\Unit;
 use App\Models\User;
@@ -30,11 +31,13 @@ class OrderController extends Controller
         $order = new Order();
         $users = User::all();
         $units = Unit::all();
+        $items = Item::all();
 
         return view('order.create', [
             'order' => $order,
             'users' => $users,
             'units' => $units,
+            'items' => $items,
         ]);
     }
 
