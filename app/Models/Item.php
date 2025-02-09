@@ -6,7 +6,11 @@ use Database\Factories\ItemFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @method static create(mixed $validated)
+ */
 class Item extends Model
 {
     /** @use HasFactory<ItemFactory> */
@@ -25,5 +29,10 @@ class Item extends Model
     public function itemGroup(): BelongsTo
     {
         return $this->belongsTo(ItemGroup::class);
+    }
+
+    public function orderedItems(): HasMany
+    {
+        return $this->hasMany(OrderedItem::class);
     }
 }
