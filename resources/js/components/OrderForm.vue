@@ -1,5 +1,6 @@
 <template>
         <form @submit.prevent="handleSubmit">
+
             <div v-if="currentStep === 1">
                 <!-- Schritt 1: Basisinformationen -->
                 <div class="mb-3">
@@ -164,6 +165,7 @@ export default {
                 status: this.order.status || "open",
                 user_id: this.order.user_id || "",
                 unit_id: this.order.unit_id || "",
+                items: this.order.items || [],
             },
             errors: {},
         };
