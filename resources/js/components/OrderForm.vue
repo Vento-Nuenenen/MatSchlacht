@@ -35,9 +35,7 @@
                     <span v-if="errors.event_end" class="text-danger">{{ errors.event_end }}</span>
                 </div>
 
-                <button type="button" class="btn btn-primary" @click="goToStep(2)">
-                    Weiter
-                </button>
+                <button type="button" class="btn btn-primary" @click="goToStep(2)">Weiter</button>
             </div>
 
             <div v-if="currentStep === 2">
@@ -107,9 +105,37 @@
                     <span v-if="errors.status" class="text-danger">{{ errors.status }}</span>
                 </div>
 
-                <button type="button" class="btn btn-secondary" @click="goToStep(1)">
-                    Zurück
-                </button>
+                <button type="button" class="btn btn-secondary" @click="goToStep(1)">Zurück</button>
+                <button type="button" class="btn btn-primary" @click="goToStep(3)">Weiter</button>
+
+            </div>
+
+            <div v-if="currentStep === 3">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Material</th>
+                            <th>Menge</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item, index) in this.items" :key="index">
+                            <td>{{ item.name }}</td>
+                            <td>
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    v-model.number="item.quantity"
+                                    min="0"
+                                    placeholder="Menge" />
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <button type="button" class="btn btn-secondary" @click="goToStep(1)">Zurück</button>
                 <button type="submit" class="btn btn-primary">Abschließen</button>
             </div>
         </form>
@@ -124,6 +150,7 @@ export default {
         step: { type: Number, default: 1 },
         users: { type: Object, default: () => ({}) },
         units: { type: Object, default: () => ({}) },
+        items: { type: Object, default: () => ({}) },
     },
     data() {
         return {
@@ -192,9 +219,4 @@ export default {
 };
 </script>
 
-<style scoped>
-/* Optional: einfache Stilanpassungen */
-.text-danger {
-    font-size: 0.875rem;
-}
-</style>
+<style scoped></style>
