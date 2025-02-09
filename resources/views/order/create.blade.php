@@ -9,7 +9,8 @@
             :order="{{ isset($order) ? $order->toJson() : '{}' }}"
             :users="{{ isset($users) ? $users->toJson() : '{}' }}"
             :units="{{ isset($units) ? $units->toJson() : '{}' }}"
-            :step="1"
+            :items="{{ isset($items) ? $items->toJson() : '{}' }}"
+            :step="3"
         ></order-form>
     </div>
 @endsection
