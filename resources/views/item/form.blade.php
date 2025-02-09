@@ -10,7 +10,7 @@
         <div class="text-danger">{{ $message }}</div>
     @enderror
 </div>
-<div>
+<div class="mb-3">
     <label for="item_group_id" class="form-label">Materialgruppe</label>
     <select class="form-control" id="item_group_id" name="item_group_id" required>
         <option value="">Bitte wählen</option>
