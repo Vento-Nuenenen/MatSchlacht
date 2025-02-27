@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\ModelStates\HasStates;
 
 /**
  * @method static create(mixed $validated)
  */
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory, HasStates;
 
     protected $fillable = [
         'event',
