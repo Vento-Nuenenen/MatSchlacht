@@ -8,7 +8,7 @@
         "@popperjs/core": "^2.11.6",
         "@vitejs/plugin-vue": "^5.2.1",
         "autoprefixer": "^10.4.20",
-        "axios": "^1.7.4",
+        "axios": "^1.8.1",
         "bootstrap": "^5.2.3",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^1.2.0",
