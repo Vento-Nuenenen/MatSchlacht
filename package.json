@@ -6,7 +6,7 @@
     },
     "devDependencies": {
         "@popperjs/core": "^2.11.6",
-        "@tailwindcss/postcss": "^4.1.16",
+        "@tailwindcss/postcss": "^4.1.17",
         "@vitejs/plugin-vue": "^6.0.1",
         "axios": "^1.13.2",
         "bootstrap": "^5.3.8",
