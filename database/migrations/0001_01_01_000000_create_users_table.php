@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('firstname');
             $table->string('lastname');
-            $table->string('scoutname');
+            $table->string('scoutname')->nullable();
             $table->string('email')->unique();
             $table->boolean('aktiv')->default(true);
             $table->boolean('initial')->default(true);
