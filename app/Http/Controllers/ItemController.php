@@ -18,7 +18,9 @@ class ItemController extends Controller
      */
     public function index(): View|Factory|Application
     {
-        return view('item.index', ['items' => Item::all()]);
+        $items = Item::all()->sortBy('item_group_id');
+
+        return view('item.index', ['items' => $items]);
     }
 
     /**
