@@ -10,17 +10,29 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): View|Factory|Application
+    public function index(Request $request): View|Factory|Application
     {
-        $items = Item::all()->sortBy('item_group_id');
+        $query = Item::query();
 
-        return view('item.index', ['items' => $items]);
+        if ($request->filled('item_group_id')) {
+            $query->where('item_group_id', $request->item_group_id);
+        }
+
+        $items = $query->get()->sortBy('item_group_id');
+        $itemGroups = ItemGroup::all();
+
+        return view('item.index', [
+            'items' => $items,
+            'itemGroups' => $itemGroups,
+            'currentGroupId' => $request->item_group_id
+        ]);
     }
 
     /**
@@ -39,14 +51,6 @@ class ItemController extends Controller
         Item::create($request->validated());
 
         return redirect()->route('items.index')->with('success', 'Neues Material wurde erfolgreich erstellt.');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Item $item)
-    {
-        //
     }
 
     /**
