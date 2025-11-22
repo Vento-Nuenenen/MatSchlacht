@@ -2,22 +2,24 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
-        $this->call(GroupSeeder::class);
-        $this->call(RoleSeeder::class);
-        $this->call(UserSeeder::class);
+        $this->call([
+            ItemGroupSeeder::class,
+            UnitsSeeder::class
+        ]);
 
-        User::factory(10)->create();
+        // First seed roles and permissions
+        $this->call(RolesAndPermissionsSeeder::class);
+
+        // Then seed users (which will use the roles)
+        $this->call(UserSeeder::class);
     }
 }
