@@ -12,9 +12,29 @@
 
                 <div class="card">
                     <div class="card-header">Material</div>
-                    <div class="card-body">
+                    <div class="card-body table-responsive">
                         <a href="{{ route('items.create') }}" class="btn btn-info btn-sm col-12">Neues Material</a>
                         <br />
+                        <br />
+
+                        <form action="{{ route('items.index') }}" method="GET" class="mb-3">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <span class="input-group-text">Filter:</span>
+                                        <select name="item_group_id" class="form-select" onchange="this.form.submit()">
+                                            <option value="">Alle Materialgruppen</option>
+                                            @foreach($itemGroups as $group)
+                                                <option value="{{ $group->id }}" {{ isset($currentGroupId) && $currentGroupId == $group->id ? 'selected' : '' }}>
+                                                    {{ $group->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
                         <br />
 
                         <table class="table table-hover table-bordered table-striped">
