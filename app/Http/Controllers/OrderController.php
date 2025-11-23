@@ -28,7 +28,7 @@ class OrderController extends Controller
      */
     public function create(): Application|Factory|View
     {
-        $order = new Order();
+        $order = new Order;
         $users = User::all();
         $units = Unit::all();
         $items = Item::all();

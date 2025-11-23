@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ItemGroup;
 use App\Http\Requests\StoreItemGroupRequest;
 use App\Http\Requests\UpdateItemGroupRequest;
+use App\Models\ItemGroup;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;

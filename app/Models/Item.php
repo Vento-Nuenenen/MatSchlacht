@@ -23,7 +23,7 @@ class Item extends Model
         'repair',
         'consumable',
         'purchase_price_cents',
-        'item_group_id'
+        'item_group_id',
     ];
 
     public function itemGroup(): BelongsTo

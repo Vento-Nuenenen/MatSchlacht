@@ -31,7 +31,7 @@ class ItemController extends Controller
         return view('item.index', [
             'items' => $items,
             'itemGroups' => $itemGroups,
-            'currentGroupId' => $request->item_group_id
+            'currentGroupId' => $request->item_group_id,
         ]);
     }
 
@@ -59,6 +59,7 @@ class ItemController extends Controller
     public function edit(Item $item): Application|Factory|View
     {
         $itemGroups = ItemGroup::all();
+
         return view('item.edit', compact('item', 'itemGroups'));
     }
 
