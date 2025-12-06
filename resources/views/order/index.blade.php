@@ -19,8 +19,8 @@
 
                         <table class="table table-hover table-bordered table-striped">
                             <thead>
-                            <th>Einheit</th>
                             <th>Anlass</th>
+                            <th>Einheit</th>
                             <th>Vom</th>
                             <th>Bis</th>
                             <th>Status</th>
@@ -29,8 +29,8 @@
                             <tbody>
                             @foreach($orders as $order)
                                 <tr>
-                                    <td>{{ $order->unit->name }}</td>
                                     <td>{{ $order->event }}</td>
+                                    <td>{{ $order->unit->name }}</td>
                                     <td>{{ $order->event_start }}</td>
                                     <td>{{ $order->event_end }}</td>
                                     <td>{{ $order->status }}</td>
