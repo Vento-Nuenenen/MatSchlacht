@@ -23,15 +23,19 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'event' => 'required',
-            'event_start' => 'required',
-            'event_end' => 'required',
-            'handover_date' => 'required',
-            'return_date' => 'required',
-            'status' => 'required',
+            'event' => 'required|string|max:255',
+            'event_start' => 'required|date',
+            'event_end' => 'required|date|after_or_equal:event_start',
+            'handover_date' => 'nullable|date',
+            'return_date' => 'nullable|date|after_or_equal:handover_date',
+            'status' => 'string|default:new',
 
-            'unit_id' => 'required',
-            'user_id' => 'required',
+            'unit_id' => 'required|exists:units,id',
+            'user_id' => 'required|exists:users,id',
+
+            // items is an associative array: items[item_id] => quantity
+            'items' => 'nullable|array',
+            'items.*' => 'nullable|integer|min:0',
         ];
     }
 }
