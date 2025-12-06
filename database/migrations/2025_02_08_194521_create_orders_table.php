@@ -16,8 +16,6 @@ return new class extends Migration
             $table->string('event');
             $table->date('event_start');
             $table->date('event_end');
-            $table->date('handover_date');
-            $table->date('return_date');
             $table->string('status');
 
             $table->foreignId('unit_id');
