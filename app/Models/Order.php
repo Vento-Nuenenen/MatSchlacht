@@ -18,8 +18,6 @@ class Order extends Model
         'event',
         'event_start',
         'event_end',
-        'handover_date',
-        'return_date',
         'status',
 
         'unit_id',
