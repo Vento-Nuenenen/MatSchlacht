@@ -49,4 +49,40 @@
 
 <br />
 
+<div class="mb-3">
+    <label class="form-label fw-bold">Rollen</label>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                @php
+                    $selectedRoles = collect(old('roles', isset($user) ? $user->getRoleNames()->toArray() : []));
+                @endphp
+                @forelse(($roles ?? []) as $role)
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="roles[]"
+                                   value="{{ $role->name }}"
+                                   id="role-{{ $role->id }}"
+                                   {{ $selectedRoles->contains($role->name) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="role-{{ $role->id }}">
+                                {{ $role->name }}
+                            </label>
+                        </div>
+                    </div>
+                @empty
+                    <div class="col-12 text-muted">Keine Rollen vorhanden.</div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+    @error('roles')
+        <div class="text-danger mt-1 small">{{ $message }}</div>
+    @enderror
+    @error('roles.*')
+        <div class="text-danger mt-1 small">{{ $message }}</div>
+    @enderror
+</div>
+
 <button type="submit" class="btn btn-primary">{{ $buttonText }}</button>
