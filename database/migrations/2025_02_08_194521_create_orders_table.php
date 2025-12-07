@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('event_end');
             $table->string('status');
 
-            $table->foreignId('unit_id');
+            $table->foreignId('role_id');
             $table->foreignId('user_id');
 
             $table->timestamps();
