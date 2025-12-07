@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\ModelStates\HasStates;
+use Spatie\Permission\Models\Role;
 
 /**
  * @method static create(mixed $validated)
@@ -20,13 +21,13 @@ class Order extends Model
         'event_end',
         'status',
 
-        'unit_id',
+        'role_id',
         'user_id',
     ];
 
-    public function unit(): BelongsTo
+    public function role(): BelongsTo
     {
-        return $this->belongsTo(Unit::class);
+        return $this->belongsTo(Role::class);
     }
 
     public function user(): BelongsTo
