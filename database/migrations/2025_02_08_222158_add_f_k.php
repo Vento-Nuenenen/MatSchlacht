@@ -16,7 +16,7 @@ return new class extends Migration
         });
 
         Schema::table('orders', function (Blueprint $table) {
-            $table->foreign('unit_id')->references('id')->on('units');
+            $table->foreign('role_id')->references('id')->on('roles');
             $table->foreign('user_id')->references('id')->on('users');
         });
 
