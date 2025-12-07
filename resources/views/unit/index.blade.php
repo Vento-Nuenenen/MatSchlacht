@@ -20,21 +20,22 @@
                         <table class="table table-hover table-bordered table-striped">
                             <thead>
                                 <th>Bezeichnung</th>
-                                <th>Beschreibung</th>
+                                <th>Guard</th>
                                 <th>Optionen</th>
                             </thead>
                             <tbody>
                                 @foreach($units as $unit)
                                     <tr>
                                         <td>{{ $unit->name }}</td>
-                                        <td>{{ $unit->description }}</td>
+                                        <td>{{ $unit->guard_name }}</td>
                                         <td>
                                             <a href="{{ route('units.edit', $unit->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
                                             &nbsp;
                                             @include('components.delete', [
                                                 'route' => 'units.destroy',
                                                 'id' => $unit->id
-                                            ])                                        </td>
+                                            ])
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
