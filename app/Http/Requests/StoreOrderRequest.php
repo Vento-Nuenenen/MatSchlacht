@@ -30,7 +30,7 @@ class StoreOrderRequest extends FormRequest
             'return_date' => 'nullable|date|after_or_equal:handover_date',
             'status' => 'string|default:new',
 
-            'unit_id' => 'required|exists:units,id',
+            'role_id' => 'required|exists:roles,id',
             'user_id' => 'required|exists:users,id',
 
             // items is an associative array: items[item_id] => quantity
