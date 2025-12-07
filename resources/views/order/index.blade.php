@@ -30,7 +30,7 @@
                             @foreach($orders as $order)
                                 <tr>
                                     <td>{{ $order->event }}</td>
-                                    <td>{{ $order->unit->name }}</td>
+                                    <td>{{ $order->role->name }}</td>
                                     <td>{{ $order->event_start }}</td>
                                     <td>{{ $order->event_end }}</td>
                                     <td>{{ $order->status }}</td>
