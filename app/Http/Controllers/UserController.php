@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -25,7 +26,9 @@ class UserController extends Controller
      */
     public function create(): Application|Factory|View
     {
-        return view('user.create');
+        $roles = Role::all();
+
+        return view('user.create', compact('roles'));
     }
 
     /**
@@ -33,7 +36,10 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request): RedirectResponse
     {
-        User::create($request->validated());
+        $user = User::create($request->validated());
+
+        // Assign selected roles (if any)
+        $user->syncRoles($request->input('roles', []));
 
         return redirect()->route('users.index')->with('success', 'Neuer Benutzer wurde erfolgreich erstellt.');
     }
@@ -51,7 +57,8 @@ class UserController extends Controller
      */
     public function edit(User $user): Application|Factory|View
     {
-        return view('user.edit', compact('user'));
+        $roles = Role::all();
+        return view('user.edit', compact('user', 'roles'));
     }
 
     /**
@@ -60,6 +67,9 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
         $user->update($request->validated());
+
+        // Sync roles assignment (empty clears all)
+        $user->syncRoles($request->input('roles', []));
 
         return redirect()->route('users.index')->with('success', 'Benutzer wurde erfolgreich aktualisiert.');
     }
