@@ -23,11 +23,11 @@
                     <input type="text" class="form-control" id="event" name="event" value="{{ old('event', $order->event ?? '') }}" required>
                 </div>
                 <div class="col-md-3">
-                    <label for="unit_id" class="form-label">Einheit</label>
-                    <select id="unit_id" name="unit_id" class="form-select" required>
+                    <label for="role_id" class="form-label">Einheit</label>
+                    <select id="role_id" name="role_id" class="form-select" required>
                         <option value="">Bitte wählen</option>
-                        @foreach($units as $unit)
-                            <option value="{{ $unit->id }}" @selected(old('unit_id') == $unit->id)>{{ $unit->name }}</option>
+                        @foreach($roles as $role)
+                            <option value="{{ $role->id }}" @selected(old('role_id') == $role->id)>{{ $role->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -36,7 +36,7 @@
                     <select id="user_id" name="user_id" class="form-select" required>
                         <option value="">Bitte wählen</option>
                         @foreach($users as $user)
-                            <option value="{{ $user->id }}" @selected(old('user_id') == $user->id)>{{ $user->firstname }} {{ $user->lastname }}</option>
+                            <option value="{{ $user->id }}" @selected(old('user_id') == $user->id)>{{ $user->scoutname . " / " ?? '' }} {{ $user->firstname }} {{ $user->lastname }}</option>
                         @endforeach
                     </select>
                 </div>
