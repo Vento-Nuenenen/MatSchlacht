@@ -18,7 +18,7 @@ class UpdateUserRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array|string>
      */
     public function rules(): array
     {
@@ -28,6 +28,9 @@ class UpdateUserRequest extends FormRequest
             'scoutname' => 'required',
             'email' => 'required|email',
             'aktiv' => '',
+
+            'roles' => 'array',
+            'roles.*' => 'exists:roles,name',
         ];
     }
 }
