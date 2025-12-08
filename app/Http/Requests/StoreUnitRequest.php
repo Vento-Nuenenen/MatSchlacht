@@ -18,13 +18,15 @@ class StoreUnitRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array|string>
      */
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string|max:255',
+            'name' => 'required|string|unique:roles,name',
+            'guard_name' => 'nullable|string|max:255',
+            'permissions' => 'array',
+            'permissions.*' => 'exists:permissions,name',
         ];
     }
 }
