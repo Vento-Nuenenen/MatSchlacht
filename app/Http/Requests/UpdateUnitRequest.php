@@ -18,13 +18,21 @@ class UpdateUnitRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array|string>
      */
     public function rules(): array
     {
+        $roleId = $this->route('unit');
+
+        if (is_object($roleId) && method_exists($roleId, 'getKey')) {
+            $roleId = $roleId->getKey();
+        }
+
         return [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string|max:255',
+            'name' => 'required|string|unique:roles,name,' . ($roleId ?? 'null'),
+            'guard_name' => 'nullable|string|max:255',
+            'permissions' => 'array',
+            'permissions.*' => 'exists:permissions,name',
         ];
     }
 }
