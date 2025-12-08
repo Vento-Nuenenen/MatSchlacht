@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUnitRequest;
 use App\Http\Requests\UpdateUnitRequest;
-use App\Models\Unit;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class UnitController extends Controller
 {
@@ -17,7 +18,7 @@ class UnitController extends Controller
      */
     public function index(): View|Factory|Application
     {
-        return view('unit.index', ['units' => Unit::all()]);
+        return view('unit.index', ['units' => Role::all()]);
     }
 
     /**
@@ -25,7 +26,11 @@ class UnitController extends Controller
      */
     public function create(): Application|Factory|View
     {
-        return view('unit.create');
+        $permissions = Permission::all();
+
+        return view('unit.create', [
+            'permissions' => $permissions,
+        ]);
     }
 
     /**
@@ -33,33 +38,44 @@ class UnitController extends Controller
      */
     public function store(StoreUnitRequest $request): RedirectResponse
     {
-        Unit::create($request->validated());
+        $data = $request->validated();
+
+        $role = Role::create([
+            'name' => $data['name'],
+            'guard_name' => $data['guard_name'] ?? 'web',
+        ]);
+
+        if (!empty($data['permissions'] ?? null)) {
+            $role->syncPermissions($data['permissions']);
+        }
 
         return redirect()->route('units.index')->with('success', 'Neue Einheit wurde erfolgreich erstellt.');
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Unit $unit)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Unit $unit): Application|Factory|View
+    public function edit(Role $unit): Application|Factory|View
     {
-        return view('unit.edit', compact('unit'));
+        $permissions = Permission::all();
+
+        return view('unit.edit', ['unit' => $unit, 'permissions' => $permissions]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUnitRequest $request, Unit $unit): RedirectResponse
+    public function update(UpdateUnitRequest $request, Role $unit): RedirectResponse
     {
-        $unit->update($request->validated());
+        $data = $request->validated();
+
+        $unit->name = $data['name'];
+        if (!empty($data['guard_name'])) {
+            $unit->guard_name = $data['guard_name'];
+        }
+        $unit->save();
+
+        $unit->syncPermissions($data['permissions'] ?? []);
 
         return redirect()->route('units.index')->with('success', 'Einheit wurde erfolgreich aktualisiert.');
     }
@@ -67,7 +83,7 @@ class UnitController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Unit $unit): RedirectResponse
+    public function destroy(Role $unit): RedirectResponse
     {
         $unit->delete();
 
