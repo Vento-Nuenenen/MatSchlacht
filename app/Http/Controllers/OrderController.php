@@ -3,15 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreOrderRequest;
+use App\Mail\OrderCreated;
 use App\Models\Item;
 use App\Models\Order;
-use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Spatie\Permission\Models\Role;
 
 class OrderController extends Controller
 {
@@ -23,20 +25,25 @@ class OrderController extends Controller
         return view('order.index', ['orders' => Order::all()]);
     }
 
+    public function show(Order $order): Application|Factory|View
+    {
+        return view('order.show', compact('order'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
     public function create(): Application|Factory|View
     {
-        $order = new Order;
         $users = User::all();
-        $units = Unit::all();
-        $items = Item::all();
+        $roles = Role::all();
+
+        $items = Item::with('itemGroup')
+            ->orderBy('name')->get();
 
         return view('order.create', [
-            'order' => $order,
             'users' => $users,
-            'units' => $units,
+            'roles' => $roles,
             'items' => $items,
         ]);
     }
@@ -46,7 +53,61 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request): RedirectResponse
     {
-        Order::create($request->validated());
+        $data = $request->validated();
+
+        if (empty($data['status'])) {
+            $data['status'] = 'new';
+        }
+
+        $order = Order::create([
+            'event' => $data['event'],
+            'event_start' => $data['event_start'],
+            'event_end' => $data['event_end'],
+            'status' => $data['status'],
+            'role_id' => $data['role_id'],
+            'user_id' => $data['user_id'],
+        ]);
+
+        // Create ordered items from submitted quantities
+        $items = $data['items'] ?? [];
+        foreach ($items as $itemId => $qty) {
+            $qty = (int) $qty;
+            if ($qty > 0) {
+                $order->orderedItems()->create([
+                    'item_id' => (int) $itemId,
+                    'quantity' => $qty,
+                    'confirmed' => false,
+                    'delivered' => false,
+                    'returned' => 0,
+                    'repair' => 0,
+                    'broken' => 0,
+                ]);
+            }
+        }
+
+        // Send notification email to users in the selected unit (best-effort)
+        try {
+            $unit = Role::find($data['role_id']);
+            // Prefer users having a role named like the unit (Spatie Permission)
+            $recipients = $unit ? User::role($unit->name)->get() : collect();
+            // Fallback: at least email the ordering user
+            if ($recipients->isEmpty()) {
+                $orderingUser = User::find($data['user_id']);
+                if ($orderingUser) {
+                    $recipients = collect([$orderingUser]);
+                }
+            }
+
+            if ($recipients->isNotEmpty()) {
+                foreach ($recipients as $user) {
+                    if (!empty($user->email)) {
+                        Mail::to($user->email)->send(new OrderCreated($order));
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            \Log::error($e);
+        }
 
         return redirect()->route('orders.index')->with('success', 'Neue Bestellung wurde erfolgreich erstellt.');
     }
