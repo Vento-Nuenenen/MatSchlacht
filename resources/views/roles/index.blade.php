@@ -11,7 +11,10 @@
                 @endif
 
                 <div class="card">
-                    <div class="card-header">Rollen und Berechtigungsverwaltung</div>
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Rollen und Berechtigungsverwaltung</span>
+                        <a href="{{ route('azure-group-role-mappings.index') }}" class="btn btn-info btn-sm">Azure Group Mappings</a>
+                    </div>
                     <div class="card-body">
                         <table class="table table-hover table-bordered table-striped">
                             <thead>
