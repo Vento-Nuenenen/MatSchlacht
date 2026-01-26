@@ -12,6 +12,15 @@ use Illuminate\Http\RedirectResponse;
 
 class ItemGroupController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:view itemgroups')->only(['index', 'show']);
+        $this->middleware('permission:create itemgroups')->only(['create', 'store']);
+        $this->middleware('permission:edit itemgroups')->only(['edit', 'update']);
+        $this->middleware('permission:delete itemgroups')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      */

@@ -8,6 +8,12 @@ use Spatie\Permission\Models\Role;
 
 class AzureGroupRoleMappingController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:manage azure mappings');
+    }
+
     /**
      * Display a listing of the resource.
      */
