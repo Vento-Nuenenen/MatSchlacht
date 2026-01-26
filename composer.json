@@ -11,8 +11,10 @@
         "php": "^8.2",
         "elibyy/tcpdf-laravel": "^11.5",
         "laravel/framework": "^12.0",
+        "laravel/socialite": "^5.24",
         "laravel/tinker": "^2.10",
         "laravel/ui": "^4.6",
+        "socialiteproviders/microsoft-azure": "^5.2",
         "spatie/laravel-model-states": "^2.11",
         "spatie/laravel-permission": "^6.12"
     },
