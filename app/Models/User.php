@@ -21,6 +21,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'azure_id',
         'firstname',
         'lastname',
         'scoutname',
@@ -56,8 +57,14 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
-    public function fullName()
+    public function fullName(): string
     {
-        return $this->firstname.' '.$this->lastname;
+        $civil_name = $this->firstname.' '.$this->lastname;
+
+        if ($this->scoutname) {
+            $civil_name .= ' / '.$this->scoutname;
+        }
+
+        return $civil_name;
     }
 }
