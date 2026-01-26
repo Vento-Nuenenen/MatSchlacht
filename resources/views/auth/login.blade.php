@@ -51,9 +51,9 @@
                             </div>
                         </div>
 
-                        <div class="row mb-0">
+                        <div class="row mb-1">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary pr-1">
                                     {{ __('Login') }}
                                 </button>
 
@@ -62,6 +62,14 @@
                                         {{ __('Forgot Your Password?') }}
                                     </a>
                                 @endif
+                            </div>
+                        </div>
+
+                        <div class="row mb-0">
+                            <div class="col-md-12 offset-md-4">
+                                <a href="{{ route('azure.login') }}" class="btn btn-outline-primary">
+                                    {{ __('Login with Microsoft') }}
+                                </a>
                             </div>
                         </div>
                     </form>
