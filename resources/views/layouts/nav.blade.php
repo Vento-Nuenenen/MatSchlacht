@@ -37,13 +37,10 @@
                         <a class="dropdown-item" href="{{ route('users.index') }}">Benutzer</a>
                         <a class="dropdown-item" href="{{ route('units.index') }}">Einheiten</a>
                         <a class="dropdown-item" href="{{ route('roles.index') }}">Rollen</a>
+                        <a class="dropdown-item" href="{{ route('azure-group-role-mappings.index') }}">Azure Group Mappings</a>
                     </div>
                 </li>
             </ul>
-
-
-
-
 
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ms-auto">
@@ -63,7 +60,7 @@
                 @else
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            {{ Auth::user()->pfadiname }}
+                            {{ Auth::user()->fullName() }}
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{ route('logout') }}"
