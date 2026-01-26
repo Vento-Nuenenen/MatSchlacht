@@ -13,6 +13,15 @@ use Spatie\Permission\Models\Role;
 
 class UnitController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:view units')->only(['index', 'show']);
+        $this->middleware('permission:create units')->only(['create', 'store']);
+        $this->middleware('permission:edit units')->only(['edit', 'update']);
+        $this->middleware('permission:delete units')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      */
