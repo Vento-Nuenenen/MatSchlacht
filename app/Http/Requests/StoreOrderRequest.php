@@ -28,7 +28,7 @@ class StoreOrderRequest extends FormRequest
             'event_end' => 'required|date|after_or_equal:event_start',
             'handover_date' => 'nullable|date',
             'return_date' => 'nullable|date|after_or_equal:handover_date',
-            'status' => 'string|default:new',
+            'status' => 'nullable|string',
 
             'role_id' => 'required|exists:roles,id',
             'user_id' => 'required|exists:users,id',
