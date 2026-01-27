@@ -65,7 +65,7 @@ class OrderController extends Controller
         $data = $request->validated();
 
         if (empty($data['status'])) {
-            $data['status'] = 'new';
+            $data['status'] = 'stored';
         }
 
         $order = Order::create([
