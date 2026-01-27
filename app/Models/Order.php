@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\States\Order\OrderState;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,6 +11,7 @@ use Spatie\Permission\Models\Role;
 
 /**
  * @method static create(mixed $validated)
+ * @property OrderState $status
  */
 class Order extends Model
 {
@@ -23,6 +25,10 @@ class Order extends Model
 
         'role_id',
         'user_id',
+    ];
+
+    protected $casts = [
+        'status' => OrderState::class,
     ];
 
     public function role(): BelongsTo
