@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\AzureGroupRoleMapping;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Support\Str;
 
 class AzureController extends Controller
 {
@@ -22,7 +23,7 @@ class AzureController extends Controller
     {
         try {
             $azureUser = Socialite::driver('azure')->user();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect('/login')->with('error', 'Azure authentication failed.');
         }
 
@@ -61,7 +62,7 @@ class AzureController extends Controller
     protected function syncRoles(User $user, string $token)
     {
         // Get user groups from Microsoft Graph
-        $response = \Illuminate\Support\Facades\Http::withToken($token)
+        $response = Http::withToken($token)
             ->get('https://graph.microsoft.com/v1.0/me/memberOf?$select=id');
 
         if ($response->successful()) {
