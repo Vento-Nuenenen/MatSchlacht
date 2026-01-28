@@ -12,7 +12,7 @@
                         @csrf
 
                         <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Adresse') }}</label>
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
@@ -26,7 +26,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
+                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Passwort') }}</label>
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
@@ -45,13 +45,13 @@
                                     <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
                                     <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
+                                        {{ __('Eingeloggt bleiben') }}
                                     </label>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row mb-1">
+                        <div class="row mb-3">
                             <div class="col-md-8 offset-md-4">
                                 <button type="submit" class="btn btn-primary pr-1">
                                     {{ __('Login') }}
@@ -59,16 +59,16 @@
 
                                 @if (Route::has('password.request'))
                                     <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
+                                        {{ __('Passwort vergessen?') }}
                                     </a>
                                 @endif
                             </div>
                         </div>
 
-                        <div class="row mb-0">
+                        <div class="row mb-3">
                             <div class="col-md-12 offset-md-4">
-                                <a href="{{ route('azure.login') }}" class="btn btn-outline-primary">
-                                    {{ __('Login with Microsoft') }}
+                                <a href="{{ route('azure.login') }}" class="btn btn-scout-mail col-md-6">
+                                    {{ __('Login mit Pfadi Mail') }}
                                 </a>
                             </div>
                         </div>
@@ -78,4 +78,8 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('assets-css')
+    @vite('resources/sass/auth.scss')
 @endsection

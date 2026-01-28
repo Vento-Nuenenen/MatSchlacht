@@ -13,5 +13,14 @@
     "names": [
       "app.css"
     ]
+  },
+  "resources/sass/auth.scss": {
+    "file": "assets/auth-B8LrgXsP.css",
+    "src": "resources/sass/auth.scss",
+    "isEntry": true,
+    "name": "auth",
+    "names": [
+      "auth.css"
+    ]
   }
 }
