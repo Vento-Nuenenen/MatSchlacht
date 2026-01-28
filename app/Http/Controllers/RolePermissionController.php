@@ -24,14 +24,14 @@ class RolePermissionController extends Controller
         $roles = Role::with('permissions')->get();
         $permissions = Permission::all();
 
-        return view('roles.index', compact('roles', 'permissions'));
+        return view('role.index', compact('roles', 'permissions'));
     }
 
     public function create(): Factory|View
     {
         $permissions = Permission::all();
 
-        return view('roles.create', compact('permissions'));
+        return view('role.create', compact('permissions'));
     }
 
     public function store(StoreRoleRequest $request): RedirectResponse
@@ -60,7 +60,7 @@ class RolePermissionController extends Controller
 
         $permissions = Permission::all();
 
-        return view('roles.edit', compact('role', 'permissions'));
+        return view('role.edit', compact('role', 'permissions'));
     }
 
     public function update(UpdateRoleRequest $request, $id): RedirectResponse
