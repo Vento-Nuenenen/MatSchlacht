@@ -30,7 +30,7 @@ class OrderCreated extends Mailable
             view: 'emails.order_created',
             with: [
                 'order' => $this->order,
-                'unit' => $this->order->unit,
+                'role' => $this->order->role,
                 'user' => $this->order->user,
                 'items' => $this->order->orderedItems()->with('item')->get(),
             ],
