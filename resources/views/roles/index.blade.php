@@ -11,16 +11,19 @@
                 @endif
 
                 <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <span>Rollen und Berechtigungsverwaltung</span>
-                        <a href="{{ route('azure-group-role-mappings.index') }}" class="btn btn-info btn-sm">Azure Group Mappings</a>
-                    </div>
+                    <div class="card-header">Einheiten und Berechtigungen</div>
                     <div class="card-body">
+                        @can('manage roles')
+                            <a href="{{ route('roles.create') }}" class="btn btn-info btn-sm col-12">Neue Einheit erstellen</a>
+                            <br />
+                            <br />
+                        @endcan
+
                         <table class="table table-hover table-bordered table-striped">
                             <thead>
-                            <th>Rolle</th>
-                            <th>Berechtigungen</th>
-                            <th>Optionen</th>
+                                <th scope="col">Rolle</th>
+                                <th scope="col" class="col-8">Berechtigungen</th>
+                                <th scope="col">Optionen</th>
                             </thead>
                             <tbody>
                             @foreach ($roles as $role)
@@ -28,7 +31,19 @@
                                     <td>{{ $role->name }}</td>
                                     <td>{{ $role->permissions->pluck('name')->join(', ') }}</td>
                                     <td>
-                                        <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                                        @if($role->name !== 'Materialwart')
+                                            @can('edit roles')
+                                                <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                                                &nbsp;
+                                            @endcan
+
+                                            @can('delete roles')
+                                                @include('components.delete', [
+                                                    'route' => 'roles.destroy',
+                                                    'id' => $role->id
+                                                ])
+                                            @endcan
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
