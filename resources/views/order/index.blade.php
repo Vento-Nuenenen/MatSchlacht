@@ -13,9 +13,11 @@
                 <div class="card">
                     <div class="card-header">Bestellungen</div>
                     <div class="card-body">
+                        @can('create orders')
                         <a href="{{ route('orders.create') }}" class="btn btn-info btn-sm col-12">Neue Bestellung</a>
                         <br />
                         <br />
+                        @endcan
 
                         <table class="table table-hover table-bordered table-striped">
                             <thead>
@@ -37,12 +39,16 @@
                                     <td>
                                         <a href="{{ route('orders.show', $order->id) }}" class="btn btn-info btn-sm">Anzeigen</a>
                                         &nbsp;
+                                        @can('edit orders')
                                         <a href="{{ route('orders.edit', $order->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
                                         &nbsp;
+                                        @endcan
+                                        @can('delete orders')
                                         @include('components.delete', [
                                             'route' => 'orders.destroy',
                                             'id' => $order->id
                                         ])
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach
