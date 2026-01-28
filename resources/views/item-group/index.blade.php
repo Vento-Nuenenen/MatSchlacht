@@ -14,9 +14,11 @@
                     <div class="card-header">Materialgruppen</div>
 
                     <div class="card-body">
+                        @can('create itemgroups')
                         <a href="{{ route('itemgroups.create') }}" class="btn btn-info btn-sm col-12">Neue Materialgruppe</a>
                         <br />
                         <br />
+                        @endcan
 
                         <table class="table table-hover table-bordered table-striped">
                             <thead>
@@ -30,12 +32,16 @@
                                     <td>{{ $itemGroup->position }}</td>
                                     <td>{{ $itemGroup->name }}</td>
                                     <td>
+                                        @can('edit itemgroups')
                                         <a href="{{ route('itemgroups.edit', $itemGroup->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
                                         &nbsp;
+                                        @endcan
+                                        @can('delete itemgroups')
                                         @include('components.delete', [
                                             'route' => 'itemgroups.destroy',
                                             'id' => $itemGroup->id
                                         ])
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach

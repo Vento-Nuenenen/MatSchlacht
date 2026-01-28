@@ -13,9 +13,11 @@
                 <div class="card">
                     <div class="card-header">Material</div>
                     <div class="card-body table-responsive">
+                        @can('create items')
                         <a href="{{ route('items.create') }}" class="btn btn-info btn-sm col-12">Neues Material</a>
                         <br />
                         <br />
+                        @endcan
 
                         <form action="{{ route('items.index') }}" method="GET" class="mb-3">
                             <div class="row">
@@ -53,12 +55,16 @@
                                         <td>{{ $item->stock }}</td>
                                         <td>{{ $item->repair }}</td>
                                         <td>
+                                            @can('edit items')
                                             <a href="{{ route('items.edit', $item->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
                                             &nbsp;
+                                            @endcan
+                                            @can('delete items')
                                             @include('components.delete', [
                                                 'route' => 'items.destroy',
                                                 'id' => $item->id
                                             ])
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach
