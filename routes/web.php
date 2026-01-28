@@ -22,7 +22,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/overwatch', [OverwatchController::class, 'index'])->name('home');
 
     Route::resource('users', UserController::class);
-    Route::resource('units', UnitController::class);
     Route::resource('itemgroups', ItemGroupController::class);
     Route::resource('items', ItemController::class);
     Route::resource('orders', OrderController::class);
