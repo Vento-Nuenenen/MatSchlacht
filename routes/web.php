@@ -18,12 +18,14 @@ Auth::routes();
 Route::get('/auth/azure', [AzureController::class, 'redirectToAzure'])->name('azure.login');
 Route::get('/auth/azure/callback', [AzureController::class, 'handleAzureCallback']);
 
-Route::get('/overwatch', [OverwatchController::class, 'index'])->name('home');
+Route::middleware('auth')->group(function () {
+    Route::get('/overwatch', [OverwatchController::class, 'index'])->name('home');
 
-Route::resource('users', UserController::class);
-Route::resource('units', UnitController::class);
-Route::resource('itemgroups', ItemGroupController::class);
-Route::resource('items', ItemController::class);
-Route::resource('orders', OrderController::class);
-Route::resource('roles', RolePermissionController::class)->only(['index', 'edit', 'update', 'destroy']);
-Route::resource('azure-group-role-mappings', AzureGroupRoleMappingController::class)->except(['show']);
+    Route::resource('users', UserController::class);
+    Route::resource('units', UnitController::class);
+    Route::resource('itemgroups', ItemGroupController::class);
+    Route::resource('items', ItemController::class);
+    Route::resource('orders', OrderController::class);
+    Route::resource('roles', RolePermissionController::class);
+    Route::resource('azure-group-role-mappings', AzureGroupRoleMappingController::class)->except(['show']);
+});
