@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
@@ -13,18 +14,53 @@ class RolesAndPermissionsSeeder extends Seeder
      */
     public function run(): void
     {
-        // Rollen erstellen und Berechtigungen zuweisen
-        Role::create(['name' => 'Materialwart']);
-        Role::create(['name' => 'Abteilungsleitung']);
-        Role::create(['name' => 'Bezirk']);
-        Role::create(['name' => 'Biberstufe']);
-        Role::create(['name' => 'Wolfsstufe']);
-        Role::create(['name' => 'Pfadistufe']);
-        Role::create(['name' => 'Piostufe']);
-        Role::create(['name' => 'Roverstufe']);
-        Role::create(['name' => 'Leitende Aetna']);
-        Role::create(['name' => 'Leitende Biberstein']);
-        Role::create(['name' => 'Leitende Phönix']);
-        Role::create(['name' => 'Leitende Saturn']);
+        // Reset cached roles and permissions
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+
+        // Create Permissions
+        $models = ['users', 'units', 'itemgroups', 'items', 'orders', 'roles'];
+        $actions = ['view', 'create', 'edit', 'delete'];
+
+        $permissions = [
+            'manage roles',
+            'manage azure mappings',
+            'authenticated'
+        ];
+
+        foreach ($models as $model) {
+            foreach ($actions as $action) {
+                $permissions[] = "$action $model";
+            }
+        }
+
+        foreach ($permissions as $permission) {
+            Permission::findOrCreate($permission);
+        }
+
+        Role::findOrCreate('authenticated');
+
+        // Create Roles and assign permissions
+        $materialwart = Role::findOrCreate('Materialwart');
+        $materialwart->givePermissionTo(Permission::all());
+
+        $abteilungsleitung = Role::findOrCreate('Abteilungsleitung');
+        $abteilungsleitung->givePermissionTo([
+            'view users', 'view units',
+            'view itemgroups', 'view items',
+            'view orders', 'create orders', 'edit orders'
+        ]);
+
+        $leitung = [
+            'Bezirk', 'Biberstufe', 'Wolfsstufe', 'Pfadistufe', 'Piostufe', 'Roverstufe',
+            'Leitende Aetna', 'Leitende Biberstein', 'Leitende Phönix', 'Leitende Saturn'
+        ];
+
+        foreach ($leitung as $roleName) {
+            $role = Role::findOrCreate($roleName);
+            $role->givePermissionTo([
+                'view itemgroups', 'view items',
+                'view orders', 'create orders'
+            ]);
+        }
     }
 }
