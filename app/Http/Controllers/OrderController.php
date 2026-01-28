@@ -94,11 +94,11 @@ class OrderController extends Controller
             }
         }
 
-        // Send notification email to users in the selected unit (best-effort)
+        // Send notification email to users in the selected role (best-effort)
         try {
-            $unit = Role::find($data['role_id']);
-            // Prefer users having a role named like the unit (Spatie Permission)
-            $recipients = $unit ? User::role($unit->name)->get() : collect();
+            $role = Role::find($data['role_id']);
+            // Prefer users having the selected role (Spatie Permission)
+            $recipients = $role ? User::role($role->name)->get() : collect();
             // Fallback: at least email the ordering user
             if ($recipients->isEmpty()) {
                 $orderingUser = User::find($data['user_id']);
