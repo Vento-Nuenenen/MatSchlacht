@@ -2664,9 +2664,10 @@ namespace PHPSTORM_META {
 'itemgroups.edit','itemgroups.update','itemgroups.destroy','items.index','items.create',
 'items.store','items.show','items.edit','items.update','items.destroy',
 'orders.index','orders.create','orders.store','orders.show','orders.edit',
-'orders.update','orders.destroy','roles.index','roles.edit','roles.update',
-'roles.destroy','azure-group-role-mappings.index','azure-group-role-mappings.create','azure-group-role-mappings.store','azure-group-role-mappings.edit',
-'azure-group-role-mappings.update','azure-group-role-mappings.destroy','storage.local',);
+'orders.update','orders.destroy','roles.index','roles.create','roles.store',
+'roles.show','roles.edit','roles.update','roles.destroy','azure-group-role-mappings.index',
+'azure-group-role-mappings.create','azure-group-role-mappings.store','azure-group-role-mappings.edit','azure-group-role-mappings.update','azure-group-role-mappings.destroy',
+'storage.local',);
         registerArgumentsSet('views', 
 'auth.login','auth.passwords.confirm','auth.passwords.email','auth.passwords.reset','auth.register',
 'auth.verify','azure_mappings.create','azure_mappings.edit','azure_mappings.form','azure_mappings.index',
