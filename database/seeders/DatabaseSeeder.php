@@ -13,7 +13,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             ItemGroupSeeder::class,
-            UnitsSeeder::class,
         ]);
 
         // First seed roles and permissions
