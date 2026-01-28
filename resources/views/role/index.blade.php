@@ -15,15 +15,15 @@
                     <div class="card-body">
                         @can('manage roles')
                             <a href="{{ route('roles.create') }}" class="btn btn-info btn-sm col-12">Neue Einheit erstellen</a>
-                            <br />
-                            <br />
+                            <br/>
+                            <br/>
                         @endcan
 
                         <table class="table table-hover table-bordered table-striped">
                             <thead>
-                                <th scope="col">Rolle</th>
-                                <th scope="col" class="col-8">Berechtigungen</th>
-                                <th scope="col">Optionen</th>
+                            <th scope="col">Rolle</th>
+                            <th scope="col" class="col-8">Berechtigungen</th>
+                            <th scope="col">Optionen</th>
                             </thead>
                             <tbody>
                             @foreach ($roles as $role)
@@ -33,7 +33,8 @@
                                     <td>
                                         @if($role->name !== 'Materialwart')
                                             @can('edit roles')
-                                                <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                                                <a href="{{ route('roles.edit', $role->id) }}"
+                                                   class="btn btn-warning btn-sm">Bearbeiten</a>
                                                 &nbsp;
                                             @endcan
 
