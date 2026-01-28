@@ -22,12 +22,13 @@ class RolePermissionControllerTest extends TestCase
 
         // Create a user with 'manage roles' permission
         $this->user = User::factory()->create();
-        $role_manage_permission = Permission::create(['name' => 'manage roles']);
+        $role_manage_permission = Permission::findOrCreate('manage roles');
         $this->user->givePermissionTo($role_manage_permission);
 
         // Create Materialwart role
-        $this->materialwart = Role::create(['name' => 'Materialwart']);
-        $this->permission = Permission::create(['name' => 'view users']);
+        $this->materialwart = Role::findOrCreate('Materialwart');
+        $this->permission = Permission::findOrCreate('view users');
+        $this->materialwart->givePermissionTo($role_manage_permission);
     }
 
     /** @test */
@@ -45,7 +46,7 @@ class RolePermissionControllerTest extends TestCase
     {
         $response = $this->actingAs($this->user)
             ->put(route('roles.update', $this->materialwart->id), [
-                'role_name' => 'Materialwart Updated',
+                'name' => 'Materialwart Updated',
                 'permissions' => [$this->permission->name]
             ]);
 
@@ -63,7 +64,7 @@ class RolePermissionControllerTest extends TestCase
 
         $response = $this->actingAs($this->user)
             ->put(route('roles.update', $other_role->id), [
-                'role_name' => 'Other Role Updated',
+                'name' => 'Other Role Updated',
                 'permissions' => [$this->permission->name]
             ]);
 
@@ -76,6 +77,9 @@ class RolePermissionControllerTest extends TestCase
     /** @test */
     public function it_hides_edit_button_for_materialwart_in_index()
     {
+        // Add manage roles permission to the user role
+        $this->user->assignRole($this->materialwart);
+
         $response = $this->actingAs($this->user)
             ->get(route('roles.index'));
 
