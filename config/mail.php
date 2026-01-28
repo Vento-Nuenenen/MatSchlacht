@@ -79,6 +79,14 @@ return [
             'transport' => 'array',
         ],
 
+        'microsoftgraph' => [
+            'transport' => 'microsoftgraph',
+            'tenant_id' => env('AZURE_TENANT_ID'),
+            'client_id' => env('AZURE_CLIENT_ID'),
+            'client_secret' => env('AZURE_CLIENT_SECRET'),
+            'user_id' => env('MAIL_OFFICE365_USER_ID', 'material@pfadi-nuenenen.ch'),
+        ],
+
         'failover' => [
             'transport' => 'failover',
             'mailers' => [
