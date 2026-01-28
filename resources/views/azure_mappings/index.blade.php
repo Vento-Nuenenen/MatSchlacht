@@ -13,9 +13,11 @@
             <div class="card">
                 <div class="card-header">Azure Group to Role Mappings</div>
                 <div class="card-body">
-                    <a href="{{ route('azure-group-role-mappings.create') }}" class="btn btn-info btn-sm col-12">Office 365 Mapping hinzufügen</a>
-                    <br />
-                    <br />
+                    @can('manage azure mappings')
+                        <a href="{{ route('azure-group-role-mappings.create') }}" class="btn btn-info btn-sm col-12">Office 365 Mapping hinzufügen</a>
+                        <br />
+                        <br />
+                    @endcan
 
                     <table class="table table-hover table-bordered table-striped">
                         <thead>
@@ -31,12 +33,13 @@
                                     <td>{{ $mapping->azure_group_id }}</td>
                                     <td>{{ $mapping->role_name }}</td>
                                     <td>
-                                        <a href="{{ route('azure-group-role-mappings.edit', $mapping->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
-                                        &nbsp;
-                                        @include('components.delete', [
-                                            'route' => 'azure-group-role-mappings.destroy',
-                                            'id' => $mapping->id
-                                        ])
+                                        @can('manage azure mappings')
+                                            <a href="{{ route('azure-group-role-mappings.edit', $mapping->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>&nbsp;
+                                            @include('components.delete', [
+                                                'route' => 'azure-group-role-mappings.destroy',
+                                                'id' => $mapping->id
+                                            ])
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach
