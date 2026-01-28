@@ -15,7 +15,7 @@
 <p>Es wurde eine neue Bestellung erfasst.</p>
 
 <p>
-    Einheit: <strong>{{ $unit?->name }}</strong><br>
+    Einheit: <strong>{{ $role?->name }}</strong><br>
     Anlass: <strong>{{ $order->event }}</strong><br>
     Zeitraum: <strong>{{ $order->event_start }}</strong> bis <strong>{{ $order->event_end }}</strong><br>
     Bestellt von: <strong>{{ $user?->firstname }} {{ $user?->lastname }}</strong>
