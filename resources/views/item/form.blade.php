@@ -1,4 +1,4 @@
-<!-- resources/views/users/_form.blade.php -->
+<!-- resources/views/item/_form.blade.php -->
 
 @csrf
 
