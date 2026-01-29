@@ -7,6 +7,10 @@ use Spatie\ModelStates\StateConfig;
 
 abstract class OrderState extends State
 {
+    abstract public function display(): string;
+
+    abstract public function color(): string;
+
     public static function config(): StateConfig
     {
         return parent::config()
