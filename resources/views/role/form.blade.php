@@ -21,28 +21,41 @@
     <label class="form-label fw-bold">Berechtigungen</label>
     <div class="card">
         <div class="card-body">
-            <div class="row">
-                @forelse($permissions as $permission)
-                    <div class="col-md-4">
-                        <div class="form-check">
-                            <input class="form-check-input"
-                                   type="checkbox"
-                                   name="permissions[]"
-                                   value="{{ $permission->name }}"
-                                   id="perm-{{ $permission->id }}"
-                                   {{ (isset($role) && $role->hasPermissionTo($permission->name)) ? 'checked' : '' }}>
+            @php
+                $groupedPermissions = $permissions->groupBy(function($permission) {
+                    $parts = explode(' ', $permission->name);
+                    return count($parts) > 1 ? $parts[1] : 'Andere';
+                });
+            @endphp
 
-                            <label class="form-check-label" for="perm-{{ $permission->id }}">
-                                {{ $permission->name }}
-                            </label>
+            @forelse($groupedPermissions as $module => $modulePermissions)
+                <h6 class="fw-bold mt-{{ $loop->first ? '0' : '3' }}">{{ ucfirst($module) }}</h6>
+                <div class="row">
+                    @foreach($modulePermissions as $permission)
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       name="permissions[]"
+                                       value="{{ $permission->name }}"
+                                       id="perm-{{ $permission->id }}"
+                                       {{ (isset($role) && $role->hasPermissionTo($permission->name)) ? 'checked' : '' }}>
+
+                                <label class="form-check-label" for="perm-{{ $permission->id }}">
+                                    {{ $permission->name }}
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                @empty
-                    <div class="col-12 text-muted">
-                        Keine Berechtigungen gefunden.
-                    </div>
-                @endforelse
-            </div>
+                    @endforeach
+                </div>
+                @if(!$loop->last)
+                    <hr class="my-3">
+                @endif
+            @empty
+                <div class="text-muted">
+                    Keine Berechtigungen gefunden.
+                </div>
+            @endforelse
         </div>
     </div>
     @error('permissions')
