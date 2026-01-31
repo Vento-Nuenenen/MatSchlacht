@@ -67,4 +67,15 @@ class User extends Authenticatable
 
         return $civil_name;
     }
+
+    public function preferredName()
+    {
+        if ($this->scoutname) {
+            $preferred_name = $this->scoutname;
+        } else {
+            $preferred_name = $this->firstname;
+        }
+
+        return $preferred_name;
+    }
 }
