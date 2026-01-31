@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAzureGroupRoleMapping;
 use App\Models\AzureGroupRoleMapping;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -35,14 +36,9 @@ class AzureGroupRoleMappingController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreAzureGroupRoleMapping $request)
     {
-        $validated = $request->validate([
-            'azure_group_id' => 'required|string|unique:azure_group_role_mappings,azure_group_id',
-            'role_name' => 'required|string|exists:roles,name',
-        ]);
-
-        AzureGroupRoleMapping::create($validated);
+        AzureGroupRoleMapping::create($request->validated());
 
         return redirect()->route('azure-group-role-mappings.index')
             ->with('success', 'Mapping created successfully.');
