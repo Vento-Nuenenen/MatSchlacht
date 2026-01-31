@@ -21,9 +21,9 @@
 
                         <table class="table table-hover table-bordered table-striped">
                             <thead>
-                            <th scope="col">Rolle</th>
-                            <th scope="col" class="col-8">Berechtigungen</th>
-                            <th scope="col">Optionen</th>
+                                <th scope="col">Rolle</th>
+                                <th scope="col" class="col-8">Berechtigungen</th>
+                                <th scope="col">Optionen</th>
                             </thead>
                             <tbody>
                             @foreach ($roles as $role)
