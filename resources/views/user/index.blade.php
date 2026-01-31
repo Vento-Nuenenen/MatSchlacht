@@ -24,6 +24,7 @@
                                 <th>Pfadiname</th>
                                 <th>Name</th>
                                 <th>Mail</th>
+                                <th>Einheiten</th>
                                 <th>Login</th>
                                 <th>Aktiv</th>
                                 <th>Optionen</th>
@@ -34,6 +35,11 @@
                                         <td>{{ $user->scoutname }}</td>
                                         <td>{{ $user->firstname . " " . $user->lastname }}</td>
                                         <td>{{ $user->email }}</td>
+                                        <td>
+                                            @foreach($user->roles as $role)
+                                                <span class="badge bg-pink">{{ $role->name }}</span> &nbsp;
+                                            @endforeach
+                                        </td>
                                         <td>
                                             @if($user->azure_id)
                                                 <span class="badge bg-primary">Azure AD</span>
