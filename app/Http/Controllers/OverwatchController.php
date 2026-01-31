@@ -23,7 +23,7 @@ class OverwatchController extends Controller
         $user = auth()->user();
         $stats = [];
 
-        if ($user->hasRole('Materialwart')) {
+        if ($user->isPrivileged()) {
             $stats['total_users'] = User::count();
             $stats['total_items'] = Item::count();
             $stats['pending_orders'] = Order::whereState('status', Committed::class)->count();

@@ -78,4 +78,9 @@ class User extends Authenticatable
 
         return $preferred_name;
     }
+
+    public function isPrivileged(): bool
+    {
+        return $this->hasAnyRole(['Materialwart', 'Admin']);
+    }
 }
