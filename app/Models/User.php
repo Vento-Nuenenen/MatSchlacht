@@ -81,6 +81,6 @@ class User extends Authenticatable
 
     public function isPrivileged(): bool
     {
-        return $this->hasAnyRole(['Materialwart', 'Admin']);
+        return $this->hasAnyRole(['Materialwart']);
     }
 }
