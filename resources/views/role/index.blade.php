@@ -13,7 +13,7 @@
                 <div class="card">
                     <div class="card-header">Einheiten und Berechtigungen</div>
                     <div class="card-body">
-                        @can('manage roles')
+                        @can('create roles')
                             <a href="{{ route('roles.create') }}" class="btn btn-info btn-sm col-12">Neue Einheit erstellen</a>
                             <br/>
                             <br/>
