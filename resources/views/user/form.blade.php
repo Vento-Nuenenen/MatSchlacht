@@ -85,4 +85,9 @@
     @enderror
 </div>
 
-<button type="submit" class="btn btn-primary">{{ $buttonText }}</button>
+<div class="d-flex justify-content-between">
+    <a href="{{ route('users.index') }}" class="btn btn-secondary">Abbrechen</a>
+    <button type="submit" class="btn btn-primary">
+        {{ $buttonText }}
+    </button>
+</div>
