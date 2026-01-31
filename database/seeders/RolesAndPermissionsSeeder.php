@@ -23,7 +23,9 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $permissions = [
             'manage azure mappings',
-            'authenticated'
+            'authenticated',
+            'edit own orders',
+            'delete own orders',
         ];
 
         foreach ($models as $model) {
@@ -56,7 +58,8 @@ class RolesAndPermissionsSeeder extends Seeder
             $role = Role::findOrCreate($roleName);
             $role->givePermissionTo([
                 'view itemgroups', 'view items',
-                'view orders', 'create orders'
+                'view orders', 'create orders',
+                'edit own orders', 'delete own orders',
             ]);
         }
     }
