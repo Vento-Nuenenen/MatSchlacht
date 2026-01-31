@@ -91,4 +91,22 @@ class RolePermissionControllerTest extends TestCase
             ->get(route('roles.index'));
         $response->assertSee(route('roles.edit', $other_role->id));
     }
+
+    /** @test */
+    public function it_shows_permissions_grouped_by_module_in_edit_view()
+    {
+        $other_role = Role::create(['name' => 'Test Role']);
+        Permission::findOrCreate('create items');
+        Permission::findOrCreate('edit items');
+        Permission::findOrCreate('view orders');
+        Permission::findOrCreate('manage azure mappings');
+
+        $response = $this->actingAs($this->user)
+            ->get(route('roles.edit', $other_role->id));
+
+        $response->assertStatus(200);
+        $response->assertSee('Items');
+        $response->assertSee('Orders');
+        $response->assertSee('Azure');
+    }
 }
