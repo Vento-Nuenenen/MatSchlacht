@@ -36,8 +36,6 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::findOrCreate($permission);
         }
 
-        Role::findOrCreate('authenticated');
-
         // Create Roles and assign permissions
         $materialwart = Role::findOrCreate('Materialwart');
         $materialwart->givePermissionTo(Permission::all());
