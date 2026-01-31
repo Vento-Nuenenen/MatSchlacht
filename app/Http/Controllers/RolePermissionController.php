@@ -7,7 +7,6 @@ use App\Http\Requests\UpdateRoleRequest;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -16,7 +15,10 @@ class RolePermissionController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('permission:manage roles');
+        $this->middleware('permission:view roles')->only(['index']);
+        $this->middleware('permission:create roles')->only(['create', 'store']);
+        $this->middleware('permission:edit roles')->only(['edit', 'update']);
+        $this->middleware('permission:delete roles')->only('destroy');
     }
 
     public function index(): Factory|View
