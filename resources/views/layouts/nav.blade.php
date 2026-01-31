@@ -12,15 +12,16 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{{ url('/') }}">Home</a>
                 </li>
+
                 @canany(['view orders', 'create orders', 'edit orders', 'delete orders'])
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('orders.index') }}">Bestellen</a>
                 </li>
                 @endcan
 
-                @canany(['view orders', 'create orders', 'edit orders', 'delete orders'])
+                @can('manage orders')
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('home') }}">Verwalten</a>
+                    <a class="nav-link" href="{{ route('orders.manage') }}">Verwalten</a>
                 </li>
                 @endcan
 
