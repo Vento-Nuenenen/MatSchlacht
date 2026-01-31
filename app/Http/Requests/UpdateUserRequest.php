@@ -25,7 +25,7 @@ class UpdateUserRequest extends FormRequest
         return [
             'firstname' => 'required',
             'lastname' => 'required',
-            'scoutname' => 'required',
+            'scoutname' => '',
             'email' => 'required|email',
             'aktiv' => '',
 
