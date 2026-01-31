@@ -11,7 +11,7 @@
             @endif
 
             <div class="card">
-                <div class="card-header">Azure Group to Role Mappings</div>
+                <div class="card-header">Azure Group Role Mappings</div>
                 <div class="card-body">
                     @can('manage azure mappings')
                         <a href="{{ route('azure-group-role-mappings.create') }}" class="btn btn-info btn-sm col-12">Office 365 Mapping hinzufügen</a>
