@@ -57,18 +57,18 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="unit_id" class="form-label">Einheit</label>
+                    <label for="role_id" class="form-label">Einheit</label>
                     <select
                         class="form-control"
-                        id="unit_id"
-                        v-model="form.unit_id"
+                        id="role_id"
+                        v-model="form.role_id"
                         required>
                         <option value="">Bitte Einheit auswählen</option>
-                        <option v-for="unit in this.units" :key="unit.id" :value="unit.id">
-                            {{ unit.name }}
+                        <option v-for="role in this.roles" :key="role.id" :value="role.id">
+                            {{ role.name }}
                         </option>
                     </select>
-                    <span v-if="errors.unit_id" class="text-danger">{{ errors.unit_id }}</span>
+                    <span v-if="errors.role_id" class="text-danger">{{ errors.role_id }}</span>
                 </div>
 
                 <!-- Schritt 2: Übergabe und Rückgabe -->
@@ -150,7 +150,7 @@ export default {
         order: { type: Object, default: () => ({}) },
         step: { type: Number, default: 1 },
         users: { type: Object, default: () => ({}) },
-        units: { type: Object, default: () => ({}) },
+        roles: { type: Object, default: () => ({}) },
         items: { type: Object, default: () => ({}) },
     },
     data() {
@@ -164,7 +164,7 @@ export default {
                 return_date: this.order.return_date || "",
                 status: this.order.status || "open",
                 user_id: this.order.user_id || "",
-                unit_id: this.order.unit_id || "",
+                role_id: this.order.role_id || "",
                 items: this.order.items || [],
             },
             errors: {},
