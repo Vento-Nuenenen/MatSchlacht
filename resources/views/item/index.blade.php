@@ -44,6 +44,7 @@
                                 <th>Bezeichnung</th>
                                 <th>Materialgruppe</th>
                                 <th>Bestand</th>
+                                <th>Packungsgrösse</th>
                                 <th>Reparatur</th>
                                 <th>Optionen</th>
                             </thead>
@@ -53,6 +54,7 @@
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->itemGroup->name }}</td>
                                         <td>{{ $item->stock }}</td>
+                                        <td>{{ $item->lot }}</td>
                                         <td>{{ $item->repair }}</td>
                                         <td>
                                             @can('edit items')

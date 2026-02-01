@@ -17,26 +17,29 @@
                 <table class="table table-sm mb-0">
                     <thead>
                     <tr>
-                        <th scope="col" class="col-8">Name</th>
+                        <th scope="col" class="col-6">Name</th>
                         <th scope="col" class="col-2">Verfügbar</th>
+                        <th scope="col" class="col-2">Packungsgrösse</th>
                         <th scope="col" class="col-2">Bestellen</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach($groupItems as $item)
                         @php
-                            $qty = old('items.'.$item->id, $orderItemQuantities->get($item->id, 0));
+                            $actualQty = old('items.'.$item->id, $orderItemQuantities->get($item->id, 0));
+                            $displayQty = ($item->lot > 1) ? $actualQty / $item->lot : $actualQty;
                         @endphp
-                        <tr class="item-row {{ $qty > 0 ? 'table-primary' : '' }}">
+                        <tr class="item-row {{ $actualQty > 0 ? 'table-primary' : '' }}">
                             <td class="item-name">{{ $item->name }}</td>
                             <td>{{ $item->stock }}</td>
+                            <td>{{ $item->lot }}</td>
                             <td>
                                 <input
                                     type="number"
                                     min="0"
                                     class="form-control form-control-sm"
                                     name="items[{{ $item->id }}]"
-                                    value="{{ $qty }}">
+                                    value="{{ $displayQty }}">
                             </td>
                         </tr>
                     @endforeach

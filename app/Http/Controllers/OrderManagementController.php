@@ -70,6 +70,11 @@ class OrderManagementController extends Controller
         foreach ($items as $itemId => $qty) {
             $qty = (int) $qty;
             if ($qty > 0) {
+                $item = Item::find($itemId);
+                if ($item && $item->lot > 1) {
+                    $qty = $qty * $item->lot;
+                }
+
                 $order->orderedItems()->create([
                     'item_id' => (int) $itemId,
                     'quantity' => $qty,

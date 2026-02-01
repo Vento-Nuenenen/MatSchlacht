@@ -19,10 +19,11 @@ class Item extends Model
     protected $fillable = [
         'name',
         'stock',
+        'lot',
         'available',
         'repair',
         'consumable',
-        'purchase_price_cents',
+        'purch_price_cents',
         'item_group_id',
     ];
 

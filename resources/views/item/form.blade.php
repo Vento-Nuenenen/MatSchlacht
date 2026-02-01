@@ -30,6 +30,14 @@
     @enderror
 </div>
 <div class="mb-3">
+    <label for="lot" class="form-label">Packungsgrösse</label>
+    <input type="number" class="form-control" id="lot" name="lot" value="{{ old('lot', $item->lot ?? 1) }}" min="1" required>
+
+    @error('lot')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
+</div>
+<div class="mb-3">
     <label for="repair" class="form-label">Reparatur</label>
     <input type="number" class="form-control" id="repair" name="repair"  value="{{ old('repair', $item->repair ?? 0) }}" required>
 

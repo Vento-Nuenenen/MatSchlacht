@@ -25,6 +25,7 @@ class UpdateItemRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'stock' => 'required|integer|min:0',
+            'lot' => 'required|integer|min:1',
             'repair' => 'integer',
             'item_group_id' => 'required|integer',
         ];
