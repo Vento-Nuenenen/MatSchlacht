@@ -33,9 +33,9 @@ class OrderController extends Controller
     public function index(): Application|Factory|View
     {
         if (auth()->user()->isPrivileged()){
-            $orders = Order::all();
+            $orders = Order::all()->sortBy('event_start');
         } else {
-            $orders = Order::where('user_id', auth()->id())->get();
+            $orders = Order::where('user_id', auth()->id())->orderBy('event_start')->get();
         }
 
         return view('order.index', ['orders' => $orders]);
