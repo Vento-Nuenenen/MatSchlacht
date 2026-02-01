@@ -39,7 +39,7 @@
                             @endif
 
                             @if($order->status->canTransitionTo('stored'))
-                                <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline me-3">
+                                <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline me-3 transition-form">
                                     @csrf
                                     <input type="hidden" name="to" value="stored">
                                     <button type="submit" class="btn btn-outline-danger">Ablehnen (zu Entwurf)</button>
@@ -48,13 +48,13 @@
 
                             @if($order->status->canTransitionTo('accepted'))
                                 @if($order->status->equals(\App\States\Order\Committed::class))
-                                    <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline me-3">
+                                    <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline me-3 transition-form">
                                         @csrf
                                         <input type="hidden" name="to" value="accepted">
                                         <button type="submit" class="btn btn-primary">Akzeptieren</button>
                                     </form>
                                 @else
-                                    <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline me-3">
+                                    <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline me-3 transition-form">
                                         @csrf
                                         <input type="hidden" name="to" value="accepted">
                                         <button type="submit" class="btn btn-outline-danger">Rückgängig (Ausgeben)</button>
@@ -64,13 +64,13 @@
 
                             @if($order->status->canTransitionTo('committed'))
                                 @if($order->status->equals(\App\States\Order\Stored::class))
-                                    <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline me-3">
+                                    <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline me-3 transition-form">
                                         @csrf
                                         <input type="hidden" name="to" value="committed">
                                         <button type="submit" class="btn btn-primary">Bestellen</button>
                                     </form>
                                 @else
-                                    <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline me-3">
+                                    <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline me-3 transition-form">
                                         @csrf
                                         <input type="hidden" name="to" value="committed">
                                         <button type="submit" class="btn btn-outline-danger">Rückgängig (Akzeptieren)</button>
@@ -80,13 +80,13 @@
 
                             @if($order->status->canTransitionTo('delivered'))
                                 @if($order->status->equals(\App\States\Order\Accepted::class))
-                                    <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline me-3">
+                                    <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline me-3 transition-form">
                                         @csrf
                                         <input type="hidden" name="to" value="delivered">
                                         <button type="submit" class="btn btn-info">Ausgeben</button>
                                     </form>
                                 @else
-                                    <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline me-3">
+                                    <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline me-3 transition-form">
                                         @csrf
                                         <input type="hidden" name="to" value="delivered">
                                         <button type="submit" class="btn btn-outline-danger">Rückgängig (Zurückerhalten)</button>
@@ -95,7 +95,7 @@
                             @endif
 
                             @if($order->status->canTransitionTo('returned'))
-                                <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline me-3">
+                                <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline me-3 transition-form">
                                     @csrf
                                     <input type="hidden" name="to" value="returned">
                                     <button type="submit" class="btn btn-secondary">Zurückerhalten</button>
@@ -103,7 +103,7 @@
                             @endif
 
                             @if($order->status->canTransitionTo('archived'))
-                                <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline me-3">
+                                <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline me-3 transition-form">
                                     @csrf
                                     <input type="hidden" name="to" value="archived">
                                     <button type="submit" class="btn btn-danger">Archivieren/Stornieren</button>
@@ -128,7 +128,7 @@
                         <hr>
 
                         <h5>Details & Material bearbeiten</h5>
-                        <form method="POST" action="{{ route('manage.update', $order->id) }}">
+                        <form method="POST" action="{{ route('manage.update', $order->id) }}" id="orderUpdateForm">
                             @csrf
                             @method('PUT')
 
@@ -163,4 +163,32 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('orderUpdateForm');
+            let isDirty = false;
+
+            if (form) {
+                form.addEventListener('input', function() {
+                    isDirty = true;
+                });
+
+                form.addEventListener('submit', function() {
+                    isDirty = false;
+                });
+            }
+
+            const transitionForms = document.querySelectorAll('.transition-form');
+            transitionForms.forEach(tForm => {
+                tForm.addEventListener('submit', function(e) {
+                    if (isDirty) {
+                        if (!confirm('Sie haben ungespeicherte Änderungen am Material oder den Bestelldetails. Möchten Sie den Status trotzdem ändern, ohne zu speichern?')) {
+                            e.preventDefault();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

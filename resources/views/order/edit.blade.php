@@ -14,7 +14,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('orders.update', $order->id) }}">
+        <form method="POST" action="{{ route('orders.update', $order->id) }}" id="orderUpdateForm">
             @csrf
             @method('PUT')
 
@@ -60,8 +60,36 @@
                 <a href="{{ route('orders.index') }}" class="btn btn-secondary">Abbrechen</a>
 
                 <button type="submit" class="btn btn-success" name="action" value="save">Bestellung speichern</button>
-                <button type="submit" class="btn btn-primary" name="action" value="order">Bestellung senden</button>
+                <button type="submit" class="btn btn-primary" name="action" value="order" id="submitOrderButton">Bestellung senden</button>
             </div>
         </form>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('orderUpdateForm');
+            let isDirty = false;
+
+            if (form) {
+                form.addEventListener('input', function() {
+                    isDirty = true;
+                });
+
+                form.addEventListener('submit', function() {
+                    isDirty = false;
+                });
+            }
+
+            const submitOrderButton = document.getElementById('submitOrderButton');
+            if (submitOrderButton) {
+                submitOrderButton.addEventListener('click', function(e) {
+                    if (isDirty) {
+                        if (!confirm('Sie haben ungespeicherte Änderungen am Material oder den Bestelldetails. Möchten Sie die Bestellung trotzdem senden? (Die Änderungen werden beim Senden automatisch mit gespeichert)')) {
+                            e.preventDefault();
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 @endsection
