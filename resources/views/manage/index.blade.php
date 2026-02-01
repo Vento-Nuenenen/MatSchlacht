@@ -60,62 +60,11 @@
                                         <tr>
                                             <td>{{ $order->event }}</td>
                                             <td>{{ $order->role->name }}</td>
-                                            <td>{{ $order->event_start }}</td>
-                                            <td>{{ $order->event_end }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($order->event_start)->format('d.m.Y') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($order->event_end)->format('d.m.Y') }}</td>
                                             <td>
-                                                <a href="{{ route('orders.show', $order->id) }}" class="btn btn-info btn-sm">Anzeigen</a> &nbsp;
-
-                                                @if($order->status->equals(\App\States\Order\Stored::class))
-                                                    @can('edit orders')
-                                                        <a href="{{ route('orders.edit', $order->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
-                                                    @endcan
-                                                @endif
-
-                                                @if($order->status->equals(\App\States\Order\Committed::class))
-                                                    <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline">
-                                                        @csrf
-                                                        <input type="hidden" name="to" value="accepted">
-                                                        <button type="submit" class="btn btn-primary btn-sm">Akzeptieren</button>
-                                                    </form>
-                                                @endif
-
-                                                @if($order->status->equals(\App\States\Order\Accepted::class))
-                                                    <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline">
-                                                        @csrf
-                                                        <input type="hidden" name="to" value="delivered">
-                                                        <button type="submit" class="btn btn-info btn-sm">Ausgeben</button>
-                                                    </form>
-                                                @endif
-
-                                                @if($order->status->equals(\App\States\Order\Delivered::class))
-                                                    <form action="{{ route('orders.transition', $order) }}" method="POST" class="d-inline">
-                                                        @csrf
-                                                        <input type="hidden" name="to" value="returned">
-                                                        <button type="submit" class="btn btn-secondary btn-sm">Zurückerhalten</button>
-                                                    </form>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        <tr class="collapse" id="orderItems{{ $order->id }}">
-                                            <td colspan="6">
-                                                <div class="p-3 bg-light border">
-                                                    <h5>Material für {{ $order->event }}</h5>
-                                                    <form method="POST" action="{{ route('orders.update', $order->id) }}">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        {{-- Keep existing metadata --}}
-                                                        <input type="hidden" name="event" value="{{ $order->event }}">
-                                                        <input type="hidden" name="role_id" value="{{ $order->role_id }}">
-                                                        <input type="hidden" name="user_id" value="{{ $order->user_id }}">
-                                                        <input type="hidden" name="event_start" value="{{ \Carbon\Carbon::parse($order->event_start)->format('Y-m-d\TH:i') }}">
-                                                        <input type="hidden" name="event_end" value="{{ \Carbon\Carbon::parse($order->event_end)->format('Y-m-d\TH:i') }}">
-
-                                                        @include('components.material-grid', ['items' => $items, 'order' => $order])
-
-                                                        <div class="text-end">
-                                                            <button type="submit" class="btn btn-primary btn-sm">Material-Änderungen speichern</button>
-                                                        </div>
-                                                    </form>
+                                                <div class="btn-group">
+                                                    <a href="{{ route('manage.edit', $order->id) }}" class="btn btn-warning btn-sm">Verwalten</a>
                                                 </div>
                                             </td>
                                         </tr>

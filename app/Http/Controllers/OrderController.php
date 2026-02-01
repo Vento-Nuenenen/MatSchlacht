@@ -8,12 +8,6 @@ use App\Mail\OrderCreated;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\User;
-use App\States\Order\Accepted;
-use App\States\Order\Archived;
-use App\States\Order\Committed;
-use App\States\Order\Delivered;
-use App\States\Order\OrderState;
-use App\States\Order\Returned;
 use App\States\Order\Stored;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -47,32 +41,12 @@ class OrderController extends Controller
         return view('order.index', ['orders' => $orders]);
     }
 
-    public function manage(): Application|Factory|View
+    public function show(Order $order): Application|Factory|View|RedirectResponse
     {
-        if (auth()->user()->cannot('edit orders')) {
-            abort(403);
+        if (auth()->user()->isPrivileged()) {
+            return redirect()->route('manage.edit', $order);
         }
 
-        $stateClasses = [
-            Stored::class,
-            Committed::class,
-            Accepted::class,
-            Delivered::class,
-            Returned::class,
-            Archived::class,
-        ];
-
-        $items = Item::with('itemGroup')->orderBy('name')->get();
-
-        return view('manage.index', [
-            'orders' => Order::all(),
-            'items' => $items,
-            'stateClasses' => $stateClasses,
-        ]);
-    }
-
-    public function show(Order $order): Application|Factory|View
-    {
         return view('order.show', compact('order'));
     }
 
@@ -238,7 +212,9 @@ class OrderController extends Controller
         }
 
         if (!$order->status->equals(Stored::class) && !$user->isPrivileged()) {
-            return redirect()->route('orders.show', $order)->with('error', 'Nur Entwürfe können bearbeitet werden.');
+            if (!$user->can('edit orders')) {
+                return redirect()->route('orders.show', $order)->with('error', 'Nur Entwürfe können bearbeitet werden.');
+            }
         }
 
         // Basic validation for role_id and user_id if they are in the request
