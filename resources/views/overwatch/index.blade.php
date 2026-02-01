@@ -74,7 +74,7 @@
                     <div class="card h-100">
                         <div class="card-body text-center">
                             <div class="h1 text-warning">{{ $stats['draft_orders'] }}</div>
-                            <div class="text-muted">Bestellung ntwürfe</div>
+                            <div class="text-muted">Bestellung Entwürfe</div>
                         </div>
                     </div>
                 </div>
