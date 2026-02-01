@@ -33,7 +33,10 @@ class UpdateOrderRequest extends FormRequest
             'items' => 'nullable|array',
             'items.*' => 'nullable|integer|min:0',
 
-            'action' => 'required|in:save,order',
+            'returned' => 'nullable|array',
+            'returned.*' => 'nullable|integer|min:0',
+
+            'action' => 'nullable|in:save,order',
         ];
     }
 }

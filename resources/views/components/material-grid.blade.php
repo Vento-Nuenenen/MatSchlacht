@@ -19,8 +19,11 @@
                     <tr>
                         <th scope="col" class="col-6">Name</th>
                         <th scope="col" class="col-2">Verfügbar</th>
-                        <th scope="col" class="col-2">Packungsgrösse</th>
-                        <th scope="col" class="col-2">Bestellen</th>
+                        <th scope="col" class="col-{{ isset($order) && ($order->status->equals(\App\States\Order\Delivered::class) || $order->status->equals(\App\States\Order\Returned::class) || $order->status->equals(\App\States\Order\Archived::class)) ? '1' : '2' }}">Packungsgrösse</th>
+                        <th scope="col" class="col-{{ isset($order) && ($order->status->equals(\App\States\Order\Delivered::class) || $order->status->equals(\App\States\Order\Returned::class) || $order->status->equals(\App\States\Order\Archived::class)) ? '1' : '2' }}">Bestellen</th>
+                        @if(isset($order) && ($order->status->equals(\App\States\Order\Delivered::class) || $order->status->equals(\App\States\Order\Returned::class) || $order->status->equals(\App\States\Order\Archived::class)))
+                            <th scope="col" class="col-2">Zurückgegeben</th>
+                        @endif
                     </tr>
                     </thead>
                     <tbody>
@@ -28,6 +31,10 @@
                         @php
                             $actualQty = old('items.'.$item->id, $orderItemQuantities->get($item->id, 0));
                             $displayQty = ($item->lot > 1) ? $actualQty / $item->lot : $actualQty;
+
+                            $orderedItem = isset($order) ? $order->orderedItems->where('item_id', $item->id)->first() : null;
+                            $returnedQty = old('returned.'.$item->id, $orderedItem?->returned ?? ($actualQty > 0 ? $actualQty : 0));
+                            $displayReturnedQty = ($item->lot > 1) ? $returnedQty / $item->lot : $returnedQty;
                         @endphp
                         <tr class="item-row {{ $actualQty > 0 ? 'table-primary' : '' }}">
                             <td class="item-name">{{ $item->name }}</td>
@@ -39,8 +46,24 @@
                                     min="0"
                                     class="form-control form-control-sm"
                                     name="items[{{ $item->id }}]"
-                                    value="{{ $displayQty }}">
+                                    value="{{ $displayQty }}"
+                                    {{ isset($order) && ($order->status->equals(\App\States\Order\Delivered::class) || $order->status->equals(\App\States\Order\Returned::class) || $order->status->equals(\App\States\Order\Archived::class)) ? 'readonly' : '' }}>
                             </td>
+                            @if(isset($order) && ($order->status->equals(\App\States\Order\Delivered::class) || $order->status->equals(\App\States\Order\Returned::class) || $order->status->equals(\App\States\Order\Archived::class)))
+                                <td>
+                                    @if($actualQty > 0)
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            class="form-control form-control-sm"
+                                            name="returned[{{ $item->id }}]"
+                                            value="{{ $displayReturnedQty }}"
+                                            {{ $order->status->equals(\App\States\Order\Returned::class) || $order->status->equals(\App\States\Order\Archived::class) ? 'readonly' : '' }}>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                            @endif
                         </tr>
                     @endforeach
                     </tbody>

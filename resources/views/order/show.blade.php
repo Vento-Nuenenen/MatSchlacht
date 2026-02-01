@@ -47,7 +47,10 @@
                             <thead>
                                 <tr>
                                     <th>Material</th>
-                                    <th>Menge</th>
+                                    <th>Bestellt</th>
+                                    @if($order->status->equals(\App\States\Order\Delivered::class) || $order->status->equals(\App\States\Order\Returned::class))
+                                        <th>Zurückgegeben</th>
+                                    @endif
                                     <th>Materialgruppe</th>
                                 </tr>
                             </thead>
@@ -56,6 +59,9 @@
                                 <tr>
                                     <td>{{ $orderedItem->item->name }}</td>
                                     <td>{{ $orderedItem->quantity }}</td>
+                                    @if($order->status->equals(\App\States\Order\Delivered::class) || $order->status->equals(\App\States\Order\Returned::class))
+                                        <td>{{ $orderedItem->returned }}</td>
+                                    @endif
                                     <td>{{ $orderedItem->item->itemGroup?->name ?? 'Sonstiges' }}</td>
                                 </tr>
                             @endforeach

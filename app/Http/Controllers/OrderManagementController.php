@@ -64,26 +64,40 @@ class OrderManagementController extends Controller
             'user_id' => $data['user_id'],
         ]);
 
-        // Update ordered items
-        $order->orderedItems()->delete();
-        $items = $data['items'] ?? [];
-        foreach ($items as $itemId => $qty) {
-            $qty = (int) $qty;
-            if ($qty > 0) {
+        if ($order->status->equals(Delivered::class)) {
+            // In Delivered state, we update 'returned' and keep 'quantity' as is
+            $returned = $data['returned'] ?? [];
+            foreach ($returned as $itemId => $qty) {
+                $qty = (int) $qty;
                 $item = Item::find($itemId);
                 if ($item && $item->lot > 1) {
                     $qty = $qty * $item->lot;
                 }
 
-                $order->orderedItems()->create([
-                    'item_id' => (int) $itemId,
-                    'quantity' => $qty,
-                    'confirmed' => false,
-                    'delivered' => false,
-                    'returned' => 0,
-                    'repair' => 0,
-                    'broken' => 0,
-                ]);
+                $order->orderedItems()->where('item_id', $itemId)->update(['returned' => $qty]);
+            }
+        } else {
+            // Update ordered items (quantities)
+            $order->orderedItems()->delete();
+            $items = $data['items'] ?? [];
+            foreach ($items as $itemId => $qty) {
+                $qty = (int) $qty;
+                if ($qty > 0) {
+                    $item = Item::find($itemId);
+                    if ($item && $item->lot > 1) {
+                        $qty = $qty * $item->lot;
+                    }
+
+                    $order->orderedItems()->create([
+                        'item_id' => (int) $itemId,
+                        'quantity' => $qty,
+                        'confirmed' => false,
+                        'delivered' => false,
+                        'returned' => 0,
+                        'repair' => 0,
+                        'broken' => 0,
+                    ]);
+                }
             }
         }
 

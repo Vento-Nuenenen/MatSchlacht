@@ -32,8 +32,9 @@
     <table class="items-table">
         <thead>
             <tr>
-                <th width="70%">Bezeichnung</th>
-                <th width="30%">Menge</th>
+                <th width="50%">Bezeichnung</th>
+                <th width="25%">Bestellt</th>
+                <th width="25%">Zurückgegeben</th>
             </tr>
         </thead>
         <tbody>
@@ -41,6 +42,7 @@
                 <tr>
                     <td>{{ $orderedItem->item->name }}</td>
                     <td>{{ $orderedItem->quantity }} Stk.</td>
+                    <td>{{ $orderedItem->returned }} Stk.</td>
                 </tr>
             @endforeach
         </tbody>
