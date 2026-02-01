@@ -12,7 +12,7 @@ class UpdateOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,17 @@ class UpdateOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'event' => 'required|string|max:255',
+            'event_start' => 'required|date',
+            'event_end' => 'required|date|after_or_equal:event_start',
+
+            'role_id' => 'required|exists:roles,id',
+            'user_id' => 'required|exists:users,id',
+
+            'items' => 'nullable|array',
+            'items.*' => 'nullable|integer|min:0',
+
+            'action' => 'required|in:save,order',
         ];
     }
 }

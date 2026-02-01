@@ -35,20 +35,26 @@
                                     <td>{{ $order->role->name }}</td>
                                     <td>{{ $order->event_start }}</td>
                                     <td>{{ $order->event_end }}</td>
-                                    <td>{{ $order->status }}</td>
+                                    <td>
+                                        <span class="badge bg- bg-{{ $order->status->color() }}">
+                                            {{ $order->status->display() }}
+                                        </span>
+                                    </td>
                                     <td>
                                         <a href="{{ route('orders.show', $order->id) }}" class="btn btn-info btn-sm">Anzeigen</a>
                                         &nbsp;
-                                        @can('edit orders')
-                                        <a href="{{ route('orders.edit', $order->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
-                                        &nbsp;
-                                        @endcan
-                                        @can('delete orders')
-                                        @include('components.delete', [
-                                            'route' => 'orders.destroy',
-                                            'id' => $order->id
-                                        ])
-                                        @endcan
+                                        @if($order->status->equals(\App\States\Order\Stored::class))
+                                            @if(auth()->user()->can('edit orders') || (auth()->user()->can('edit own orders') && $order->user_id === auth()->id()))
+                                            <a href="{{ route('orders.edit', $order->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                                            &nbsp;
+                                            @endif
+                                            @if(auth()->user()->can('delete orders') || (auth()->user()->can('delete own orders') && $order->user_id === auth()->id()))
+                                            @include('components.delete', [
+                                                'route' => 'orders.destroy',
+                                                'id' => $order->id
+                                            ])
+                                            @endif
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

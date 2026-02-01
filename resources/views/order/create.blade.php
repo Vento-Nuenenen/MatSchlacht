@@ -53,66 +53,14 @@
 
             <hr class="my-4" />
 
-            <div class="mb-3">
-                <label class="form-label">Materialien</label>
-                <input type="text" id="itemSearch" class="form-control" placeholder="Suchen…" oninput="filterItems()">
-            </div>
+            @include('components.material-grid', ['items' => $items, 'order' => null])
 
-            <div id="itemsContainer">
-                @php
-                    $grouped = $items->groupBy(fn($i) => optional($i->itemGroup)->position . '|' . optional($i->itemGroup)->name);
-                @endphp
+            <div class="d-flex justify-content-between">
+                <a href="{{ route('orders.index') }}" class="btn btn-secondary">Abbrechen</a>
 
-                @foreach($grouped as $groupKey => $groupItems)
-                    @php [$pos,$groupName] = array_pad(explode('|',$groupKey,2),2,'Sonstiges'); @endphp
-                    <div class="card mb-3 item-group">
-                        <div class="card-header fw-bold">{{ $groupName }}</div>
-                        <div class="card-body">
-                            <table class="table table-sm mb-0">
-                                <thead>
-                                <tr>
-                                    <th width="60%">Name</th>
-                                    <th width="20%">Verfügbar</th>
-                                    <th width="20%">Bestellen</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($groupItems as $item)
-                                    <tr class="item-row">
-                                        <td class="item-name">{{ $item->name }}</td>
-                                        <td>{{ $item->stock }}</td>
-                                        <td>
-                                            <input type="number" min="0" class="form-control form-control-sm" name="items[{{ $item->id }}]" value="{{ old('items.'.$item->id, 0) }}">
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-
-            <div class="text-end">
-                <button type="submit" class="btn btn-primary">Bestellung abschließen</button>
+                <button type="submit" class="btn btn-success" name="action" value="save">Bestellung speichern</button>
+                <button type="submit" class="btn btn-primary" name="action" value="order">Bestellung senden</button>
             </div>
         </form>
     </div>
-
-    <script>
-        function filterItems() {
-            const q = (document.getElementById('itemSearch').value || '').toLowerCase();
-            const groups = document.querySelectorAll('#itemsContainer .item-group');
-            groups.forEach(group => {
-                let visible = 0;
-                group.querySelectorAll('.item-row').forEach(row => {
-                    const name = row.querySelector('.item-name').textContent.toLowerCase();
-                    const match = !q || name.includes(q);
-                    row.style.display = match ? '' : 'none';
-                    if (match) visible++;
-                });
-                group.style.display = visible ? '' : 'none';
-            });
-        }
-    </script>
 @endsection

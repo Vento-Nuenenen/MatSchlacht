@@ -26,15 +26,14 @@ class StoreOrderRequest extends FormRequest
             'event' => 'required|string|max:255',
             'event_start' => 'required|date',
             'event_end' => 'required|date|after_or_equal:event_start',
-            'handover_date' => 'nullable|date',
-            'return_date' => 'nullable|date|after_or_equal:handover_date',
-            'status' => 'nullable|string',
 
             'role_id' => 'required|exists:roles,id',
             'user_id' => 'required|exists:users,id',
 
             'items' => 'nullable|array',
             'items.*' => 'nullable|integer|min:0',
+
+            'action' => 'required|in:save,order',
         ];
     }
 }
