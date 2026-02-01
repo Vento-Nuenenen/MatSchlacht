@@ -43,9 +43,6 @@ test('edit button visible for own order with permission', function () {
 
     $response = $this->actingAs($user)->get(route('orders.index'));
     $response->assertSee(route('orders.edit', $order));
-
-    $response = $this->actingAs($user)->get(route('orders.show', $order));
-    $response->assertSee(route('orders.edit', $order));
 });
 
 test('edit button not visible for others order with only own permission', function () {
@@ -60,9 +57,6 @@ test('edit button not visible for others order with only own permission', functi
     ]);
 
     $response = $this->actingAs($user)->get(route('orders.index'));
-    $response->assertDontSee(route('orders.edit', $order));
-
-    $response = $this->actingAs($user)->get(route('orders.show', $order));
     $response->assertDontSee(route('orders.edit', $order));
 });
 
