@@ -17,18 +17,26 @@
                 <table class="table table-sm mb-0">
                     <thead>
                     <tr>
-                        <th width="60%">Name</th>
-                        <th width="20%">Verfügbar</th>
-                        <th width="20%">Bestellen</th>
+                        <th scope="col" class="col-8">Name</th>
+                        <th scope="col" class="col-2">Verfügbar</th>
+                        <th scope="col" class="col-2">Bestellen</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach($groupItems as $item)
-                        <tr class="item-row">
+                        @php
+                            $qty = old('items.'.$item->id, $orderItemQuantities->get($item->id, 0));
+                        @endphp
+                        <tr class="item-row {{ $qty > 0 ? 'table-warning' : '' }}">
                             <td class="item-name">{{ $item->name }}</td>
                             <td>{{ $item->stock }}</td>
                             <td>
-                                <input type="number" min="0" class="form-control form-control-sm" name="items[{{ $item->id }}]" value="{{ old('items.'.$item->id, $orderItemQuantities->get($item->id, 0)) }}">
+                                <input
+                                    type="number"
+                                    min="0"
+                                    class="form-control form-control-sm"
+                                    name="items[{{ $item->id }}]"
+                                    value="{{ $qty }}">
                             </td>
                         </tr>
                     @endforeach
