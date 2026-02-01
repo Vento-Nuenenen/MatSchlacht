@@ -27,7 +27,7 @@
                         @php
                             $qty = old('items.'.$item->id, $orderItemQuantities->get($item->id, 0));
                         @endphp
-                        <tr class="item-row {{ $qty > 0 ? 'table-warning' : '' }}">
+                        <tr class="item-row {{ $qty > 0 ? 'table-primary' : '' }}">
                             <td class="item-name">{{ $item->name }}</td>
                             <td>{{ $item->stock }}</td>
                             <td>
