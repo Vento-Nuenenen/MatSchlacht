@@ -44,11 +44,11 @@
 
                 <div class="col-md-3">
                     <label for="event_start" class="form-label">Verwendungszeitraum von</label>
-                    <input type="datetime-local" class="form-control" id="event_start" name="event_start" value="{{ old('event_start', \Carbon\Carbon::parse($order->event_start)->format('Y-m-d\TH:i')) }}" required>
+                    <input type="date" class="form-control" id="event_start" name="event_start" value="{{ old('event_start', \Carbon\Carbon::parse($order->event_start)->format('Y-m-d')) }}" required>
                 </div>
                 <div class="col-md-3">
                     <label for="event_end" class="form-label">Verwendungszeitraum bis</label>
-                    <input type="datetime-local" class="form-control" id="event_end" name="event_end" value="{{ old('event_end', \Carbon\Carbon::parse($order->event_end)->format('Y-m-d\TH:i')) }}" required>
+                    <input type="date" class="form-control" id="event_end" name="event_end" value="{{ old('event_end', \Carbon\Carbon::parse($order->event_end)->format('Y-m-d')) }}" required>
                 </div>
             </div>
 

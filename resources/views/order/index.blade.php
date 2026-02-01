@@ -33,8 +33,8 @@
                                 <tr>
                                     <td>{{ $order->event }}</td>
                                     <td>{{ $order->role->name }}</td>
-                                    <td>{{ $order->event_start }}</td>
-                                    <td>{{ $order->event_end }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($order->event_start)->format('d.m.Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($order->event_end)->format('d.m.Y') }}</td>
                                     <td>
                                         <span class="badge bg- bg-{{ $order->status->color() }}">
                                             {{ $order->status->display() }}
