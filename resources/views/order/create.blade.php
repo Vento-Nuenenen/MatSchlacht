@@ -43,11 +43,11 @@
 
                 <div class="col-md-3">
                     <label for="event_start" class="form-label">Verwendungszeitraum von</label>
-                    <input type="datetime-local" class="form-control" id="event_start" name="event_start" value="{{ old('event_start') }}" required>
+                    <input type="date" class="form-control" id="event_start" name="event_start" value="{{ old('event_start') }}" required>
                 </div>
                 <div class="col-md-3">
                     <label for="event_end" class="form-label">Verwendungszeitraum bis</label>
-                    <input type="datetime-local" class="form-control" id="event_end" name="event_end" value="{{ old('event_end') }}" required>
+                    <input type="date" class="form-control" id="event_end" name="event_end" value="{{ old('event_end') }}" required>
                 </div>
             </div>
 
