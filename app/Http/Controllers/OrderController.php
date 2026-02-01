@@ -47,7 +47,11 @@ class OrderController extends Controller
             return redirect()->route('manage.edit', $order);
         }
 
-        return view('order.show', compact('order'));
+        $order->load('orderedItems.item.itemGroup');
+
+        return view('order.show', [
+            'order' => $order,
+        ]);
     }
 
     public function create(): Application|Factory|View
