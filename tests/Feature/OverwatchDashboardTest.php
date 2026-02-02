@@ -26,7 +26,7 @@ test('overwatch dashboard shows user stats', function () {
 });
 
 test('overwatch dashboard shows admin stats', function () {
-    $adminRole = Role::create(['name' => 'Admin']);
+    $adminRole = Role::create(['name' => 'Materialwart']);
     $admin = User::factory()->create(['firstname' => 'AdminUser']);
     $admin->assignRole($adminRole);
 
