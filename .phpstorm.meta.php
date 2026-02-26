@@ -1380,6 +1380,7 @@ namespace PHPSTORM_META {
             'tinker.commands' => 'array',
             'tinker.alias' => 'array',
             'tinker.dont_alias' => 'array',
+            'tinker.trust_project' => 'string',
         ]));
     override(\Illuminate\Config\Repository::get(), map([
             'hashing.driver' => 'string',
@@ -1938,6 +1939,7 @@ namespace PHPSTORM_META {
             'tinker.commands' => 'array',
             'tinker.alias' => 'array',
             'tinker.dont_alias' => 'array',
+            'tinker.trust_project' => 'string',
         ]));
     override(\Illuminate\Support\Facades\Config::get(), map([
             'hashing.driver' => 'string',
@@ -2496,6 +2498,7 @@ namespace PHPSTORM_META {
             'tinker.commands' => 'array',
             'tinker.alias' => 'array',
             'tinker.dont_alias' => 'array',
+            'tinker.trust_project' => 'string',
         ]));
 
 
@@ -2647,7 +2650,7 @@ namespace PHPSTORM_META {
 'ide-helper.magic','ide-helper.interfaces','ide-helper.model_camel_case_properties','ide-helper.type_overrides.integer','ide-helper.type_overrides.boolean',
 'ide-helper.include_class_docblocks','ide-helper.force_fqn','ide-helper.use_generics_annotations','ide-helper.macro_default_return_types.Illuminate\\Http\\Client\\Factory','ide-helper.additional_relation_types',
 'ide-helper.additional_relation_return_types','ide-helper.enforce_nullable_relationships','ide-helper.post_migrate','tinker.commands','tinker.alias',
-'tinker.dont_alias',);
+'tinker.dont_alias','tinker.trust_project',);
         registerArgumentsSet('middleware', 
 'web','api','auth','auth.basic','auth.session',
 'cache.headers','can','guest','password.confirm','precognitive',
@@ -2667,7 +2670,7 @@ namespace PHPSTORM_META {
 'manage.pdf','manage.update','orders.transition','roles.index','roles.create',
 'roles.store','roles.show','roles.edit','roles.update','roles.destroy',
 'azure-group-role-mappings.index','azure-group-role-mappings.create','azure-group-role-mappings.store','azure-group-role-mappings.edit','azure-group-role-mappings.update',
-'azure-group-role-mappings.destroy','profile.edit','profile.password.update','storage.local',);
+'azure-group-role-mappings.destroy','profile.edit','profile.password.update','storage.local','storage.local.upload',);
         registerArgumentsSet('views', 
 'auth.login','auth.passwords.confirm','auth.passwords.email','auth.passwords.reset','auth.register',
 'auth.verify','azure_mappings.create','azure_mappings.edit','azure_mappings.form','azure_mappings.index',

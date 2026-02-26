@@ -50,6 +50,8 @@ class UserController extends Controller
         // Assign selected roles (if any)
         $user->syncRoles($request->input('roles', []));
 
+        \Password::broker()->sendResetLink(['email' => $user->email]);
+
         return redirect()->route('users.index')->with('success', 'Neuer Benutzer wurde erfolgreich erstellt.');
     }
 
