@@ -9,7 +9,7 @@
         "@vitejs/plugin-vue": "^6.0.7",
         "axios": "^1.16.1",
         "bootstrap": "^5.3.8",
-        "concurrently": "^9.2.1",
+        "concurrently": "^10.0.3",
         "laravel-vite-plugin": "^3.1.0",
         "postcss": "^8.5.15",
         "sass": "^1.100.0",
