@@ -7,7 +7,7 @@
     "devDependencies": {
         "@popperjs/core": "^2.11.8",
         "@vitejs/plugin-vue": "^6.0.7",
-        "axios": "^1.16.1",
+        "axios": "^1.18.0",
         "bootstrap": "^5.3.8",
         "concurrently": "^10.0.3",
         "laravel-vite-plugin": "^3.1.0",
