@@ -50,9 +50,25 @@ class UserController extends Controller
         // Assign selected roles (if any)
         $user->syncRoles($request->input('roles', []));
 
-        \Password::broker()->sendResetLink(['email' => $user->email]);
+        if (!$user->isAzureUser()) {
+            \Password::broker()->sendResetLink(['email' => $user->email]);
+        }
 
         return redirect()->route('users.index')->with('success', 'Neuer Benutzer wurde erfolgreich erstellt.');
+    }
+
+    /**
+     * Send a password reset link to the user.
+     */
+    public function sendResetLink(User $user): RedirectResponse
+    {
+        if ($user->isAzureUser()) {
+            return redirect()->back()->with('error', 'Passwort-Reset für Office 365 Benutzer nicht möglich.');
+        }
+
+        \Password::broker()->sendResetLink(['email' => $user->email]);
+
+        return redirect()->back()->with('success', 'Passwort-Reset-Link wurde erfolgreich gesendet.');
     }
 
     /**

@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/overwatch', [OverwatchController::class, 'index'])->name('home');
 
     Route::resource('users', UserController::class);
+    Route::post('users/{user}/password-reset', [UserController::class, 'sendResetLink'])->name('users.password-reset');
     Route::resource('itemgroups', ItemGroupController::class);
     Route::resource('items', ItemController::class);
     Route::resource('orders', OrderController::class);

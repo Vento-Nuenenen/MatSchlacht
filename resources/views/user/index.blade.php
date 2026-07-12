@@ -54,6 +54,14 @@
                                                 &nbsp;
                                             @endcan
 
+                                            @if(!$user->isAzureUser())
+                                                <form action="{{ route('users.password-reset', $user->id) }}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-secondary btn-sm">Passwort-Reset</button>
+                                                </form>
+                                                &nbsp;
+                                            @endif
+
                                             @can('delete users')
                                                 @include('components.delete', [
                                                     'route' => 'users.destroy',
