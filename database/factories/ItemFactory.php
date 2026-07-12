@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Item;
 use App\Models\ItemGroup;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<ItemGroup>
+ * @extends Factory<Item>
  */
 class ItemFactory extends Factory
 {
