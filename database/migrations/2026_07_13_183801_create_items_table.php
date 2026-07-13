@@ -21,7 +21,7 @@ return new class extends Migration
             $table->boolean('consumable')->default(false);
             $table->integer('item_price_cents')->default(0);
 
-            $table->foreignId('item_group_id')->constrained();
+            $table->foreignId('item_group_id');
 
             $table->timestamps();
         });
