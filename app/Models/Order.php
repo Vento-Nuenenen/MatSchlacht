@@ -6,13 +6,10 @@ use App\States\Order\OrderState;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\ModelStates\HasStates;
 use Spatie\Permission\Models\Role;
 
-/**
- * @method static create(mixed $validated)
- * @property OrderState $status
- */
 class Order extends Model
 {
     use HasFactory, HasStates;
@@ -23,8 +20,8 @@ class Order extends Model
         'event_end',
         'status',
 
-        'role_id',
         'user_id',
+        'role_id',
     ];
 
     protected $casts = [
@@ -41,7 +38,7 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function orderedItems()
+    public function orderedItems(): HasMany
     {
         return $this->hasMany(OrderedItem::class);
     }
