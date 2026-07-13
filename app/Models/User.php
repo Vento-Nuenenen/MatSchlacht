@@ -56,10 +56,10 @@ class User extends Authenticatable implements PasskeyUser
 
     public function fullName(): string
     {
-        $civil_name = $this->firstname . ' ' . $this->lastname;
+        $civil_name = $this->firstname.' '.$this->lastname;
 
         if ($this->scoutname) {
-            $civil_name .= ' / ' . $this->scoutname;
+            $civil_name .= ' / '.$this->scoutname;
         }
 
         return $civil_name;
@@ -83,6 +83,6 @@ class User extends Authenticatable implements PasskeyUser
 
     public function isAzureUser(): bool
     {
-        return !empty($this->azure_id);
+        return ! empty($this->azure_id);
     }
 }
