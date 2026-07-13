@@ -46,12 +46,12 @@ class RolesAndPermissionsSeeder extends Seeder
         $abteilungsleitung->givePermissionTo([
             'view users',
             'view itemgroups', 'view items',
-            'view orders', 'create orders', 'edit orders'
+            'view orders', 'create orders', 'edit orders',
         ]);
 
         $leitung = [
             'Bezirk', 'Biberstufe', 'Wolfsstufe', 'Pfadistufe', 'Piostufe', 'Roverstufe',
-            'Leitende Aetna', 'Leitende Biberstein', 'Leitende Phönix', 'Leitende Saturn'
+            'Leitende Aetna', 'Leitende Biberstein', 'Leitende Phönix', 'Leitende Saturn',
         ];
 
         foreach ($leitung as $roleName) {
