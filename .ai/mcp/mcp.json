@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "laravel-boost": {
+      "command": "/home/caspar/.asdf/installs/php/8.5.4/bin/php",
+      "args": [
+        "/home/caspar/projekte/php/MatSchlacht/artisan",
+        "boost:mcp"
+      ]
+    }
+  }
+}
