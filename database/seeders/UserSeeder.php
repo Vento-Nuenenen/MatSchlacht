@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@example.com',
             'password' => Hash::make('password'),
         ]);
-        $admin->assignRole('Abteilungsleitung');
+        $admin->assignRole('Materialwart');
 
         // Create regular user
         $user = User::updateOrCreate(['email' => 'user@example.com'], [
@@ -31,7 +31,7 @@ class UserSeeder extends Seeder
             'email' => 'user@example.com',
             'password' => Hash::make('password'),
         ]);
-        $user->assignRole('Materialwart');
+        $user->assignRole('Abteilungsleitung');
 
         // Create additional users with the user role
         User::factory(5)->create()->each(function ($user) {
