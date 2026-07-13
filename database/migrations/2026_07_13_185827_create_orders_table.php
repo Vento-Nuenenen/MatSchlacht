@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('event');
             $table->date('event_start');
             $table->date('event_end');
-            $table->string('state')->default(OrderState::PENDING);
+            $table->string('state');
 
             $table->foreignId('role_id');
             $table->foreignId('user_id');
