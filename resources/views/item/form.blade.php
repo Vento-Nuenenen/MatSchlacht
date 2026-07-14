@@ -1,5 +1,3 @@
-<!-- resources/views/item/_form.blade.php -->
-
 @csrf
 
 <div class="mb-3">
