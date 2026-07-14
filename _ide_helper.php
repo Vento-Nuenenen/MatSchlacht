@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 13.19.0.
+ * Generated for Laravel 13.20.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -11961,6 +11961,20 @@ namespace Illuminate\Support\Facades {
         }
 
         /**
+         * Assert if a mailable was queued a number of times.
+         *
+         * @param string $mailable
+         * @param int $times
+         * @return void
+         * @static
+         */
+        public static function assertQueuedTimes($mailable, $times = 1)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+            $instance->assertQueuedTimes($mailable, $times);
+        }
+
+        /**
          * Determine if a mailable was not queued based on a truth-test callback.
          *
          * @param string|\Closure $mailable
@@ -13897,6 +13911,32 @@ namespace Illuminate\Support\Facades {
         }
 
         /**
+         * Register a callback to be invoked before pushing a job.
+         *
+         * @param callable $callback
+         * @return \Illuminate\Support\Testing\Fakes\QueueFake
+         * @static
+         */
+        public static function beforePushing($callback)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\QueueFake $instance */
+            return $instance->beforePushing($callback);
+        }
+
+        /**
+         * Register a callback to be invoked after pushing a job.
+         *
+         * @param callable $callback
+         * @return \Illuminate\Support\Testing\Fakes\QueueFake
+         * @static
+         */
+        public static function afterPushing($callback)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\QueueFake $instance */
+            return $instance->afterPushing($callback);
+        }
+
+        /**
          * Get the connection name for the queue.
          *
          * @return string
@@ -15736,6 +15776,17 @@ namespace Illuminate\Support\Facades {
         }
 
         /**
+         * Retrieve a file from the request as an image instance.
+         *
+         * @static
+         */
+        public static function image($key)
+        {
+            /** @var \Illuminate\Http\Request $instance */
+            return $instance->image($key);
+        }
+
+        /**
          * Dump the items.
          *
          * @param mixed $keys
@@ -17278,15 +17329,6 @@ namespace Illuminate\Support\Facades {
             return \Illuminate\Http\Request::hasValidRelativeSignatureWhileIgnoring($ignoreQuery);
         }
 
-        /**
-         * @see \Inertia\ServiceProvider::registerRequestMacro()
-         * @static
-         */
-        public static function inertia()
-        {
-            return \Illuminate\Http\Request::inertia();
-        }
-
             }
     /**
      * @see \Illuminate\Routing\ResponseFactory
@@ -18687,16 +18729,6 @@ namespace Illuminate\Support\Facades {
         {
             /** @var \Illuminate\Routing\Router $instance */
             return $instance->tap($callback);
-        }
-
-        /**
-         * @param array<array-key, mixed> $props
-         * @see \Inertia\ServiceProvider::registerRouterMacro()
-         * @static
-         */
-        public static function inertia($uri, $component, $props = [])
-        {
-            return \Illuminate\Routing\Router::inertia($uri, $component, $props);
         }
 
         /**
@@ -21062,6 +21094,19 @@ namespace Illuminate\Support\Facades {
         }
 
         /**
+         * Assert that the disk contains no files.
+         *
+         * @return \Illuminate\Filesystem\LocalFilesystemAdapter
+         * @static
+         */
+        public static function assertEmpty()
+        {
+            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter 
+            /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
+            return $instance->assertEmpty();
+        }
+
+        /**
          * Determine if a file or directory exists.
          *
          * @param string $path
@@ -21239,6 +21284,18 @@ namespace Illuminate\Support\Facades {
             //Method inherited from \Illuminate\Filesystem\FilesystemAdapter 
             /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
             return $instance->download($path, $name, $headers);
+        }
+
+        /**
+         * Create an image instance from a file in storage.
+         *
+         * @static
+         */
+        public static function image($path)
+        {
+            //Method inherited from \Illuminate\Filesystem\FilesystemAdapter 
+            /** @var \Illuminate\Filesystem\LocalFilesystemAdapter $instance */
+            return $instance->image($path);
         }
 
         /**
@@ -25205,28 +25262,6 @@ namespace Illuminate\Http {
             return \Illuminate\Http\Request::hasValidRelativeSignatureWhileIgnoring($ignoreQuery);
         }
 
-        /**
-         * @see \Inertia\ServiceProvider::registerRequestMacro()
-         * @static
-         */
-        public static function inertia()
-        {
-            return \Illuminate\Http\Request::inertia();
-        }
-
-            }
-    /**
-     */
-    class RedirectResponse extends \Symfony\Component\HttpFoundation\RedirectResponse {
-        /**
-         * @see \Inertia\ServiceProvider::registerRedirectMacro()
-         * @static
-         */
-        public static function preserveFragment()
-        {
-            return \Illuminate\Http\RedirectResponse::preserveFragment();
-        }
-
             }
     }
 
@@ -25235,16 +25270,6 @@ namespace Illuminate\Routing {
      * @mixin \Illuminate\Routing\RouteRegistrar
      */
     class Router {
-        /**
-         * @param array<array-key, mixed> $props
-         * @see \Inertia\ServiceProvider::registerRouterMacro()
-         * @static
-         */
-        public static function inertia($uri, $component, $props = [])
-        {
-            return \Illuminate\Routing\Router::inertia($uri, $component, $props);
-        }
-
         /**
          * @see \Laravel\Ui\AuthRouteMethods::auth()
          * @param mixed $options
@@ -25314,65 +25339,6 @@ namespace Illuminate\Routing {
         public static function roleOrPermission($rolesOrPermissions = [])
         {
             return \Illuminate\Routing\Route::roleOrPermission($rolesOrPermissions);
-        }
-
-            }
-    }
-
-namespace Illuminate\Testing {
-    /**
-     * @template TResponse of \Symfony\Component\HttpFoundation\Response
-     * @mixin \Illuminate\Http\Response
-     */
-    class TestResponse {
-        /**
-         * @see \Inertia\Testing\TestResponseMacros::assertInertia()
-         * @param \Closure|null $callback
-         * @static
-         */
-        public static function assertInertia($callback = null)
-        {
-            return \Illuminate\Testing\TestResponse::assertInertia($callback);
-        }
-
-        /**
-         * @see \Inertia\Testing\TestResponseMacros::inertiaPage()
-         * @static
-         */
-        public static function inertiaPage()
-        {
-            return \Illuminate\Testing\TestResponse::inertiaPage();
-        }
-
-        /**
-         * @see \Inertia\Testing\TestResponseMacros::inertiaProps()
-         * @param string|null $propName
-         * @static
-         */
-        public static function inertiaProps($propName = null)
-        {
-            return \Illuminate\Testing\TestResponse::inertiaProps($propName);
-        }
-
-        /**
-         * @see \Inertia\Testing\TestResponseMacros::assertInertiaFlash()
-         * @param string $key
-         * @param mixed|null $expected
-         * @static
-         */
-        public static function assertInertiaFlash($key, $expected = null)
-        {
-            return \Illuminate\Testing\TestResponse::assertInertiaFlash($key, $expected);
-        }
-
-        /**
-         * @see \Inertia\Testing\TestResponseMacros::assertInertiaFlashMissing()
-         * @param string $key
-         * @static
-         */
-        public static function assertInertiaFlashMissing($key)
-        {
-            return \Illuminate\Testing\TestResponse::assertInertiaFlashMissing($key);
         }
 
             }
