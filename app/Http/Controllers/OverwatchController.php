@@ -9,16 +9,12 @@ use App\States\Order\Archived;
 use App\States\Order\Committed;
 use App\States\Order\Returned;
 use App\States\Order\Stored;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
 
 class OverwatchController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(): View|Factory|Application
+    public function __construct() {}
+
+    public function index()
     {
         $user = auth()->user();
         $stats = [];
@@ -26,14 +22,14 @@ class OverwatchController extends Controller
         if ($user->isPrivileged()) {
             $stats['total_users'] = User::count();
             $stats['total_items'] = Item::count();
-            $stats['pending_orders'] = Order::whereState('status', Committed::class)->count();
-            $stats['draft_orders'] = Order::whereState('status', Stored::class)->count();
+            $stats['pending_orders'] = Order::whereState('state', Committed::class)->count();
+            $stats['draft_orders'] = Order::whereState('state', Stored::class)->count();
             $stats['total_orders'] = Order::count();
         }
 
         $user_stats = [
             'total_orders' => $user->orders()->count(),
-            'active_orders' => $user->orders()->whereNotState('status', [Archived::class, Returned::class])->count(),
+            'active_orders' => $user->orders()->whereNotState('state', [Archived::class, Returned::class])->count(),
         ];
 
         return view('overwatch.index', compact('stats', 'user_stats'));
