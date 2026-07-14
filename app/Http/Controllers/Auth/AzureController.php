@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\AzureGroupRoleMapping;
 use App\Models\User;
 use Exception;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
+use Http;
 use Laravel\Socialite\Facades\Socialite;
 
 class AzureController extends Controller
@@ -38,7 +36,7 @@ class AzureController extends Controller
             ->orWhere('email', $azureUser->email)
             ->first();
 
-        if (!$user) {
+        if (! $user) {
             $user = User::create([
                 'azure_id' => $azureUser->id,
                 'firstname' => $azureUser->offsetGet('givenName') ?? $azureUser->name,
@@ -49,6 +47,9 @@ class AzureController extends Controller
         } else {
             $user->update([
                 'azure_id' => $azureUser->id,
+                'firstname' => $azureUser->offsetGet('givenName') ?? $azureUser->name,
+                'lastname' => $azureUser->offsetGet('surname') ?? '',
+                'email' => $azureUser->email,
             ]);
         }
 
@@ -74,7 +75,7 @@ class AzureController extends Controller
                 ->pluck('role_name')
                 ->toArray();
 
-            if (!empty($rolesToAssign)) {
+            if (! empty($rolesToAssign)) {
                 $user->syncRoles($rolesToAssign);
             }
         }
