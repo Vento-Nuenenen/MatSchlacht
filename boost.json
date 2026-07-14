@@ -6,11 +6,17 @@
     "guidelines": true,
     "mcp": true,
     "nightwatch": false,
+    "packages": [
+        "spatie/laravel-permission",
+        "barryvdh/laravel-debugbar"
+    ],
     "sail": false,
     "skills": [
         "laravel-best-practices",
         "socialite-development",
         "pest-testing",
-        "tailwindcss-development"
+        "tailwindcss-development",
+        "laravel-permission-development",
+        "debug-using-debugbar"
     ]
 }
