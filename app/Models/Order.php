@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\States\Order\OrderState;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
