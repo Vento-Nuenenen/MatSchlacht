@@ -2,30 +2,26 @@
 
 namespace App\Models;
 
-use Database\Factories\ItemFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * @method static create(mixed $validated)
- */
+#[Fillable([
+    'name',
+    'stock',
+    'lot',
+    'available',
+    'repair',
+    'consumable',
+    'purch_price_cents',
+
+    'item_group_id',
+])]
 class Item extends Model
 {
-    /** @use HasFactory<ItemFactory> */
     use HasFactory;
-
-    protected $fillable = [
-        'name',
-        'stock',
-        'lot',
-        'available',
-        'repair',
-        'consumable',
-        'purch_price_cents',
-        'item_group_id',
-    ];
 
     public function itemGroup(): BelongsTo
     {
