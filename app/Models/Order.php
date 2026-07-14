@@ -14,7 +14,7 @@ use Spatie\Permission\Models\Role;
     'event',
     'event_start',
     'event_end',
-    'status',
+    'state',
 
     'user_id',
     'role_id',
@@ -24,7 +24,7 @@ class Order extends Model
     use HasFactory, HasStates;
 
     protected $casts = [
-        'status' => OrderState::class,
+        'state' => OrderState::class,
     ];
 
     public function role(): BelongsTo
