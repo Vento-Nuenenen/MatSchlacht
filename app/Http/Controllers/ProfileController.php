@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
@@ -16,7 +19,7 @@ class ProfileController extends Controller
     /**
      * Show the profile edit form.
      */
-    public function edit()
+    public function edit(): Factory|View
     {
         return view('profile.index', [
             'user' => auth()->user(),
@@ -25,6 +28,8 @@ class ProfileController extends Controller
 
     /**
      * Update the user's password.
+     *
+     * @return RedirectResponse
      */
     public function updatePassword(Request $request)
     {
