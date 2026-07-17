@@ -6,10 +6,10 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
+use Password;
 use Spatie\Permission\Models\Role;
+use View;
 
 class UserController extends Controller
 {
@@ -25,7 +25,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View|Factory|Application
+    public function index(): Factory|View
     {
         return view('user.index', ['users' => User::all()]);
     }
@@ -33,7 +33,7 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): Application|Factory|View
+    public function create(): Factory|View
     {
         $roles = Role::all();
 
@@ -50,8 +50,8 @@ class UserController extends Controller
         // Assign selected roles (if any)
         $user->syncRoles($request->input('roles', []));
 
-        if (!$user->isAzureUser()) {
-            \Password::broker()->sendResetLink(['email' => $user->email]);
+        if (! $user->isAzureUser()) {
+            Password::broker()->sendResetLink(['email' => $user->email]);
         }
 
         return redirect()->route('users.index')->with('success', 'Neuer Benutzer wurde erfolgreich erstellt.');
@@ -66,7 +66,7 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'Passwort-Reset für Office 365 Benutzer nicht möglich.');
         }
 
-        \Password::broker()->sendResetLink(['email' => $user->email]);
+        Password::broker()->sendResetLink(['email' => $user->email]);
 
         return redirect()->back()->with('success', 'Passwort-Reset-Link wurde erfolgreich gesendet.');
     }
@@ -82,9 +82,10 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user): Application|Factory|View
+    public function edit(User $user): Factory|View
     {
         $roles = Role::all();
+
         return view('user.edit', compact('user', 'roles'));
     }
 
