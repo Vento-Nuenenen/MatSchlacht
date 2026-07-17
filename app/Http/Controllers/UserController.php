@@ -9,7 +9,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Password;
 use Spatie\Permission\Models\Role;
-use View;
+use Illuminate\View\View;
 
 class UserController extends Controller
 {
