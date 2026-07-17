@@ -12,7 +12,7 @@
         </form>
 
         @if(!$user->isAzureUser())
-            <hr>
+            <hr />
             <div class="mt-3">
                 <form action="{{ route('users.password-reset', $user->id) }}" method="POST">
                     @csrf
