@@ -1,5 +1,3 @@
-<!-- resources/views/users/_form.blade.php -->
-
 @csrf
 
 <div class="mb-3">
@@ -61,14 +59,14 @@
                     <div class="col-md-4">
                         <div class="form-check">
                             <input class="form-check-input"
-                                   type="checkbox"
-                                   name="roles[]"
-                                   value="{{ $role->name }}"
-                                   id="role-{{ $role->id }}"
-                                   {{ $selectedRoles->contains($role->name) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="role-{{ $role->id }}">
-                                {{ $role->name }}
-                            </label>
+                                    type="checkbox"
+                                    name="roles[]"
+                                    value="{{ $role->name }}"
+                                    id="role-{{ $role->id }}"
+                                    {{ $selectedRoles->contains($role->name) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="role-{{ $role->id }}">
+                                    {{ $role->name }}
+                                </label>
                         </div>
                     </div>
                 @empty
