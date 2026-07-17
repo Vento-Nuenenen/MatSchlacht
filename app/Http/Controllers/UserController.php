@@ -7,9 +7,9 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Password;
 use Spatie\Permission\Models\Role;
-use Illuminate\View\View;
 
 class UserController extends Controller
 {
