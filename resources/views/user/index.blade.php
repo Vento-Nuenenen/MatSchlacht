@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                @if (session('status'))
+                @if(session('status'))
                     <div class="alert alert-success" role="alert">
                         {{ session('status') }}
                     </div>
@@ -14,9 +14,9 @@
                     <div class="card-header">Benutzer</div>
                     <div class="card-body">
                         @can('create users')
-                        <a href="{{ route('users.create') }}" class="btn btn-info btn-sm col-12">Neuer Benutzer</a>
-                        <br />
-                        <br />
+                            <a href="{{ route('users.create') }}" class="btn btn-info btn-sm col-12">Neuer Benutzer</a>
+                            <br />
+                            <br />
                         @endcan
 
                         <table class="table table-hover table-bordered table-striped">
@@ -33,7 +33,7 @@
                                 @foreach($users as $user)
                                     <tr>
                                         <td>{{ $user->scoutname }}</td>
-                                        <td>{{ $user->firstname . " " . $user->lastname }}</td>
+                                        <td>{{ $user->fullName(false) }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>
                                             @foreach($user->roles as $role)
@@ -41,7 +41,7 @@
                                             @endforeach
                                         </td>
                                         <td>
-                                            @if($user->azure_id)
+                                            @if($user->isAzureUser())
                                                 <span class="badge bg-primary">Azure AD</span>
                                             @else
                                                 <span class="badge bg-secondary">Lokal</span>
@@ -55,7 +55,7 @@
                                             @endcan
 
                                             @if(!$user->isAzureUser())
-                                                <form action="{{ route('users.password-reset', $user->id) }}" method="POST" style="display:inline;">
+                                                <form action="{{ route('users.password-reset', $user->id) }}" method="POST" style="display: inline;">
                                                     @csrf
                                                     <button type="submit" class="btn btn-secondary btn-sm">Passwort-Reset</button>
                                                 </form>
