@@ -3,11 +3,11 @@
 @section('content')
     <div class="container">
         <h2>Materialgruppe bearbeiten</h2>
-        <form method="POST" action="{{ route('itemgroups.update', $itemgroup->id) }}">
+        <form method="POST" action="{{ route('item-groups.update', $itemGroup->id) }}">
             @method('PUT')
             @include('item-group.form', [
                 'buttonText' => 'Speichern',
-                'itemgroup' => $itemgroup
+                'itemGroup' => $itemGroup,
             ])
         </form>
     </div>
