@@ -14,7 +14,7 @@
                     <div class="card-header">Materialgruppen</div>
                     <div class="card-body">
                         @can('create itemgroups')
-                            <a href="{{ route('itemgroups.create') }}" class="btn btn-info btn-sm col-12">Neue Materialgruppe erstellen</a>
+                            <a href="{{ route('item-groups.create') }}" class="btn btn-info btn-sm col-12">Neue Materialgruppe erstellen</a>
                             <br />
                             <br />
                         @endcan
@@ -32,12 +32,12 @@
                                     <td>{{ $itemGroup->name }}</td>
                                     <td>
                                         @can('edit itemgroups')
-                                            <a href="{{ route('itemgroups.edit', $itemGroup->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                                            <a href="{{ route('item-groups.edit', $itemGroup->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
                                             &nbsp;
                                         @endcan
                                         @can('delete itemgroups')
                                             @include('components.delete', [
-                                                'route' => 'itemgroups.destroy',
+                                                'route' => 'item-groups.destroy',
                                                 'id' => $itemGroup->id,
                                             ])
                                         @endcan
