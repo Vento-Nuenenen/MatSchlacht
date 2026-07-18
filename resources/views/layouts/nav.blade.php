@@ -50,7 +50,7 @@
                                 <a class="dropdown-item" href="{{ route('users.index') }}">Benutzer</a>
                             @endcan
                             @canany(['view roles', 'create roles', 'update roles', 'delete roles'])
-                                <a class="dropdown-item" href="{{ route('roles.index') }}">Einheiten</a>
+                                <a class="dropdown-item" href="{{ route('roles.index') }}">Einheiten & Berechtigungen</a>
                             @endcan
                             @can('manage azure mappings')
                                 <a class="dropdown-item" href="{{ route('azure-group-role-mappings.index') }}">Azure Group Mappings</a>
