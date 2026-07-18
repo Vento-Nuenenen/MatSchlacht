@@ -1,3 +1,5 @@
+@csrf
+
 <div class="mb-3">
     <label for="name" class="form-label">Einheit Name</label>
     <input type="text" class="form-control @error('name') is-invalid @enderror"
