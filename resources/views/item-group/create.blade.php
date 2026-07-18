@@ -6,7 +6,7 @@
         <form method="POST" action="{{ route('itemgroups.store') }}">
             @include('item-group.form', [
                 'buttonText' => 'Erstellen',
-                'itemGroup' => null
+                'itemGroup' => null,
             ])
         </form>
     </div>
