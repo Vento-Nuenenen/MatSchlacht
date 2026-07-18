@@ -21,6 +21,7 @@ class ItemController extends Controller
         $this->middleware('permission:edit items')->only(['edit', 'update']);
         $this->middleware('permission:delete items')->only('destroy');
     }
+
     /**
      * Display a listing of the resource.
      */
