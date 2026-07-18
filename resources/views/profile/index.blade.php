@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             @if (session('success'))
                 <div class="alert alert-success" role="alert">
                     {{ session('success') }}
@@ -17,23 +17,22 @@
 
             <div class="card">
                 <div class="card-header">Profil</div>
-
                 <div class="card-body">
                     <div class="mb-4">
                         <h5>Benutzerinformationen</h5>
                         <p>
-                            <strong>Name:</strong> {{ $user->fullName() }}<br>
-                            <strong>E-Mail:</strong> {{ $user->email }}<br>
+                            <strong>Name:</strong> {{ $user->fullName() }} <br />
+                            <strong>E-Mail:</strong> {{ $user->email }} <br />
                             <strong>Benutzertyp: &nbsp;</strong>
                             @if($user->isAzureUser())
                                 <span class="badge bg-info text-dark">Azure Benutzer</span>
                             @else
-                                <span class="badge bg-secondary">Interner Benutzer</span>
+                                <span class="badge bg-secondary">Nativer Benutzer</span>
                             @endif
                         </p>
                     </div>
 
-                    <hr>
+                    <hr />
 
                     @if($user->isAzureUser())
                         <div class="alert alert-info">
