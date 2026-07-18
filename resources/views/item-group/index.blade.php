@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                @if (session('status'))
+                @if(session('status'))
                     <div class="alert alert-success" role="alert">
                         {{ session('status') }}
                     </div>
@@ -12,12 +12,11 @@
 
                 <div class="card">
                     <div class="card-header">Materialgruppen</div>
-
                     <div class="card-body">
                         @can('create itemgroups')
-                        <a href="{{ route('itemgroups.create') }}" class="btn btn-info btn-sm col-12">Neue Materialgruppe</a>
-                        <br />
-                        <br />
+                            <a href="{{ route('itemgroups.create') }}" class="btn btn-info btn-sm col-12">Neue Materialgruppe erstellen</a>
+                            <br />
+                            <br />
                         @endcan
 
                         <table class="table table-hover table-bordered table-striped">
@@ -33,14 +32,14 @@
                                     <td>{{ $itemGroup->name }}</td>
                                     <td>
                                         @can('edit itemgroups')
-                                        <a href="{{ route('itemgroups.edit', $itemGroup->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
-                                        &nbsp;
+                                            <a href="{{ route('itemgroups.edit', $itemGroup->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                                            &nbsp;
                                         @endcan
                                         @can('delete itemgroups')
-                                        @include('components.delete', [
-                                            'route' => 'itemgroups.destroy',
-                                            'id' => $itemGroup->id
-                                        ])
+                                            @include('components.delete', [
+                                                'route' => 'itemgroups.destroy',
+                                                'id' => $itemGroup->id,
+                                            ])
                                         @endcan
                                     </td>
                                 </tr>
