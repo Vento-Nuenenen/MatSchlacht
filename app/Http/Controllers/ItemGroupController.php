@@ -43,7 +43,7 @@ class ItemGroupController extends Controller
     {
         ItemGroup::create($request->validated());
 
-        return redirect()->route('itemgroups.index')->with('success', 'Neue Materialgruppe wurde erfolgreich erstellt.');
+        return redirect()->route('item-groups.index')->with('success', 'Neue Materialgruppe wurde erfolgreich erstellt.');
     }
 
     /**
@@ -69,7 +69,7 @@ class ItemGroupController extends Controller
     {
         $itemGroup->update($request->validated());
 
-        return redirect()->route('itemgroups.index')->with('success', 'Materialgruppe wurde erfolgreich aktualisiert.');
+        return redirect()->route('item-groups.index')->with('success', 'Materialgruppe wurde erfolgreich aktualisiert.');
     }
 
     /**
@@ -79,6 +79,6 @@ class ItemGroupController extends Controller
     {
         $itemGroup->delete();
 
-        return redirect()->route('itemgroups.index')->with('success', 'Materialgruppe wurde erfolgreich gelöscht.');
+        return redirect()->route('item-groups.index')->with('success', 'Materialgruppe wurde erfolgreich gelöscht.');
     }
 }
