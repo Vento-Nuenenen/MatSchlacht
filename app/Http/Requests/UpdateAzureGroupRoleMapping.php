@@ -23,8 +23,8 @@ class UpdateAzureGroupRoleMapping extends FormRequest
     public function rules(): array
     {
         return [
-            'azure_group_id' => '',
-            'role_name' => '',
+            'azure_group_id' => 'required|string|unique:azure_group_role_mappings,azure_group_id',
+            'role_name' => 'required|string|exists:roles,name',
         ];
     }
 }
