@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAzureGroupRoleMapping;
 use App\Http\Requests\UpdateAzureGroupRoleMapping;
 use App\Models\AzureGroupRoleMapping;
-use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 
 class AzureGroupRoleMappingController extends Controller
