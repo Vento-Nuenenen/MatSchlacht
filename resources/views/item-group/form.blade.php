@@ -2,15 +2,14 @@
 
 <div class="mb-3">
     <label for="name" class="form-label">Bezeichnung</label>
-    <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $itemgroup->name ?? '') }}" required>
+    <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $itemGroup->name ?? '') }}" required>
 
     @error('name')
-        <div class="text-danger">{{ $message }}</div>
         <div class="text-danger">{{ $message }}</div>
     @enderror
 </div>
 
-<input type="hidden" name="position" value="{{ $itemgroup->position ?? 0 }}" />
+<input type="hidden" name="position" value="{{ $itemGroup->position ?? 0 }}" />
 
 <br />
 
