@@ -23,7 +23,7 @@
         "@vueuse/core": "^14.3.0",
         "axios": "^1.18.1",
         "bootstrap": "^5.2.3",
-        "concurrently": "^9.0.1",
+        "concurrently": "^10.0.3",
         "eslint": "^9.17.0",
         "eslint-config-prettier": "^10.0.1",
         "eslint-import-resolver-typescript": "^4.4.4",
