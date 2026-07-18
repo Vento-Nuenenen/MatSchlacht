@@ -2818,8 +2818,10 @@ namespace PHPSTORM_META {
 'storage.local.upload',);
         registerArgumentsSet('views', 
 'auth.login','auth.passwords.confirm','auth.passwords.email','auth.passwords.reset','auth.register',
-'auth.verify','components.delete','item.create','item.edit','item.form',
-'item.index','layouts.app','layouts.nav','overwatch.index','profile.index',
+'auth.verify','azure_mappings.create','azure_mappings.index','components.delete','item-group.create',
+'item-group.edit','item-group.form','item-group.index','item.create','item.edit',
+'item.form','item.index','layouts.app','layouts.nav','overwatch.index',
+'profile.index','role.create','role.edit','role.form','role.index',
 'user.create','user.edit','user.form','user.index','laravel-exceptions-renderer::components.badge',
 'laravel-exceptions-renderer::components.empty-state','laravel-exceptions-renderer::components.file-with-line','laravel-exceptions-renderer::components.formatted-source','laravel-exceptions-renderer::components.frame','laravel-exceptions-renderer::components.frame-code',
 'laravel-exceptions-renderer::components.header','laravel-exceptions-renderer::components.http-method','laravel-exceptions-renderer::components.icons.alert','laravel-exceptions-renderer::components.icons.check','laravel-exceptions-renderer::components.icons.chevron-left',
