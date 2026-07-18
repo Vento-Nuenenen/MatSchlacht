@@ -26,7 +26,7 @@ class OrderFactory extends Factory
             'event_end' => now()->addDays(fake()->numberBetween(11, 20)),
             'state' => Stored::class,
             'user_id' => User::factory(),
-            'role_id' => Role::first()?->id ?? Role::create(['name' => 'TestRole'])->id,
+            'role_id' => Role::first()->id ?? Role::create(['name' => 'TestRole'])->id,
         ];
     }
 }
