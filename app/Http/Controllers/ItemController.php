@@ -8,7 +8,6 @@ use App\Models\Item;
 use App\Models\ItemGroup;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -22,11 +21,10 @@ class ItemController extends Controller
         $this->middleware('permission:edit items')->only(['edit', 'update']);
         $this->middleware('permission:delete items')->only('destroy');
     }
-
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View|Factory|Application
+    public function index(Request $request): View|Factory
     {
         $query = Item::query();
 
@@ -47,7 +45,7 @@ class ItemController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): Application|Factory|View
+    public function create(): Factory|View
     {
         return view('item.create', ['itemGroups' => ItemGroup::all()]);
     }
@@ -65,7 +63,7 @@ class ItemController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Item $item): Application|Factory|View
+    public function edit(Item $item): Factory|View
     {
         $itemGroups = ItemGroup::all();
 
