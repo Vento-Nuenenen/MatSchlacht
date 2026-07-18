@@ -1,5 +1,3 @@
-<!-- resources/views/item-group/form.blade.php -->
-
 @csrf
 
 <div class="mb-3">
@@ -7,6 +5,7 @@
     <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $itemgroup->name ?? '') }}" required>
 
     @error('name')
+        <div class="text-danger">{{ $message }}</div>
         <div class="text-danger">{{ $message }}</div>
     @enderror
 </div>
