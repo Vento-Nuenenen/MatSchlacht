@@ -35,7 +35,7 @@
                                 <a class="dropdown-item" href="{{ route('items.index') }}">Material</a>
                             @endcan
                             @canany(['view itemgroups', 'create itemgroups', 'update itemgroups', 'delete itemgroups'])
-                                <a class="dropdown-item" href="{{ route('itemgroups.index') }}">Materialgruppen</a>
+                                <a class="dropdown-item" href="{{ route('item-groups.index') }}">Materialgruppen</a>
                             @endcan
                         </div>
                     </li>
