@@ -4,7 +4,6 @@
     <div class="container">
         <h2>Einheit & Berechtigung erstellen</h2>
         <form method="POST" action="{{ route('roles.store') }}">
-            @csrf
             @include('role.form', [
                 'buttonText' => 'Erstellen',
                 'role' => null
