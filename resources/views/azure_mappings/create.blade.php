@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <h2>Create Azure Mapping</h2>
+        <h2>Azure Mapping erstellen</h2>
         <form method="POST" action="{{ route('azure-group-role-mappings.store') }}">
             @include('azure_mappings.form', [
                 'buttonText' => 'Erstellen',
