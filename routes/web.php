@@ -5,6 +5,7 @@ use App\Http\Controllers\AzureGroupRoleMappingController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemGroupController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderManagementController;
 use App\Http\Controllers\OverwatchController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RolePermissionController;
