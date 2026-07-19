@@ -6,15 +6,13 @@ use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Item;
 use App\Models\Order;
 use App\States\Order\Accepted;
-use App\States\Order\Archived;
 use App\States\Order\Committed;
 use App\States\Order\Delivered;
 use App\States\Order\Returned;
 use App\States\Order\Stored;
-use Elibyy\TCPDF\Facades\TCPDF;
-use Illuminate\Contracts\View\Factory;
+use Elibyy\TCPDF\TCPDF;
+use Faker\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -25,7 +23,10 @@ class OrderManagementController extends Controller
         $this->middleware(['auth', 'permission:edit orders']);
     }
 
-    public function index(): Application|Factory|View
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(): Factory|View
     {
         $stateClasses = [
             Stored::class,
@@ -33,25 +34,30 @@ class OrderManagementController extends Controller
             Accepted::class,
             Delivered::class,
             Returned::class,
-            Archived::class,
         ];
 
-        return view('manage.index', [
+        return view('order-management.index', [
             'orders' => Order::all(),
             'stateClasses' => $stateClasses,
         ]);
     }
 
-    public function edit(Order $order): Application|Factory|View
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Order $order): Factory|View
     {
         $items = Item::with('itemGroup')->orderBy('name')->get();
 
-        return view('manage.edit', [
+        return view('order-management.edit', [
             'order' => $order->load('orderedItems.item', 'role', 'user'),
             'items' => $items,
         ]);
     }
 
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(UpdateOrderRequest $request, Order $order): RedirectResponse
     {
         $data = $request->validated();
@@ -64,7 +70,7 @@ class OrderManagementController extends Controller
             'user_id' => $data['user_id'],
         ]);
 
-        if ($order->status->equals(Delivered::class)) {
+        if ($order->state->equals(Delivered::class)) {
             // In Delivered state, we update 'returned' and keep 'quantity' as is
             $returned = $data['returned'] ?? [];
             foreach ($returned as $itemId => $qty) {
@@ -101,25 +107,25 @@ class OrderManagementController extends Controller
             }
         }
 
-        return redirect()->route('manage.edit', $order)->with('success', 'Bestellung wurde erfolgreich aktualisiert.');
+        return redirect()->route('orders.manage.edit', $order)->with('success', 'Bestellung wurde erfolgreich aktualisiert.');
     }
 
     public function transition(Request $request, Order $order): RedirectResponse
     {
         $to = $request->input('to');
 
-        if (!$order->status->canTransitionTo($to)) {
+        if (!$order->state->canTransitionTo($to)) {
             return back()->with('error', 'Ungültiger Statusübergang.');
         }
 
-        $order->status->transitionTo($to);
+        $order->state->transitionTo($to);
 
         return back()->with('success', 'Bestellstatus wurde aktualisiert.');
     }
 
     public function exportPdf(Order $order)
     {
-        if (!$order->status->equals(Accepted::class)) {
+        if (!$order->state->equals(Accepted::class)) {
             return back()->with('error', 'PDF Export ist nur für bestätigte Bestellungen möglich.');
         }
 
