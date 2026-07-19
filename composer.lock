@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "69adac532f379a32ddb720c7ad3ca278",
+    "content-hash": "ba12bc99d135440de0868f09dfe29531",
     "packages": [
         {
             "name": "brick/math",
@@ -5108,28 +5108,28 @@
             "time": "2026-03-18T22:13:24+00:00"
         },
         {
-            "name": "socialiteproviders/microsoft-azure",
-            "version": "5.2.0",
+            "name": "socialiteproviders/microsoft",
+            "version": "4.9.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/SocialiteProviders/Microsoft-Azure.git",
-                "reference": "453d62c9d7e3b3b76e94c913fb46e68a33347b16"
+                "url": "https://github.com/SocialiteProviders/Microsoft.git",
+                "reference": "664c946a57994abeeca0208c3ed187dd3d73ccc4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SocialiteProviders/Microsoft-Azure/zipball/453d62c9d7e3b3b76e94c913fb46e68a33347b16",
-                "reference": "453d62c9d7e3b3b76e94c913fb46e68a33347b16",
+                "url": "https://api.github.com/repos/SocialiteProviders/Microsoft/zipball/664c946a57994abeeca0208c3ed187dd3d73ccc4",
+                "reference": "664c946a57994abeeca0208c3ed187dd3d73ccc4",
                 "shasum": ""
             },
             "require": {
-                "ext-json": "*",
+                "firebase/php-jwt": "^7.0",
                 "php": "^8.0",
                 "socialiteproviders/manager": "^4.4"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "SocialiteProviders\\Azure\\": ""
+                    "SocialiteProviders\\Microsoft\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -5138,13 +5138,12 @@
             ],
             "authors": [
                 {
-                    "name": "Chris Hemmings",
-                    "email": "chris@hemmin.gs"
+                    "name": "Brian Faust",
+                    "email": "hello@brianfaust.de"
                 }
             ],
-            "description": "Microsoft Azure OAuth2 Provider for Laravel Socialite",
+            "description": "Microsoft OAuth2 Provider for Laravel Socialite",
             "keywords": [
-                "azure",
                 "laravel",
                 "microsoft",
                 "oauth",
@@ -5152,11 +5151,11 @@
                 "socialite"
             ],
             "support": {
-                "docs": "https://socialiteproviders.com/microsoft-azure",
+                "docs": "https://socialiteproviders.com/microsoft",
                 "issues": "https://github.com/socialiteproviders/providers/issues",
                 "source": "https://github.com/socialiteproviders/providers"
             },
-            "time": "2024-03-15T03:02:10+00:00"
+            "time": "2026-03-26T00:32:34+00:00"
         },
         {
             "name": "spatie/laravel-model-states",
