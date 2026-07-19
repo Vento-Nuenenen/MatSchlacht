@@ -10,7 +10,7 @@ use App\States\Order\Committed;
 use App\States\Order\Delivered;
 use App\States\Order\Returned;
 use App\States\Order\Stored;
-use Elibyy\TCPDF\TCPDF;
+use Elibyy\TCPDF\Facades\TCPDF;
 use Faker\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -114,7 +114,7 @@ class OrderManagementController extends Controller
     {
         $to = $request->input('to');
 
-        if (!$order->state->canTransitionTo($to)) {
+        if (! $order->state->canTransitionTo($to)) {
             return back()->with('error', 'Ungültiger Statusübergang.');
         }
 
@@ -131,10 +131,10 @@ class OrderManagementController extends Controller
 
         $order->load(['orderedItems.item', 'role', 'user']);
 
-        $view = view('manage.pdf', compact('order'));
+        $view = view('order-management.pdf', compact('order'));
         $html = $view->render();
 
-        TCPDF::SetTitle('Auftragsliste - ' . $order->event);
+        TCPDF::SetTitle('Auftragsliste - '.$order->event);
         TCPDF::AddPage();
         TCPDF::writeHTML($html, true, false, true, false, '');
 
