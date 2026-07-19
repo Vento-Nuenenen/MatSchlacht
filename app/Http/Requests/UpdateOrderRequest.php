@@ -33,6 +33,9 @@ class UpdateOrderRequest extends FormRequest
             'items' => 'nullable|array',
             'items.*' => 'nullable|integer|min:0',
 
+            'collections' => 'nullable|array',
+            'collections.*' => 'exists:item_collections,id',
+
             'returned' => 'nullable|array',
             'returned.*' => 'nullable|integer|min:0',
 
