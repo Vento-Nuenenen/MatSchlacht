@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AzureController;
 use App\Http\Controllers\AzureGroupRoleMappingController;
+use App\Http\Controllers\ItemCollectionController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemGroupController;
 use App\Http\Controllers\OrderController;
@@ -24,8 +25,9 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('users', UserController::class);
     Route::post('users/{user}/password-reset', [UserController::class, 'sendResetLink'])->name('users.password-reset');
-    Route::resource('itemgroups', ItemGroupController::class);
+    Route::resource('item-groups', ItemGroupController::class);
     Route::resource('items', ItemController::class);
+    Route::resource('item-collections', ItemCollectionController::class);
     Route::resource('orders', OrderController::class);
     Route::get('/manage/orders', [OrderManagementController::class, 'index'])->name('orders.manage');
     Route::get('/manage/orders/{order}/edit', [OrderManagementController::class, 'edit'])->name('orders.manage.edit');
