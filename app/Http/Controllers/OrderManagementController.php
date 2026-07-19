@@ -125,7 +125,7 @@ class OrderManagementController extends Controller
 
     public function exportPdf(Order $order)
     {
-        if (!$order->state->equals(Accepted::class)) {
+        if (! $order->state->equals(Accepted::class)) {
             return back()->with('error', 'PDF Export ist nur für bestätigte Bestellungen möglich.');
         }
 
@@ -138,7 +138,7 @@ class OrderManagementController extends Controller
         TCPDF::AddPage();
         TCPDF::writeHTML($html, true, false, true, false, '');
 
-        return response(TCPDF::Output($order->id . '_auftragsliste.pdf', 'S'), 200)
+        return response(TCPDF::Output($order->id.'_auftragsliste.pdf', 'S'), 200)
             ->header('Content-Type', 'application/pdf');
     }
 }
