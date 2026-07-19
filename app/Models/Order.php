@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\ModelStates\HasStates;
 use Spatie\Permission\Models\Role;
@@ -41,5 +42,10 @@ class Order extends Model
     public function orderedItems(): HasMany
     {
         return $this->hasMany(OrderedItem::class);
+    }
+
+    public function itemCollections(): BelongsToMany
+    {
+        return $this->belongsToMany(ItemCollection::class, 'order_item_collection');
     }
 }
