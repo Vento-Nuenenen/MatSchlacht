@@ -6,18 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Exception;
 use Http;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
 class AzureController extends Controller
 {
-    public function redirectToAzure()
+    public function redirectToAzure(): Socialite
     {
         return Socialite::driver('azure')
             ->scopes(['User.Read', 'GroupMember.Read.All'])
             ->redirect();
     }
 
-    public function handleAzureCallback()
+    public function handleAzureCallback(): RedirectResponse
     {
         try {
             $azureUser = Socialite::driver('azure')->user();
