@@ -29,7 +29,7 @@ class RolePermissionController extends Controller
         return view('role.index', compact('roles', 'permissions'));
     }
 
-    public function create(): Factory|View
+    public function create()
     {
         $permissions = Permission::all();
 
@@ -45,16 +45,16 @@ class RolePermissionController extends Controller
             'guard_name' => $data['guard_name'] ?? 'web',
         ]);
 
-        if (!empty($data['permissions'] ?? null)) {
+        if (! empty($data['permissions'] ?? null)) {
             $role->syncPermissions($data['permissions']);
         }
 
         return redirect()->route('roles.index')->with('success', 'Rolle erfolgreich erstellt!');
     }
 
-    public function edit($id): Factory|View|RedirectResponse
+    public function edit(Role $role)
     {
-        $role = Role::with('permissions')->findOrFail($id);
+        $role = Role::with('permissions')->findOrFail($role->id);
 
         if ($role->name === 'Materialwart') {
             return redirect()->route('roles.index')->with('error', 'Die Rolle Materialwart kann nicht bearbeitet werden.');
@@ -65,18 +65,16 @@ class RolePermissionController extends Controller
         return view('role.edit', compact('role', 'permissions'));
     }
 
-    public function update(UpdateRoleRequest $request, $id): RedirectResponse
+    public function update(UpdateRoleRequest $request, Role $role)
     {
-        $role = Role::findOrFail($id);
+        $role = Role::findOrFail($role->id);
 
         if ($role->name === 'Materialwart') {
             return redirect()->route('roles.index')->with('error', 'Die Rolle Materialwart kann nicht bearbeitet werden.');
         }
 
-        $data = $request->validated();
-
         $role->name = $data['name'];
-        if (!empty($data['guard_name'])) {
+        if (! empty($data['guard_name'])) {
             $role->guard_name = $data['guard_name'];
         }
         $role->save();
