@@ -1,6 +1,6 @@
 <div class="mb-3">
     <label class="form-label">Materialien</label>
-    <input type="text" id="itemSearch" class="form-control" placeholder="Suchen…" oninput="filterItems()">
+    <input type="text" id="itemSearch" class="form-control" placeholder="Suchen…" oninput="filterItems()" />
 </div>
 
 <div id="itemsContainer">
@@ -10,18 +10,18 @@
     @endphp
 
     @foreach($grouped as $groupKey => $groupItems)
-        @php [$pos,$groupName] = array_pad(explode('|',$groupKey,2),2,'Sonstiges'); @endphp
+        @php [$pos, $groupName] = array_pad(explode('|', $groupKey, 2), 2, 'Sonstiges') @endphp
         <div class="card mb-3 item-group">
-            <div class="card-header fw-bold">{{ $groupName }}</div>
+            <div class="card-header">{{ $groupName }}</div>
             <div class="card-body">
                 <table class="table table-sm mb-0">
                     <thead>
                     <tr>
                         <th scope="col" class="col-6">Name</th>
                         <th scope="col" class="col-2">Verfügbar</th>
-                        <th scope="col" class="col-{{ isset($order) && ($order->status->equals(\App\States\Order\Delivered::class) || $order->status->equals(\App\States\Order\Returned::class) || $order->status->equals(\App\States\Order\Archived::class)) ? '1' : '2' }}">Packungsgrösse</th>
-                        <th scope="col" class="col-{{ isset($order) && ($order->status->equals(\App\States\Order\Delivered::class) || $order->status->equals(\App\States\Order\Returned::class) || $order->status->equals(\App\States\Order\Archived::class)) ? '1' : '2' }}">Bestellen</th>
-                        @if(isset($order) && ($order->status->equals(\App\States\Order\Delivered::class) || $order->status->equals(\App\States\Order\Returned::class) || $order->status->equals(\App\States\Order\Archived::class)))
+                        <th scope="col" class="col-{{ isset($order) && ($order->state->equals(\App\States\Order\Delivered::class) || $order->state->equals(\App\States\Order\Returned::class) || $order->state->equals(\App\States\Order\Archived::class)) ? '1' : '2' }}">Packungsgrösse</th>
+                        <th scope="col" class="col-{{ isset($order) && ($order->state->equals(\App\States\Order\Delivered::class) || $order->state->equals(\App\States\Order\Returned::class) || $order->state->equals(\App\States\Order\Archived::class)) ? '1' : '2' }}">Bestellen</th>
+                        @if(isset($order) && ($order->state->equals(\App\States\Order\Delivered::class) || $order->state->equals(\App\States\Order\Returned::class) || $order->state->equals(\App\States\Order\Archived::class)))
                             <th scope="col" class="col-2">Zurückgegeben</th>
                         @endif
                     </tr>
@@ -47,9 +47,9 @@
                                     class="form-control form-control-sm"
                                     name="items[{{ $item->id }}]"
                                     value="{{ $displayQty }}"
-                                    {{ isset($order) && ($order->status->equals(\App\States\Order\Delivered::class) || $order->status->equals(\App\States\Order\Returned::class) || $order->status->equals(\App\States\Order\Archived::class)) ? 'readonly' : '' }}>
+                                    {{ isset($order) && ($order->state->equals(\App\States\Order\Delivered::class) || $order->state->equals(\App\States\Order\Returned::class) || $order->state->equals(\App\States\Order\Archived::class)) ? 'readonly' : '' }}>
                             </td>
-                            @if(isset($order) && ($order->status->equals(\App\States\Order\Delivered::class) || $order->status->equals(\App\States\Order\Returned::class) || $order->status->equals(\App\States\Order\Archived::class)))
+                            @if(isset($order) && ($order->state->equals(\App\States\Order\Delivered::class) || $order->state->equals(\App\States\Order\Returned::class) || $order->state->equals(\App\States\Order\Archived::class)))
                                 <td>
                                     @if($actualQty > 0)
                                         <input
@@ -58,7 +58,7 @@
                                             class="form-control form-control-sm"
                                             name="returned[{{ $item->id }}]"
                                             value="{{ $displayReturnedQty }}"
-                                            {{ $order->status->equals(\App\States\Order\Returned::class) || $order->status->equals(\App\States\Order\Archived::class) ? 'readonly' : '' }}>
+                                            {{ $order->state->equals(\App\States\Order\Returned::class) || $order->state->equals(\App\States\Order\Archived::class) ? 'readonly' : '' }}>
                                     @else
                                         -
                                     @endif
