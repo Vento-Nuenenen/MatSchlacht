@@ -3,18 +3,19 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\AzureGroupRoleMapping;
 use App\Models\User;
 use Exception;
-use Http;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
 
 class AzureController extends Controller
 {
-    public function redirectToAzure(): Socialite
+    public function redirectToAzure(): RedirectResponse
     {
-        return Socialite::driver('azure')
+        return Socialite::driver('microsoft')
             ->scopes(['User.Read', 'GroupMember.Read.All'])
             ->redirect();
     }
@@ -22,13 +23,13 @@ class AzureController extends Controller
     public function handleAzureCallback(): RedirectResponse
     {
         try {
-            $azureUser = Socialite::driver('azure')->user();
+            $azureUser = Socialite::driver('microsoft')->user();
         } catch (Exception $e) {
             return redirect('/login')->with('error', 'Azure authentication failed.');
         }
 
         // Check for specific tenant if AZURE_TENANT_ID is set and not 'common'
-        $tenantId = config('services.azure.tenant');
+        $tenantId = config('services.microsoft.tenant');
         if ($tenantId && $tenantId !== 'common' && $tenantId !== 'organizations' && $tenantId !== 'consumers') {
             // Socialite azure provider might not directly expose tenant id in the user object easily without extra calls or parsing token
             // but the provider itself handles it if configured.
@@ -59,7 +60,7 @@ class AzureController extends Controller
 
         Auth::login($user);
 
-        return redirect()->intended(route('home'));
+        return redirect()->intended(route('overwatch'));
     }
 
     protected function syncRoles(User $user, string $token)
