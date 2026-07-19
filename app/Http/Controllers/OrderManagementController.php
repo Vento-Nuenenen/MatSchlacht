@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Item;
+use App\Models\ItemCollection;
 use App\Models\Order;
 use App\States\Order\Accepted;
 use App\States\Order\Committed;
@@ -37,7 +38,7 @@ class OrderManagementController extends Controller
         ];
 
         return view('order-management.index', [
-            'orders' => Order::all(),
+            'orders' => Order::with('itemCollections', 'role', 'user')->get(),
             'stateClasses' => $stateClasses,
         ]);
     }
@@ -48,10 +49,12 @@ class OrderManagementController extends Controller
     public function edit(Order $order): Factory|View
     {
         $items = Item::with('itemGroup')->orderBy('name')->get();
+        $collections = ItemCollection::with('items')->get();
 
         return view('order-management.edit', [
             'order' => $order->load('orderedItems.item', 'role', 'user'),
             'items' => $items,
+            'collections' => $collections,
         ]);
     }
 
@@ -107,6 +110,11 @@ class OrderManagementController extends Controller
             }
         }
 
+        $order->itemCollections()->detach();
+        foreach ($data['collections'] ?? [] as $collectionId) {
+            $order->itemCollections()->attach($collectionId);
+        }
+
         return redirect()->route('orders.manage.edit', $order)->with('success', 'Bestellung wurde erfolgreich aktualisiert.');
     }
 
@@ -129,7 +137,7 @@ class OrderManagementController extends Controller
             return back()->with('error', 'PDF Export ist nur für bestätigte Bestellungen möglich.');
         }
 
-        $order->load(['orderedItems.item', 'role', 'user']);
+        $order->load(['orderedItems.item', 'role', 'user', 'itemCollections']);
 
         $view = view('order-management.pdf', compact('order'));
         $html = $view->render();
