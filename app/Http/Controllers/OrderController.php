@@ -4,17 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
-use App\Mail\OrderCreated;
 use App\Models\Item;
+use App\Models\ItemCollection;
 use App\Models\Order;
 use App\Models\User;
 use App\States\Order\Stored;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use Mail;
 use Spatie\Permission\Models\Role;
 
 class OrderController extends Controller
@@ -30,9 +29,9 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Application|Factory|View
+    public function index(): Factory|View
     {
-        if (auth()->user()->isPrivileged()){
+        if (auth()->user()->isPrivileged()) {
             $orders = Order::all()->sortBy('event_start');
         } else {
             $orders = Order::where('user_id', auth()->id())->orderBy('event_start')->get();
@@ -41,20 +40,24 @@ class OrderController extends Controller
         return view('order.index', ['orders' => $orders]);
     }
 
-    public function show(Order $order): Application|Factory|View|RedirectResponse
+    /**
+     * Display the specified resource.
+     */
+    public function show(Order $order): Factory|View|RedirectResponse
     {
         if (auth()->user()->isPrivileged()) {
-            return redirect()->route('manage.edit', $order);
+            return redirect()->route('orders.manage.edit', $order);
         }
 
-        $order->load('orderedItems.item.itemGroup');
+        $order->load(['orderedItems.item.itemGroup', 'itemCollections']);
 
-        return view('order.show', [
-            'order' => $order,
-        ]);
+        return view('order.show', compact('order'));
     }
 
-    public function create(): Application|Factory|View
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create(): Factory|View|RedirectResponse
     {
         $user = auth()->user();
 
@@ -72,22 +75,28 @@ class OrderController extends Controller
         $items = Item::with('itemGroup')
             ->orderBy('name')->get();
 
+        $collections = ItemCollection::with('items')->get();
+
         return view('order.create', [
             'users' => $users,
             'roles' => $roles,
             'items' => $items,
+            'collections' => $collections,
         ]);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(StoreOrderRequest $request): RedirectResponse
     {
         $data = $request->validated();
 
         $user = auth()->user();
 
-        if (!$user->isPrivileged()) {
+        if (! $user->isPrivileged()) {
             // Check if user has the role
-            if (!$user->hasRole(Role::findById($data['role_id'])->name)) {
+            if (! $user->hasRole(Role::findById($data['role_id'])->name)) {
                 return back()->withErrors(['role_id' => 'Sie haben keine Berechtigung für diese Einheit zu bestellen.'])->withInput();
             }
 
@@ -138,6 +147,11 @@ class OrderController extends Controller
             }
         }
 
+        $order->itemCollections()->detach();
+        foreach ($data['collections'] ?? [] as $collectionId) {
+            $order->itemCollections()->attach($collectionId);
+        }
+
         // Send notification email to users in the selected role (best-effort)
         try {
             $role = Role::find($data['role_id']);
@@ -153,7 +167,7 @@ class OrderController extends Controller
 
             if ($recipients->isNotEmpty()) {
                 foreach ($recipients as $user) {
-                    if (!empty($user->email)) {
+                    if (! empty($user->email)) {
                         Mail::to($user->email)->send(new OrderCreated($order));
                     }
                 }
@@ -165,7 +179,10 @@ class OrderController extends Controller
         return redirect()->route('orders.index')->with('success', 'Neue Bestellung wurde erfolgreich erstellt.');
     }
 
-    public function edit(Order $order): Application|Factory|View
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Order $order): Factory|View
     {
         $user = auth()->user();
         if ($user->cannot('edit orders')) {
@@ -178,7 +195,7 @@ class OrderController extends Controller
             }
         }
 
-        if (!$order->status->equals(Stored::class)) {
+        if (! $order->state->equals(Stored::class)) {
             abort(403, 'Nur Entwürfe können bearbeitet werden.');
         }
 
@@ -193,19 +210,24 @@ class OrderController extends Controller
             })->get();
 
             // Ensure the order's role and user are included even if they are not in current user's scope (should not happen normally but for safety)
-            if (!$roles->contains('id', $order->role_id)) {
+            if (! $roles->contains('id', $order->role_id)) {
                 $roles->push($order->role);
             }
-            if (!$users->contains('id', $order->user_id)) {
+
+            if (! $users->contains('id', $order->user_id)) {
                 $users->push($order->user);
             }
         }
 
         $items = Item::with('itemGroup')->orderBy('name')->get();
+        $collections = ItemCollection::with('items')->get();
 
-        return view('order.edit', compact('order', 'users', 'roles', 'items'));
+        return view('order.edit', compact('order', 'users', 'roles', 'items', 'collections'));
     }
 
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(UpdateOrderRequest $request, Order $order): RedirectResponse
     {
         $user = auth()->user();
@@ -220,17 +242,17 @@ class OrderController extends Controller
             }
         }
 
-        if (!$order->status->equals(Stored::class) && !$user->isPrivileged()) {
-            if (!$user->can('edit orders')) {
+        if (! $order->state->equals(Stored::class) && ! $user->isPrivileged()) {
+            if (! $user->can('edit orders')) {
                 return redirect()->route('orders.show', $order)->with('error', 'Nur Entwürfe können bearbeitet werden.');
             }
         }
 
         // Basic validation for role_id and user_id if they are in the request
         if ($request->has('role_id') || $request->has('user_id')) {
-            if (!$user->isPrivileged()) {
+            if (! $user->isPrivileged()) {
                 if ($request->has('role_id')) {
-                    if (!$user->hasRole(Role::findById($request->role_id)->name)) {
+                    if (! $user->hasRole(Role::findById($request->role_id)->name)) {
                         return back()->withErrors(['role_id' => 'Sie haben keine Berechtigung für diese Einheit zu bestellen.'])->withInput();
                     }
                 }
@@ -239,7 +261,7 @@ class OrderController extends Controller
                     $sharedRoles = $user->roles->intersect($targetUser->roles);
                     if ($sharedRoles->isEmpty()) {
                         // Allow if it's the current user_id of the order (in case it was already out of scope)
-                        if ($targetUser->id != $order->user_id) {
+                        if ($targetUser->id !== $order->user_id) {
                             return back()->withErrors(['user_id' => 'Die ausgewählte Person ist nicht in Ihrem Bereich.'])->withInput();
                         }
                     }
@@ -274,6 +296,7 @@ class OrderController extends Controller
             $qty = (int) $qty;
             if ($qty > 0) {
                 $item = Item::find($itemId);
+
                 if ($item && $item->lot > 1) {
                     $qty = $qty * $item->lot;
                 }
@@ -288,6 +311,11 @@ class OrderController extends Controller
                     'broken' => 0,
                 ]);
             }
+        }
+
+        $order->itemCollections()->detach();
+        foreach ($data['collections'] ?? [] as $collectionId) {
+            $order->itemCollections()->attach($collectionId);
         }
 
         return redirect()->route('orders.index')->with('success', 'Bestellung wurde erfolgreich aktualisiert.');
@@ -319,11 +347,11 @@ class OrderController extends Controller
     {
         $to = $request->input('to');
 
-        if (!$order->status->canTransitionTo($to)) {
+        if (! $order->state->canTransitionTo($to)) {
             return back()->with('error', 'Ungültiger Statusübergang.');
         }
 
-        $order->status->transitionTo($to);
+        $order->state->transitionTo($to);
 
         return back()->with('success', 'Bestellstatus wurde aktualisiert.');
     }
