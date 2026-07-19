@@ -14,19 +14,19 @@
                     <div class="card-header">Bestellungen</div>
                     <div class="card-body">
                         @can('create orders')
-                        <a href="{{ route('orders.create') }}" class="btn btn-info btn-sm col-12">Neue Bestellung</a>
-                        <br />
-                        <br />
+                            <a href="{{ route('orders.create') }}" class="btn btn-info btn-sm col-12">Neue Bestellung</a>
+                            <br />
+                            <br />
                         @endcan
 
                         <table class="table table-hover table-bordered table-striped">
                             <thead>
-                            <th>Anlass</th>
-                            <th>Einheit</th>
-                            <th>Vom</th>
-                            <th>Bis</th>
-                            <th>Status</th>
-                            <th>Optionen</th>
+                                <th>Anlass</th>
+                                <th>Einheit</th>
+                                <th>Von</th>
+                                <th>Bis</th>
+                                <th>Status</th>
+                                <th>Optionen</th>
                             </thead>
                             <tbody>
                             @foreach($orders as $order)
@@ -36,24 +36,25 @@
                                     <td>{{ \Carbon\Carbon::parse($order->event_start)->format('d.m.Y') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($order->event_end)->format('d.m.Y') }}</td>
                                     <td>
-                                        <span class="badge bg- bg-{{ $order->status->color() }}">
-                                            {{ $order->status->display() }}
+                                        <span class="badge bg-{{ $order->state->color() }}">
+                                            {{ $order->state->display() }}
                                         </span>
                                     </td>
                                     <td>
                                         <a href="{{ route('orders.show', $order->id) }}" class="btn btn-info btn-sm">Anzeigen</a>
                                         &nbsp;
-                                        @if($order->status->equals(\App\States\Order\Stored::class))
+                                        @if($order->state->equals(\App\States\Order\Stored::class))
                                             @if(auth()->user()->can('edit orders') || (auth()->user()->can('edit own orders') && $order->user_id === auth()->id()))
-                                            <a href="{{ route('orders.edit', $order->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
-                                            &nbsp;
+                                                <a href="{{ route('orders.edit', $order->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                                                &nbsp;
                                             @endif
                                             @if(auth()->user()->can('delete orders') || (auth()->user()->can('delete own orders') && $order->user_id === auth()->id()))
-                                            @include('components.delete', [
-                                                'route' => 'orders.destroy',
-                                                'id' => $order->id
-                                            ])
+                                                @include('components.delete', [
+                                                    'route' => 'orders.destroy',
+                                                    'id' => $order->id,
+                                                ])
                                             @endif
+
                                         @endif
                                     </td>
                                 </tr>
@@ -63,6 +64,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 @endsection
