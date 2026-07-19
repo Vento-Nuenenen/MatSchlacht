@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAzureGroupRoleMapping;
 use App\Http\Requests\UpdateAzureGroupRoleMapping;
 use App\Models\AzureGroupRoleMapping;
+use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 
 class AzureGroupRoleMappingController extends Controller
@@ -18,7 +19,7 @@ class AzureGroupRoleMappingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
         $mappings = AzureGroupRoleMapping::all();
 
