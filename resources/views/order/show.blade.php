@@ -4,17 +4,17 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                @if (session('status'))
+                @if(session('status'))
                     <div class="alert alert-success" role="alert">
                         {{ session('status') }}
                     </div>
                 @endif
-                @if (session('success'))
+                @if(session('success'))
                     <div class="alert alert-success" role="alert">
                         {{ session('success') }}
                     </div>
                 @endif
-                @if (session('error'))
+                @if(session('error'))
                     <div class="alert alert-danger" role="alert">
                         {{ session('error') }}
                     </div>
@@ -23,7 +23,7 @@
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <span>Bestellung Ansehen: <strong>{{ $order->event }}</strong></span>
-                        <span class="badge bg-{{ $order->status->color() }}">{{ $order->status->display() }}</span>
+                        <span class="badge bg-{{ $order->state->color() }}">{{ $order->state->display() }}</span>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -33,13 +33,13 @@
                                     <b>Anlass:</b> {{ $order->event }} <br />
                                     <b>Einheit:</b> {{ $order->role->name }} <br />
                                     <b>Bestellt von:</b> {{ $order->user->fullName() }} <br />
-                                    <b>Vom:</b> {{ \Carbon\Carbon::parse($order->event_start)->format('d.m.Y') }} <br />
+                                    <b>Von:</b> {{ \Carbon\Carbon::parse($order->event_start)->format('d.m.Y') }} <br />
                                     <b>Bis:</b> {{ \Carbon\Carbon::parse($order->event_end)->format('d.m.Y') }} <br />
                                 </p>
                             </div>
                         </div>
 
-                        <hr>
+                        <hr />
 
                         <h5>Details & Material</h5>
 
@@ -48,7 +48,7 @@
                                 <tr>
                                     <th>Material</th>
                                     <th>Bestellt</th>
-                                    @if($order->status->equals(\App\States\Order\Delivered::class) || $order->status->equals(\App\States\Order\Returned::class))
+                                    @if($order->state->equals(\App\States\Order\Delivered::class) || $order->state->equals(\App\States\Order\Returned::class))
                                         <th>Zurückgegeben</th>
                                     @endif
                                     <th>Materialgruppe</th>
@@ -59,7 +59,7 @@
                                 <tr>
                                     <td>{{ $orderedItem->item->name }}</td>
                                     <td>{{ $orderedItem->quantity }}</td>
-                                    @if($order->status->equals(\App\States\Order\Delivered::class) || $order->status->equals(\App\States\Order\Returned::class))
+                                    @if($order->state->equals(\App\States\Order\Delivered::class) || $order->state->equals(\App\States\Order\Returned::class))
                                         <td>{{ $orderedItem->returned }}</td>
                                     @endif
                                     <td>{{ $orderedItem->item->itemGroup?->name ?? 'Sonstiges' }}</td>
