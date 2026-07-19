@@ -35,6 +35,9 @@
                                     <b>Bestellt von:</b> {{ $order->user->fullName() }} <br />
                                     <b>Von:</b> {{ \Carbon\Carbon::parse($order->event_start)->format('d.m.Y') }} <br />
                                     <b>Bis:</b> {{ \Carbon\Carbon::parse($order->event_end)->format('d.m.Y') }} <br />
+                                    @if($order->itemCollections->isNotEmpty())
+                                        <b>Kollektionen:</b> {{ $order->itemCollections->pluck('name')->implode(', ') }} <br />
+                                    @endif
                                 </p>
                             </div>
                         </div>
