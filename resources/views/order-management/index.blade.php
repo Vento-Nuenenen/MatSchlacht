@@ -50,6 +50,8 @@
                                         <tr>
                                             <th>Anlass</th>
                                             <th>Einheit</th>
+                                            <th>Besteller</th>
+                                            <th>Kollektionen</th>
                                             <th>Von</th>
                                             <th>Bis</th>
                                             <th>Optionen</th>
@@ -60,6 +62,16 @@
                                             <tr>
                                                 <td>{{ $order->event }}</td>
                                                 <td>{{ $order->role->name }}</td>
+                                                <td>{{ $order->user->fullName() }}</td>
+                                                <td>
+                                                    @foreach($order->itemCollections->groupBy('id') as $collectionId => $group)
+                                                        @php $count = $group->count(); @endphp
+                                                        <span class="badge bg-info text-dark">
+                                                            {{ $group->first()->name }}
+                                                            @if($count > 1) ({{ $count }}x) @endif
+                                                        </span>
+                                                    @endforeach
+                                                </td>
                                                 <td>{{ \Carbon\Carbon::parse($order->event_start)->format('d.m.Y') }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($order->event_end)->format('d.m.Y') }}</td>
                                                 <td>
