@@ -26,6 +26,12 @@
         <p><strong>Einheit:</strong> {{ $order->role->name }}</p>
         <p><strong>Bestellt von:</strong> {{ $order->user->fullName() }}</p>
         <p><strong>Zeitraum:</strong> {{ \Carbon\Carbon::parse($order->event_start)->format('d.m.Y') }} - {{ \Carbon\Carbon::parse($order->event_end)->format('d.m.Y') }}</p>
+        @if($order->itemCollections->isNotEmpty())
+            <p><strong>Verwendete Kollektionen:</strong> {{ $order->itemCollections->groupBy('id')->map(function($group) {
+                $count = $group->count();
+                return $count > 1 ? $group->first()->name . ' (' . $count . 'x)' : $group->first()->name;
+            })->implode(', ') }}</p>
+        @endif
     </div>
 
     <h3>Bestellte Materialien</h3>
