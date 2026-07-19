@@ -33,6 +33,9 @@ class StoreOrderRequest extends FormRequest
             'items' => 'nullable|array',
             'items.*' => 'nullable|integer|min:0',
 
+            'collections' => 'nullable|array',
+            'collections.*' => 'exists:item_collections,id',
+
             'action' => 'required|in:save,order',
         ];
     }
