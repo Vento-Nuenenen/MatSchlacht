@@ -5,6 +5,7 @@ use App\Http\Controllers\AzureGroupRoleMappingController;
 use App\Http\Controllers\ItemCollectionController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemGroupController;
+use App\Http\Controllers\MailTestController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderManagementController;
 use App\Http\Controllers\OverwatchController;
@@ -38,4 +39,5 @@ Route::middleware('auth')->group(function () {
     Route::resource('azure-group-role-mappings', AzureGroupRoleMappingController::class)->except(['show']);
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    Route::get('/test-mail', [MailTestController::class, 'sendTestMail'])->name('test-mail');
 });
