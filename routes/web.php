@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('users', UserController::class);
     Route::post('users/{user}/password-reset', [UserController::class, 'sendResetLink'])->name('users.password-reset');
+    Route::post('item-groups/reorder', [ItemGroupController::class, 'reorder'])->name('item-groups.reorder');
     Route::resource('item-groups', ItemGroupController::class);
     Route::resource('items', ItemController::class);
     Route::resource('item-collections', ItemCollectionController::class);
