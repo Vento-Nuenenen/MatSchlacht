@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Order;
 use App\Models\User;
+use App\States\Order\Stored;
 
 class OrderPolicy
 {
@@ -12,7 +13,7 @@ class OrderPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->can('view orders');
     }
 
     /**
@@ -20,7 +21,11 @@ class OrderPolicy
      */
     public function view(User $user, Order $order): bool
     {
-        return false;
+        if ($user->can('view orders')) {
+            return true;
+        }
+
+        return $user->can('view own orders') && $order->user_id === $user->id;
     }
 
     /**
@@ -28,7 +33,7 @@ class OrderPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->can('create orders');
     }
 
     /**
@@ -36,6 +41,15 @@ class OrderPolicy
      */
     public function update(User $user, Order $order): bool
     {
+        if ($user->can('edit orders')) {
+            return true;
+        }
+
+        if ($user->can('edit own orders') && $order->user_id === $user->id) {
+            // Usually only drafts can be edited by regular users
+            return $order->state->equals(Stored::class);
+        }
+
         return false;
     }
 
@@ -44,6 +58,15 @@ class OrderPolicy
      */
     public function delete(User $user, Order $order): bool
     {
+        if ($user->can('delete orders')) {
+            return true;
+        }
+
+        if ($user->can('delete own orders') && $order->user_id === $user->id) {
+            // Usually only drafts can be deleted by regular users
+            return $order->state->equals(Stored::class);
+        }
+
         return false;
     }
 
@@ -52,7 +75,7 @@ class OrderPolicy
      */
     public function restore(User $user, Order $order): bool
     {
-        return false;
+        return $user->can('edit orders');
     }
 
     /**
@@ -60,6 +83,30 @@ class OrderPolicy
      */
     public function forceDelete(User $user, Order $order): bool
     {
-        return false;
+        return $user->can('delete orders');
+    }
+
+    /**
+     * Determine whether the user can manage the order (via OrderManagementController).
+     */
+    public function manage(User $user): bool
+    {
+        return $user->can('edit orders');
+    }
+
+    /**
+     * Determine whether the user can export the order as PDF.
+     */
+    public function export(User $user, Order $order): bool
+    {
+        return $user->can('edit orders');
+    }
+
+    /**
+     * Determine whether the user can export the return list as PDF.
+     */
+    public function exportReturn(User $user, Order $order): bool
+    {
+        return $user->can('edit orders');
     }
 }
