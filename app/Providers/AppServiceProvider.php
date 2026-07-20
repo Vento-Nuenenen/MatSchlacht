@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Mail\Transport\MicrosoftGraphTransport;
+use App\Models\Order;
+use App\Observers\OrderObserver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\ServiceProvider;
@@ -26,6 +28,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Order::observe(OrderObserver::class);
+
         Event::listen(SocialiteWasCalled::class, MicrosoftExtendSocialite::class);
 
         Mail::extend('microsoftgraph', function (array $config) {
