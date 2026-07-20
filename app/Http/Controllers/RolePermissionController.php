@@ -14,11 +14,7 @@ class RolePermissionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->middleware('permission:view roles')->only(['index']);
-        $this->middleware('permission:create roles')->only(['create', 'store']);
-        $this->middleware('permission:edit roles')->only(['edit', 'update']);
-        $this->middleware('permission:delete roles')->only('destroy');
+        $this->authorizeResource(Role::class, 'role');
     }
 
     public function index(): Factory|View
@@ -67,6 +63,7 @@ class RolePermissionController extends Controller
 
     public function update(UpdateRoleRequest $request, Role $role)
     {
+        $data = $request->validated();
         $role = Role::findOrFail($role->id);
 
         if ($role->name === 'Materialwart') {
