@@ -44,6 +44,7 @@ class AzureController extends Controller
                 'azure_id' => $azureUser->id,
                 'firstname' => $azureUser->offsetGet('givenName') ?? $azureUser->name,
                 'lastname' => $azureUser->offsetGet('surname') ?? '',
+                'scoutname' => explode(' / ', $azureUser->name)[1] ?? '',
                 'email' => $azureUser->email,
                 'password' => null,
             ]);
@@ -52,6 +53,7 @@ class AzureController extends Controller
                 'azure_id' => $azureUser->id,
                 'firstname' => $azureUser->offsetGet('givenName') ?? $azureUser->name,
                 'lastname' => $azureUser->offsetGet('surname') ?? '',
+                'scoutname' => explode(' / ', $azureUser->name)[1] ?? '',
                 'email' => $azureUser->email,
             ]);
         }
