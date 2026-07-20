@@ -32,7 +32,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('orders', OrderController::class);
     Route::get('/manage/orders', [OrderManagementController::class, 'index'])->name('orders.manage');
     Route::get('/manage/orders/{order}/edit', [OrderManagementController::class, 'edit'])->name('orders.manage.edit');
-    Route::get('/manage/orders/{order}/pdf', [OrderManagementController::class, 'exportPdf'])->name('orders.manage.pdf');
+    Route::get('/manage/orders/{order}/order-pdf', [OrderManagementController::class, 'exportOrderPdf'])->name('orders.manage.order-pdf');
+    Route::get('/manage/orders/{order}/return-pdf', [OrderManagementController::class, 'exportReturnPdf'])->name('orders.manage.return-pdf');
     Route::put('/manage/orders/{order}', [OrderManagementController::class, 'update'])->name('orders.manage.update');
     Route::post('/manage/orders/{order}/transition', [OrderManagementController::class, 'transition'])->name('orders.manage.transition');
     Route::resource('roles', RolePermissionController::class);
