@@ -12,8 +12,7 @@ class AzureGroupRoleMappingController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->middleware('permission:manage azure mappings');
+        $this->authorizeResource(AzureGroupRoleMapping::class, 'azure_group_role_mapping');
     }
 
     /**
