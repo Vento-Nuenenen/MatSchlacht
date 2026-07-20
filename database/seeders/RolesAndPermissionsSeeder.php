@@ -18,7 +18,7 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // Create Permissions
-        $models = ['users', 'itemgroups', 'items', 'orders', 'roles'];
+        $models = ['users', 'itemgroups', 'items', 'orders', 'roles', 'itemcollections'];
         $actions = ['view', 'create', 'edit', 'delete'];
 
         $permissions = [
