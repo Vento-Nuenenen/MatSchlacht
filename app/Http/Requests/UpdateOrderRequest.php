@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\RoleInScope;
+use App\Rules\UserInScope;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -27,8 +29,8 @@ class UpdateOrderRequest extends FormRequest
             'event_start' => 'required|date',
             'event_end' => 'required|date|after_or_equal:event_start',
 
-            'role_id' => 'required|exists:roles,id',
-            'user_id' => 'required|exists:users,id',
+            'role_id' => ['required', 'exists:roles,id', new RoleInScope],
+            'user_id' => ['required', 'exists:users,id', new UserInScope],
 
             'items' => 'nullable|array',
             'items.*' => 'nullable|integer|min:0',
