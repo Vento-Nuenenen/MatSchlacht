@@ -21,9 +21,9 @@
 
                         <table class="table table-hover table-bordered table-striped">
                             <thead>
-                                <th>Name</th>
-                                <th>Beschreibung</th>
-                                <th>Anzahl Artikel</th>
+                                <th class="sortable-header">Name</th>
+                                <th class="sortable-header">Beschreibung</th>
+                                <th class="sortable-header">Anzahl Artikel</th>
                                 <th>Optionen</th>
                             </thead>
                             <tbody>
