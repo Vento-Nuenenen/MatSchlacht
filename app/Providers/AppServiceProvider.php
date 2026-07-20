@@ -6,6 +6,7 @@ use App\Mail\Transport\MicrosoftGraphTransport;
 use App\Models\Order;
 use App\Observers\OrderObserver;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\ServiceProvider;
 use Microsoft\Graph\GraphServiceClient;
@@ -28,6 +29,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Implicitly grant "Materialwart" role all permissions
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('Materialwart') ? true : null;
+        });
+
         Order::observe(OrderObserver::class);
 
         Event::listen(SocialiteWasCalled::class, MicrosoftExtendSocialite::class);
