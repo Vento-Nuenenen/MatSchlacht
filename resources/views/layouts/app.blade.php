@@ -18,6 +18,29 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
     @yield('assets-css')
+    <style>
+        .sortable-header {
+            cursor: pointer;
+            position: relative;
+            padding-right: 20px !important;
+        }
+        .sortable-header::after {
+            content: "\f0dc";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 5px;
+            color: #ccc;
+        }
+        .sortable-header.sort-asc::after {
+            content: "\f0de";
+            color: #333;
+        }
+        .sortable-header.sort-desc::after {
+            content: "\f0dd";
+            color: #333;
+        }
+    </style>
 </head>
 <body>
     <div id="app">
@@ -29,5 +52,39 @@
     </div>
 
     @yield('assets-js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const getCellValue = (tr, idx) => {
+                const cell = tr.children[idx];
+                return cell.dataset.sortValue || cell.innerText || cell.textContent;
+            };
+
+            const comparer = (idx, asc) => (a, b) => ((v1, v2) =>
+                v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
+            )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+
+            document.querySelectorAll('th.sortable-header').forEach(th => th.addEventListener('click', (() => {
+                const table = th.closest('table');
+                const tbody = table.querySelector('tbody');
+                const index = Array.from(th.parentNode.children).indexOf(th);
+                const isAsc = th.classList.contains('sort-asc');
+
+                // Clear other headers in the same table
+                th.parentNode.querySelectorAll('th').forEach(header => {
+                    header.classList.remove('sort-asc', 'sort-desc');
+                });
+
+                if (isAsc) {
+                    th.classList.add('sort-desc');
+                } else {
+                    th.classList.add('sort-asc');
+                }
+
+                Array.from(tbody.querySelectorAll('tr'))
+                    .sort(comparer(index, !isAsc))
+                    .forEach(tr => tbody.appendChild(tr));
+            })));
+        });
+    </script>
 </body>
 </html>
