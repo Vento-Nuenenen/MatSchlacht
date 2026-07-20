@@ -12,7 +12,7 @@ class ItemPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->can('view items');
     }
 
     /**
@@ -20,7 +20,7 @@ class ItemPolicy
      */
     public function view(User $user, Item $item): bool
     {
-        return false;
+        return $user->can('view items');
     }
 
     /**
@@ -28,7 +28,7 @@ class ItemPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->can('create items');
     }
 
     /**
@@ -36,7 +36,7 @@ class ItemPolicy
      */
     public function update(User $user, Item $item): bool
     {
-        return false;
+        return $user->can('edit items');
     }
 
     /**
@@ -44,7 +44,7 @@ class ItemPolicy
      */
     public function delete(User $user, Item $item): bool
     {
-        return false;
+        return $user->can('delete items');
     }
 
     /**
