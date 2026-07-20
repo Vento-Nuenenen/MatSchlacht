@@ -12,7 +12,7 @@ class ItemCollectionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'permission:edit orders']);
+        $this->authorizeResource(ItemCollection::class, 'item_collection');
     }
 
     /**
