@@ -22,8 +22,8 @@
                         <table class="table table-hover table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>Azure Group Object ID</th>
-                                    <th>Rolle</th>
+                                    <th class="sortable-header">Azure Group Object ID</th>
+                                    <th class="sortable-header">Rolle</th>
                                     <th>Optionen</th>
                                 </tr>
                             </thead>
