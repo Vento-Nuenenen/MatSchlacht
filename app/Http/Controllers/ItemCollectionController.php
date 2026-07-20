@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreItemCollectionRequest;
+use App\Http\Requests\UpdateItemCollectionRequest;
 use App\Models\Item;
 use App\Models\ItemCollection;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ItemCollectionController extends Controller
@@ -38,14 +39,9 @@ class ItemCollectionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreItemCollectionRequest $request): RedirectResponse
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'items' => 'required|array',
-            'items.*' => 'required|integer|min:0',
-        ]);
+        $data = $request->validated();
 
         $collection = ItemCollection::create([
             'name' => $data['name'],
@@ -78,14 +74,9 @@ class ItemCollectionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ItemCollection $itemCollection): RedirectResponse
+    public function update(UpdateItemCollectionRequest $request, ItemCollection $itemCollection): RedirectResponse
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'items' => 'required|array',
-            'items.*' => 'required|integer|min:0',
-        ]);
+        $data = $request->validated();
 
         $itemCollection->update([
             'name' => $data['name'],
