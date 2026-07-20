@@ -21,12 +21,12 @@
 
                         <table class="table table-hover table-bordered table-striped">
                             <thead>
-                                <th>Anlass</th>
-                                <th>Einheit</th>
-                                <th>Verantwortlich</th>
-                                <th>Von</th>
-                                <th>Bis</th>
-                                <th>Status</th>
+                                <th class="sortable-header">Anlass</th>
+                                <th class="sortable-header">Einheit</th>
+                                <th class="sortable-header">Verantwortlich</th>
+                                <th class="sortable-header">Von</th>
+                                <th class="sortable-header">Bis</th>
+                                <th class="sortable-header">Status</th>
                                 <th>Optionen</th>
                             </thead>
                             <tbody>
@@ -35,8 +35,8 @@
                                     <td>{{ $order->event }}</td>
                                     <td>{{ $order->role->name }}</td>
                                     <td>{{ $order->user->preferredName() }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($order->event_start)->format('d.m.Y') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($order->event_end)->format('d.m.Y') }}</td>
+                                    <td data-sort-value="{{ \Carbon\Carbon::parse($order->event_start)->format('Ymd') }}">{{ \Carbon\Carbon::parse($order->event_start)->format('d.m.Y') }}</td>
+                                    <td data-sort-value="{{ \Carbon\Carbon::parse($order->event_end)->format('Ymd') }}">{{ \Carbon\Carbon::parse($order->event_end)->format('d.m.Y') }}</td>
                                     <td>
                                         <span class="badge bg-{{ $order->state->color() }}">
                                             {{ $order->state->display() }}
