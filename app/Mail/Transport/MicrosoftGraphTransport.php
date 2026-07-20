@@ -2,8 +2,14 @@
 
 namespace App\Mail\Transport;
 
-use Exception;
-use Illuminate\Support\Facades\Http;
+use Microsoft\Graph\Generated\Models\BodyType;
+use Microsoft\Graph\Generated\Models\EmailAddress;
+use Microsoft\Graph\Generated\Models\FileAttachment;
+use Microsoft\Graph\Generated\Models\ItemBody;
+use Microsoft\Graph\Generated\Models\Message;
+use Microsoft\Graph\Generated\Models\Recipient;
+use Microsoft\Graph\Generated\Users\Item\SendMail\SendMailPostRequestBody;
+use Microsoft\Graph\GraphServiceClient;
 use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mailer\Transport\AbstractTransport;
 use Symfony\Component\Mime\Address;
@@ -11,93 +17,83 @@ use Symfony\Component\Mime\MessageConverter;
 
 class MicrosoftGraphTransport extends AbstractTransport
 {
-    protected string $tenantId;
-    protected string $clientId;
-    protected string $clientSecret;
-    protected string $userId;
-
-    public function __construct(string $tenantId, string $clientId, string $clientSecret, string $userId)
-    {
+    public function __construct(
+        protected GraphServiceClient $graph,
+        protected string $userId
+    ) {
         parent::__construct();
-        $this->tenantId = $tenantId;
-        $this->clientId = $clientId;
-        $this->clientSecret = $clientSecret;
-        $this->userId = $userId;
     }
 
     protected function doSend(SentMessage $message): void
     {
-        $email = MessageConverter::toEmail($message->getOriginalMessage());
-        $accessToken = $this->getAccessToken();
+        try {
+            $email = MessageConverter::toEmail($message->getOriginalMessage());
 
-        $graphMessage = [
-            'subject' => $email->getSubject(),
-            'body' => [
-                'contentType' => $email->getHtmlBody() ? 'HTML' : 'Text',
-                'content' => $email->getHtmlBody() ?: $email->getTextBody(),
-            ],
-            'toRecipients' => $this->mapContacts($email->getTo()),
-            'ccRecipients' => $this->mapContacts($email->getCc()),
-            'bccRecipients' => $this->mapContacts($email->getBcc()),
-        ];
+            $requestBody = new SendMailPostRequestBody;
+            $graphMessage = new Message;
 
-        if ($email->getReplyTo()) {
-            $graphMessage['replyTo'] = $this->mapContacts($email->getReplyTo());
-        }
+            $graphMessage->setSubject($email->getSubject());
 
-        $attachments = [];
-        foreach ($email->getAttachments() as $attachment) {
-            $attachments[] = [
-                '@odata.type' => '#microsoft.graph.fileAttachment',
-                'name' => $attachment->getPreparedHeaders()->getHeaderParameter('Content-Disposition', 'filename') ?: 'attachment',
-                'contentType' => $attachment->getMediaType() . '/' . $attachment->getMediaSubtype(),
-                'contentBytes' => base64_encode($attachment->getBody()),
-            ];
-        }
+            $body = new ItemBody;
+            $body->setContentType(new BodyType($email->getHtmlBody() ? BodyType::HTML : BodyType::TEXT));
+            $body->setContent($email->getHtmlBody() ?: ($email->getTextBody() ?: ''));
+            $graphMessage->setBody($body);
 
-        if (!empty($attachments)) {
-            $graphMessage['attachments'] = $attachments;
-        }
+            $graphMessage->setToRecipients($this->mapContacts($email->getTo()));
 
-        $response = Http::withToken($accessToken)
-            ->post("https://graph.microsoft.com/v1.0/users/{$this->userId}/sendMail", [
-                'message' => $graphMessage,
-                'saveToSentItems' => 'true',
-            ]);
+            if ($cc = $email->getCc()) {
+                $graphMessage->setCcRecipients($this->mapContacts($cc));
+            }
 
-        if ($response->failed()) {
-            throw new Exception('Failed to send email via Microsoft Graph: ' . $response->body());
+            if ($bcc = $email->getBcc()) {
+                $graphMessage->setBccRecipients($this->mapContacts($bcc));
+            }
+
+            if ($attachments = $email->getAttachments()) {
+                $graphAttachments = [];
+                foreach ($attachments as $attachment) {
+                    $graphAttachment = new FileAttachment;
+                    $graphAttachment->setName($attachment->getFilename());
+                    $graphAttachment->setContentType($attachment->getHeaders()->get('Content-Type')?->getBody() ?? 'application/octet-stream');
+                    $graphAttachment->setContentBytes($attachment->getBody());
+                    $graphAttachments[] = $graphAttachment;
+                }
+                $graphMessage->setAttachments($graphAttachments);
+            }
+
+            // If the message has a specific From address, and it is different from the configured userId,
+            // we might want to try using it, but for Client Credentials flow with Mail.Send,
+            // we must send via a specific user endpoint.
+            $sender = $this->userId;
+            $from = $email->getFrom();
+            if (!empty($from)) {
+                $sender = $from[0]->getAddress();
+            }
+
+            $requestBody->setMessage($graphMessage);
+            $requestBody->setSaveToSentItems(true);
+
+            $this->graph->users()->byUserId($sender)->sendMail()->post($requestBody)->wait();
+        } catch (\Microsoft\Graph\Generated\Models\ODataErrors\ODataError $e) {
+            $error = $e->getError();
+            $message = $error->getMessage() ?? 'Unknown Microsoft Graph error';
+            $code = $error->getCode() ?? 'UnknownCode';
+
+            throw new \Exception("Microsoft Graph Mail Error [{$code}]: {$message}", 0, $e);
         }
     }
 
     protected function mapContacts(array $contacts): array
     {
         return array_map(function (Address $address) {
-            return [
-                'emailAddress' => [
-                    'name' => $address->getName(),
-                    'address' => $address->getAddress(),
-                ],
-            ];
+            $recipient = new Recipient;
+            $emailAddress = new EmailAddress;
+            $emailAddress->setAddress($address->getAddress());
+            $emailAddress->setName($address->getName());
+            $recipient->setEmailAddress($emailAddress);
+
+            return $recipient;
         }, $contacts);
-    }
-
-    protected function getAccessToken(): string
-    {
-        $url = "https://login.microsoftonline.com/{$this->tenantId}/oauth2/v2.0/token";
-
-        $response = Http::asForm()->post($url, [
-            'client_id' => $this->clientId,
-            'client_secret' => $this->clientSecret,
-            'scope' => 'https://graph.microsoft.com/.default',
-            'grant_type' => 'client_credentials',
-        ]);
-
-        if ($response->failed()) {
-            throw new Exception('Failed to get access token for Microsoft Graph: ' . $response->body());
-        }
-
-        return $response->json('access_token');
     }
 
     public function __toString(): string
