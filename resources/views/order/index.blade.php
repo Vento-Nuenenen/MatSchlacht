@@ -23,6 +23,7 @@
                             <thead>
                                 <th>Anlass</th>
                                 <th>Einheit</th>
+                                <th>Verantwortlich</th>
                                 <th>Von</th>
                                 <th>Bis</th>
                                 <th>Status</th>
@@ -33,6 +34,7 @@
                                 <tr>
                                     <td>{{ $order->event }}</td>
                                     <td>{{ $order->role->name }}</td>
+                                    <td>{{ $order->user->preferredName() }}</td>
                                     <td>{{ \Carbon\Carbon::parse($order->event_start)->format('d.m.Y') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($order->event_end)->format('d.m.Y') }}</td>
                                     <td>
