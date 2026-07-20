@@ -31,11 +31,11 @@
                         </div>
                         <div class="">
                             @if($order->state->equals(\App\States\Order\Accepted::class))
-                                <a href="{{ route('orders.manage.pdf', $order) }}" class="btn btn-warning me-3" target="_blank">Auftragsliste PDF</a> &nbsp;
+                                <a href="{{ route('orders.manage.order-pdf', $order) }}" class="btn btn-warning me-3" target="_blank">Auftragsliste PDF</a> &nbsp;
                             @endif
 
                             @if($order->state->equals(\App\States\Order\Delivered::class))
-                                <a href="{{ route('orders.manage.pdf', $order) }}" class="btn btn-warning me-3" target="_blank">Retourenliste PDF</a> &nbsp;
+                                <a href="{{ route('orders.manage.return-pdf', $order) }}" class="btn btn-warning me-3" target="_blank">Retourenliste PDF</a> &nbsp;
                             @endif
 
                             @if($order->state->canTransitionTo('stored'))
@@ -155,14 +155,14 @@
                                 @if($order->itemCollections->isNotEmpty())
                                     <div class="mb-2"><strong>Verknüpfte Kollektionen:</strong></div>
                                     <div class="d-flex flex-wrap gap-2 mb-3" id="collections-wrapper">
-                                            @foreach($order->itemCollections as $index => $collection)
-                                                @php $uniqueId = 'existing-' . $index; @endphp
-                                                <span class="badge bg-info text-dark p-2" id="collection-badge-{{ $uniqueId }}" data-items="{{ json_encode($collection->items->map(fn($item) => ['id' => $item->id, 'quantity' => ($item->pivot->quantity / ($item->lot > 1 ? $item->lot : 1))])) }}">
-                                                    {{ $collection->name }}
-                                                    <input type="hidden" name="collections[]" value="{{ $collection->id }}">
-                                                    <button type="button" class="btn-close btn-close-white" style="font-size: 0.5rem" onclick="removeCollection('{{ $uniqueId }}')"></button>
-                                                </span>
-                                            @endforeach
+                                        @foreach($order->itemCollections as $index => $collection)
+                                            @php $uniqueId = 'existing-' . $index; @endphp
+                                            <span class="badge bg-info text-dark p-2" id="collection-badge-{{ $uniqueId }}" data-items="{{ json_encode($collection->items->map(fn($item) => ['id' => $item->id, 'quantity' => ($item->pivot->quantity / ($item->lot > 1 ? $item->lot : 1))])) }}">
+                                                {{ $collection->name }}
+                                                <input type="hidden" name="collections[]" value="{{ $collection->id }}">
+                                                <button type="button" class="btn-close btn-close-white" style="font-size: 0.5rem" onclick="removeCollection('{{ $uniqueId }}')"></button>
+                                            </span>
+                                        @endforeach
                                     </div>
                                 @endif
                             </div>
