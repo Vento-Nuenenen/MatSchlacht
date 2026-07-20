@@ -15,11 +15,7 @@ class ItemController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->middleware('permission:view items')->only(['index', 'show']);
-        $this->middleware('permission:create items')->only(['create', 'store']);
-        $this->middleware('permission:edit items')->only(['edit', 'update']);
-        $this->middleware('permission:delete items')->only('destroy');
+        $this->authorizeResource(Item::class, 'item');
     }
 
     /**
