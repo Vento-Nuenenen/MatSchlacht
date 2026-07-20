@@ -22,7 +22,8 @@
                         <table class="table table-hover table-bordered table-striped" id="item-groups-table">
                             <thead>
                                 <th width="50"></th>
-                                <th>Bezeichnung</th>
+                                <th class="sortable-header">Pos.</th>
+                                <th class="sortable-header">Bezeichnung</th>
                                 <th>Optionen</th>
                             </thead>
                             <tbody id="item-groups-body">
@@ -35,6 +36,7 @@
                                     @else
                                         <td></td>
                                     @endcan
+                                    <td class="position-index">{{ $loop->iteration }}</td>
                                     <td>{{ $itemGroup->name }}</td>
                                     <td>
                                         @can('edit itemgroups')
@@ -88,6 +90,10 @@
                         .then(data => {
                             if (data.success) {
                                 console.log('Reordered successfully');
+                                // Update visible position numbers
+                                rows.forEach((row, index) => {
+                                    row.querySelector('.position-index').textContent = index + 1;
+                                });
                             }
                         })
                         .catch(error => {
