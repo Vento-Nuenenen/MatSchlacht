@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Mail\OrderCreated;
 use App\Models\Item;
 use App\Models\ItemCollection;
 use App\Models\Order;
