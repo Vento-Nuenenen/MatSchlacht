@@ -7,6 +7,7 @@ use Microsoft\Graph\Generated\Models\EmailAddress;
 use Microsoft\Graph\Generated\Models\FileAttachment;
 use Microsoft\Graph\Generated\Models\ItemBody;
 use Microsoft\Graph\Generated\Models\Message;
+use Microsoft\Graph\Generated\Models\ODataErrors\ODataError;
 use Microsoft\Graph\Generated\Models\Recipient;
 use Microsoft\Graph\Generated\Users\Item\SendMail\SendMailPostRequestBody;
 use Microsoft\Graph\GraphServiceClient;
@@ -66,7 +67,7 @@ class MicrosoftGraphTransport extends AbstractTransport
             // we must send via a specific user endpoint.
             $sender = $this->userId;
             $from = $email->getFrom();
-            if (!empty($from)) {
+            if (! empty($from)) {
                 $sender = $from[0]->getAddress();
             }
 
@@ -74,7 +75,7 @@ class MicrosoftGraphTransport extends AbstractTransport
             $requestBody->setSaveToSentItems(true);
 
             $this->graph->users()->byUserId($sender)->sendMail()->post($requestBody)->wait();
-        } catch (\Microsoft\Graph\Generated\Models\ODataErrors\ODataError $e) {
+        } catch (ODataError $e) {
             $error = $e->getError();
             $message = $error->getMessage() ?? 'Unknown Microsoft Graph error';
             $code = $error->getCode() ?? 'UnknownCode';
