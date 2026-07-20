@@ -21,12 +21,12 @@
 
                         <table class="table table-hover table-bordered table-striped">
                             <thead>
-                                <th scope="col">Pfadiname</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Mail</th>
-                                <th scope="col">Einheiten</th>
-                                <th scope="col">Login</th>
-                                <th scope="col">Aktiv</th>
+                                <th scope="col" class="sortable-header">Pfadiname</th>
+                                <th scope="col" class="sortable-header">Name</th>
+                                <th scope="col" class="sortable-header">Mail</th>
+                                <th scope="col" class="sortable-header">Einheiten</th>
+                                <th scope="col" class="sortable-header">Login</th>
+                                <th scope="col" class="sortable-header">Aktiv</th>
                                 <th scope="col" class="col-2">Optionen</th>
                             </thead>
                             <tbody>
