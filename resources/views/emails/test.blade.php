@@ -1,2 +1,8 @@
-<h1>Test Email</h1>
-<p>This is a test email sent via Microsoft Graph API.</p>
+<x-mail::message>
+# Test Mail
+
+The body of your message.
+
+Thanks,<br>
+{{ config('app.name') }}
+</x-mail::message>
