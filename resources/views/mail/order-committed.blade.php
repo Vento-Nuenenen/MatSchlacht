@@ -11,7 +11,7 @@
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
         th { background: #B1B1B1B0 }
         .header { margin-bottom: 20px; }
-        .status-badge { display: inline-block; padding: 5px 10px; border-radius: 4px; font-weight: bold; background: #f90; color: #fff; }
+        .status-badge { display: inline-block; padding: 5px 10px; border-radius: 4px; font-weight: bold; background: #ff0000; color: #fff; }
         .footer { margin-top: 30px; font-size: 0.8em; color: #6a6a6a; }
     </style>
 </head>
