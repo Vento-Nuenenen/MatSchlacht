@@ -4,11 +4,12 @@ namespace App\Providers;
 
 use App\Mail\Transport\MicrosoftGraphTransport;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\ServiceProvider;
-use SocialiteProviders\Azure\AzureExtendSocialite;
+use Microsoft\Graph\GraphServiceClient;
+use Microsoft\Kiota\Authentication\Oauth\ClientCredentialContext;
 use SocialiteProviders\Manager\SocialiteWasCalled;
+use SocialiteProviders\Microsoft\MicrosoftExtendSocialite;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,20 +26,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::before(function ($user, $ability) {
-            if ($user->isPrivileged()) {
-                return true;
-            }
-        });
-
-        Event::listen(SocialiteWasCalled::class, AzureExtendSocialite::class);
+        Event::listen(SocialiteWasCalled::class, MicrosoftExtendSocialite::class);
 
         Mail::extend('microsoftgraph', function (array $config) {
+            $tokenContext = new ClientCredentialContext(
+                (string) env('AZURE_TENANT_ID'),
+                (string) env('AZURE_CLIENT_ID'),
+                (string) env('AZURE_CLIENT_SECRET')
+            );
+
+            $graphServiceClient = new GraphServiceClient($tokenContext);
+
             return new MicrosoftGraphTransport(
-                $config['tenant_id'],
-                $config['client_id'],
-                $config['client_secret'],
-                $config['user_id']
+                $graphServiceClient,
+                env('MAIL_OFFICE365_USER_ID', config('mail.from.address'))
             );
         });
     }
