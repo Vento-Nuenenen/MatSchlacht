@@ -34,7 +34,7 @@
                             @canany(['view items', 'create items', 'edit items', 'delete items'])
                                 <a class="dropdown-item" href="{{ route('items.index') }}">Material</a>
                             @endcan
-                            @can('edit orders')
+                            @can(['view itemcollections', 'create itemcollections', 'edit itemcollections', 'delete itemcollections'])
                                 <a class="dropdown-item" href="{{ route('item-collections.index') }}">Kollektionen</a>
                             @endcan
                             @canany(['view itemgroups', 'create itemgroups', 'update itemgroups', 'delete itemgroups'])
