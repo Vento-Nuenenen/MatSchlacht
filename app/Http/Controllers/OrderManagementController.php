@@ -71,6 +71,8 @@ class OrderManagementController extends Controller
      */
     public function update(UpdateOrderRequest $request, Order $order): RedirectResponse
     {
+        $this->authorize('update', $order);
+
         $data = $request->validated();
         $user = auth()->user();
 
