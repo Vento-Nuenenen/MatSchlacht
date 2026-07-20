@@ -48,12 +48,12 @@
                                 <table class="table table-hover table-bordered table-striped mb-4">
                                     <thead>
                                         <tr>
-                                            <th>Anlass</th>
-                                            <th>Einheit</th>
-                                            <th>Besteller</th>
-                                            <th>Kollektionen</th>
-                                            <th>Von</th>
-                                            <th>Bis</th>
+                                            <th class="sortable-header">Anlass</th>
+                                            <th class="sortable-header">Einheit</th>
+                                            <th class="sortable-header">Besteller</th>
+                                            <th class="sortable-header">Kollektionen</th>
+                                            <th class="sortable-header">Von</th>
+                                            <th class="sortable-header">Bis</th>
                                             <th>Optionen</th>
                                         </tr>
                                     </thead>
@@ -72,8 +72,8 @@
                                                         </span>
                                                     @endforeach
                                                 </td>
-                                                <td>{{ \Carbon\Carbon::parse($order->event_start)->format('d.m.Y') }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($order->event_end)->format('d.m.Y') }}</td>
+                                                <td data-sort-value="{{ \Carbon\Carbon::parse($order->event_start)->format('Ymd') }}">{{ \Carbon\Carbon::parse($order->event_start)->format('d.m.Y') }}</td>
+                                                <td data-sort-value="{{ \Carbon\Carbon::parse($order->event_end)->format('Ymd') }}">{{ \Carbon\Carbon::parse($order->event_end)->format('d.m.Y') }}</td>
                                                 <td>
                                                     <div class="btn-group">
                                                         <a href="{{ route('orders.manage.edit', $order->id) }}" class="btn btn-warning btn-sm">Verwalten</a>
