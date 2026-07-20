@@ -7,7 +7,9 @@ use App\Http\Requests\UpdateItemGroupRequest;
 use App\Models\ItemGroup;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class ItemGroupController extends Controller
 {
@@ -21,7 +23,7 @@ class ItemGroupController extends Controller
      */
     public function index(): Factory|View
     {
-        return view('item-group.index', ['itemGroups' => ItemGroup::all()]);
+        return view('item-group.index', ['itemGroups' => ItemGroup::orderBy('position')->get()]);
     }
 
     /**
@@ -66,6 +68,22 @@ class ItemGroupController extends Controller
         $itemGroup->update($request->validated());
 
         return redirect()->route('item-groups.index')->with('success', 'Materialgruppe wurde erfolgreich aktualisiert.');
+    }
+
+    /**
+     * Update the positions of the item groups.
+     */
+    public function reorder(Request $request): JsonResponse
+    {
+        $this->authorize('create', ItemGroup::class);
+
+        $positions = $request->input('positions');
+
+        foreach ($positions as $position => $id) {
+            ItemGroup::where('id', $id)->update(['position' => $position + 1]);
+        }
+
+        return response()->json(['success' => true]);
     }
 
     /**
