@@ -19,16 +19,22 @@
                             <br />
                         @endcan
 
-                        <table class="table table-hover table-bordered table-striped">
+                        <table class="table table-hover table-bordered table-striped" id="item-groups-table">
                             <thead>
-                                <th>Position</th>
+                                <th width="50"></th>
                                 <th>Bezeichnung</th>
                                 <th>Optionen</th>
                             </thead>
-                            <tbody>
+                            <tbody id="item-groups-body">
                             @foreach($itemGroups as $itemGroup)
-                                <tr>
-                                    <td>{{ $itemGroup->position }}</td>
+                                <tr data-id="{{ $itemGroup->id }}">
+                                    @can('edit itemgroups')
+                                        <td class="drag-handle" style="cursor: move;">
+                                            <i class="fa fa-bars"></i>
+                                        </td>
+                                    @else
+                                        <td></td>
+                                    @endcan
                                     <td>{{ $itemGroup->name }}</td>
                                     <td>
                                         @can('edit itemgroups')
@@ -51,4 +57,46 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('assets-js')
+    @can('edit itemgroups')
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const el = document.getElementById('item-groups-body');
+            if (el) {
+                Sortable.create(el, {
+                    handle: '.drag-handle',
+                    animation: 150,
+                    onEnd: function () {
+                        const positions = [];
+                        const rows = el.querySelectorAll('tr');
+                        rows.forEach((row, index) => {
+                            positions.push(row.dataset.id);
+                        });
+
+                        fetch('{{ route('item-groups.reorder') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: JSON.stringify({ positions: positions })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                console.log('Reordered successfully');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+    @endcan
 @endsection
