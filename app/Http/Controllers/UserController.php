@@ -15,11 +15,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->middleware('permission:view users')->only(['index', 'show']);
-        $this->middleware('permission:create users')->only(['create', 'store']);
-        $this->middleware('permission:edit users')->only(['edit', 'update']);
-        $this->middleware('permission:delete users')->only('destroy');
+        $this->authorizeResource(User::class, 'user');
     }
 
     /**
@@ -27,7 +23,17 @@ class UserController extends Controller
      */
     public function index(): Factory|View
     {
-        return view('user.index', ['users' => User::all()]);
+        $user = auth()->user();
+        if ($user->isPrivileged()) {
+            $users = User::all();
+        } else {
+            $roleIds = $user->roles->pluck('id');
+            $users = User::whereHas('roles', function ($query) use ($roleIds) {
+                $query->whereIn('roles.id', $roleIds);
+            })->get();
+        }
+
+        return view('user.index', ['users' => $users]);
     }
 
     /**
@@ -35,7 +41,12 @@ class UserController extends Controller
      */
     public function create(): Factory|View
     {
-        $roles = Role::all();
+        $user = auth()->user();
+        if ($user->isPrivileged()) {
+            $roles = Role::all();
+        } else {
+            $roles = $user->roles;
+        }
 
         return view('user.create', compact('roles'));
     }
@@ -62,6 +73,8 @@ class UserController extends Controller
      */
     public function sendResetLink(User $user): RedirectResponse
     {
+        $this->authorize('sendResetLink', $user);
+
         if ($user->isAzureUser()) {
             return redirect()->back()->with('error', 'Passwort-Reset für Office 365 Benutzer nicht möglich.');
         }
@@ -84,7 +97,12 @@ class UserController extends Controller
      */
     public function edit(User $user): Factory|View
     {
-        $roles = Role::all();
+        $currentUser = auth()->user();
+        if ($currentUser->isPrivileged()) {
+            $roles = Role::all();
+        } else {
+            $roles = $currentUser->roles;
+        }
 
         return view('user.edit', compact('user', 'roles'));
     }
