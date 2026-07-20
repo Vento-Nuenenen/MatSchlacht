@@ -12,7 +12,7 @@ class ItemGroupPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->can('view itemgroups');
     }
 
     /**
@@ -20,7 +20,7 @@ class ItemGroupPolicy
      */
     public function view(User $user, ItemGroup $itemGroup): bool
     {
-        return false;
+        return $user->can('view itemgroups');
     }
 
     /**
@@ -28,7 +28,7 @@ class ItemGroupPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->can('create itemgroups');
     }
 
     /**
@@ -36,7 +36,7 @@ class ItemGroupPolicy
      */
     public function update(User $user, ItemGroup $itemGroup): bool
     {
-        return false;
+        return $user->can('edit itemgroups');
     }
 
     /**
@@ -44,7 +44,7 @@ class ItemGroupPolicy
      */
     public function delete(User $user, ItemGroup $itemGroup): bool
     {
-        return false;
+        return $user->can('delete itemgroups');
     }
 
     /**
