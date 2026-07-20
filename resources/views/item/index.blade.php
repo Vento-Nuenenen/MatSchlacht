@@ -41,11 +41,11 @@
 
                         <table class="table table-hover table-bordered table-striped">
                             <thead>
-                                <th>Bezeichnung</th>
-                                <th>Materialgruppe</th>
-                                <th>Bestand</th>
-                                <th>Packungsgrösse</th>
-                                <th>Reparatur</th>
+                                <th class="sortable-header">Bezeichnung</th>
+                                <th class="sortable-header">Materialgruppe</th>
+                                <th class="sortable-header">Bestand</th>
+                                <th class="sortable-header">Packungsgrösse</th>
+                                <th class="sortable-header">Reparatur</th>
                                 <th>Optionen</th>
                             </thead>
                             <tbody>
