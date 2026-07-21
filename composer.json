@@ -15,6 +15,7 @@
         "laravel/socialite": "^5.28",
         "laravel/tinker": "^3.0",
         "laravel/ui": "^4.6",
+        "league/flysystem-aws-s3-v3": "^3.0",
         "microsoft/microsoft-graph": "^3.3",
         "socialiteproviders/microsoft": "^4.0",
         "spatie/laravel-model-states": "^2.14",
