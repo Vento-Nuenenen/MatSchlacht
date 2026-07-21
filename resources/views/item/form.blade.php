@@ -21,7 +21,7 @@
 </div>
 <div class="mb-3">
     <label for="stock" class="form-label">Bestand</label>
-    <input type="number" class="form-control" id="stock" name="stock" value="{{ old('stock', $item->stock ?? 0) }}" required>
+    <input type="number" class="form-control" id="stock" name="stock" value="{{ old('stock', $item->stock ?? 0) }}" min="0" max="999999" required>
 
     @error('stock')
         <div class="text-danger">{{ $message }}</div>
@@ -29,7 +29,7 @@
 </div>
 <div class="mb-3">
     <label for="lot" class="form-label">Packungsgrösse</label>
-    <input type="number" class="form-control" id="lot" name="lot" value="{{ old('lot', $item->lot ?? 1) }}" min="1" required>
+    <input type="number" class="form-control" id="lot" name="lot" value="{{ old('lot', $item->lot ?? 1) }}" min="1" max="999999" required>
 
     @error('lot')
         <div class="text-danger">{{ $message }}</div>
@@ -37,7 +37,7 @@
 </div>
 <div class="mb-3">
     <label for="repair" class="form-label">Reparatur</label>
-    <input type="number" class="form-control" id="repair" name="repair"  value="{{ old('repair', $item->repair ?? 0) }}" required>
+    <input type="number" class="form-control" id="repair" name="repair"  value="{{ old('repair', $item->repair ?? 0) }}" min="0" max="999999" required>
 
     @error('repair')
         <div class="text-danger">{{ $message }}</div>
