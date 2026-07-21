@@ -17,7 +17,7 @@ use Elibyy\TCPDF\Facades\TCPDF;
 use Faker\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class OrderManagementController extends Controller
 {
@@ -112,7 +112,7 @@ class OrderManagementController extends Controller
         return back()->with('success', 'Bestellstatus wurde aktualisiert.');
     }
 
-    public function exportOrderPdf(Order $order)
+    public function exportOrderPdf(Order $order): Response|RedirectResponse
     {
         $this->authorize('export', $order);
 
@@ -130,10 +130,10 @@ class OrderManagementController extends Controller
         TCPDF::SetFont('helvetica', '', 10);
 
         if ($order->itemCollections->isNotEmpty()) {
-            $collections = $order->itemCollections->groupBy('id')->map(function ($group) {
+            $collections = $order->itemCollections->groupBy('id')->map(function ($group): string {
                 $count = $group->count();
 
-                return $count > 1 ? $group->first()->name.' ('.$count.'x)' : $group->first()->name;
+                return $count > 1 ? $group->first()->name.' ('.$count.'x)' : (string) $group->first()->name;
             })->implode(', ');
             TCPDF::MultiCell(0, 7, $collections, 0, 'L');
         } else {
@@ -171,7 +171,7 @@ class OrderManagementController extends Controller
             ->header('Content-Type', 'application/pdf');
     }
 
-    public function exportReturnPdf(Order $order)
+    public function exportReturnPdf(Order $order): Response|RedirectResponse
     {
         $this->authorize('exportReturn', $order);
 
