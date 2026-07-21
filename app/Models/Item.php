@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 #[Fillable([
     'name',
@@ -15,13 +16,18 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'available',
     'repair',
     'consumable',
-    'purch_price_cents',
+    'item_price_cents',
 
     'item_group_id',
 ])]
 class Item extends Model
 {
     use HasFactory;
+
+    public function attachments(): MorphMany
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
+    }
 
     public function itemGroup(): BelongsTo
     {
