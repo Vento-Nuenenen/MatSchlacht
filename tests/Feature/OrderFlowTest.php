@@ -32,6 +32,7 @@ test('a user can create an order', function () {
         'items' => [
             $this->item->id => 10,
         ],
+        'action' => 'save',
     ];
 
     $response = $this->actingAs($this->user)
@@ -48,7 +49,7 @@ test('a user can create an order', function () {
     $this->assertDatabaseHas('ordered_items', [
         'order_id' => $order->id,
         'item_id' => $this->item->id,
-        'amount' => 10,
+        'quantity' => 10,
     ]);
 });
 
@@ -68,6 +69,7 @@ test('a user can update their own draft order', function () {
         'items' => [
             $this->item->id => 5,
         ],
+        'action' => 'save',
     ];
 
     $response = $this->actingAs($this->user)
