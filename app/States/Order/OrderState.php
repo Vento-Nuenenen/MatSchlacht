@@ -5,6 +5,9 @@ namespace App\States\Order;
 use Spatie\ModelStates\State;
 use Spatie\ModelStates\StateConfig;
 
+/*
+ * @extends State<Order>
+ */
 abstract class OrderState extends State
 {
     abstract public function display(): string;

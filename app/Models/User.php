@@ -42,11 +42,17 @@ class User extends Authenticatable
         ];
     }
 
+    /*
+     * @return HasMany<Order, $this>
+     */
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
     }
 
+    /*
+     * @return string
+     */
     public function fullName(bool $withScoutName = true): string
     {
         $civil_name = $this->firstname.' '.$this->lastname;
@@ -58,6 +64,9 @@ class User extends Authenticatable
         return (string) $civil_name;
     }
 
+    /*
+     * @return string
+     */
     public function preferredName(): string
     {
         if ($this->scoutname) {
@@ -69,11 +78,17 @@ class User extends Authenticatable
         return (string) $preferred_name;
     }
 
+    /*
+     * @return bool
+     */
     public function isPrivileged(): bool
     {
         return $this->hasAnyRole(['Materialwart']);
     }
 
+    /*
+     * @return bool
+     */
     public function isAzureUser(): bool
     {
         return ! empty($this->azure_id);
