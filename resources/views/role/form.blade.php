@@ -6,7 +6,7 @@
            id="name"
            name="name"
            value="{{ old('name', $role->name ?? '') }}"
-           required>
+           required autofocus>
 
     @error('name')
     <div class="invalid-feedback">

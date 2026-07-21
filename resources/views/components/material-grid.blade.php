@@ -1,6 +1,6 @@
 <div class="mb-3">
     <label class="form-label">Materialien</label>
-    <input type="text" id="itemSearch" class="form-control" placeholder="Suchen…" oninput="filterItems()" />
+    <input type="text" id="itemSearch" class="form-control" placeholder="Suchen…" oninput="filterItems()" autofocus />
 </div>
 
 <div id="itemsContainer">

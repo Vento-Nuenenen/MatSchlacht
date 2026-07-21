@@ -2,7 +2,7 @@
 
 <div class="mb-3">
     <label for="azure_group_id" class="form-label">Azure Group Object ID</label>
-    <input type="text" class="form-control" id="azure_group_id" name="azure_group_id" value="{{ old('azure_group_id', $azureGroupRoleMapping->azure_group_id ?? '') }}" required>
+    <input type="text" class="form-control" id="azure_group_id" name="azure_group_id" value="{{ old('azure_group_id', $azureGroupRoleMapping->azure_group_id ?? '') }}" required autofocus>
 
     @error('azure_group_id')
         <div class="text-danger">{{ $message }}</div>

@@ -2,7 +2,7 @@
 
 <div class="mb-3">
     <label for="scoutname" class="form-label">Pfadiname</label>
-    <input type="text" class="form-control" id="scoutname" name="scoutname" value="{{ old('scoutname', $user->scoutname ?? '') }}">
+    <input type="text" class="form-control" id="scoutname" name="scoutname" value="{{ old('scoutname', $user->scoutname ?? '') }}" autofocus>
 
     @error('scoutname')
         <div class="text-danger">{{ $message }}</div>
