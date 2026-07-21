@@ -24,7 +24,7 @@ class ItemFactory extends Factory
             'available' => fake()->numberBetween(0, 100),
             'repair' => fake()->numberBetween(0, 100),
             'consumable' => fake()->boolean(),
-            'purch_price_cents' => fake()->numberBetween(0, 10000),
+            'item_price_cents' => fake()->numberBetween(0, 10000),
             'item_group_id' => ItemGroup::factory(),
         ];
     }
