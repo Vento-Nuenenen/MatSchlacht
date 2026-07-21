@@ -31,6 +31,7 @@
                         @php
                             $actualQty = old('items.'.$item->id, $orderItemQuantities->get($item->id, 0));
                             $displayQty = ($item->lot > 1) ? $actualQty / $item->lot : $actualQty;
+                            $maxDisplayQty = ($item->lot > 1) ? floor($item->stock / $item->lot) : $item->stock;
 
                             $orderedItem = isset($order) && isset($order->orderedItems) ? $order->orderedItems->where('item_id', $item->id)->first() : null;
                             $returnedQty = old('returned.'.$item->id, $orderedItem?->returned ?? ($actualQty > 0 ? $actualQty : 0));
@@ -63,13 +64,15 @@
                                 <input
                                     type="number"
                                     min="0"
+                                    max="{{ $maxDisplayQty }}"
                                     class="form-control form-control-sm"
                                     name="items[{{ $item->id }}]"
                                     value="{{ $displayQty }}"
                                     {{ isset($order) && isset($order->state) && ($order->state?->equals(\App\States\Order\Delivered::class) || $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class)) ? 'readonly' : '' }}
                                     onchange="updateItemHighlighting(this)"
-                                    oninput="enforceMinQuantity(this)"
-                                    data-min-qty="0">
+                                    oninput="enforceQuantityLimits(this)"
+                                    data-min-qty="0"
+                                    data-max-qty="{{ $maxDisplayQty }}">
                             </td>
                             @if(isset($order) && isset($order->state) && ($order->state?->equals(\App\States\Order\Delivered::class) || $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class)))
                                 <td>
@@ -77,10 +80,14 @@
                                         <input
                                             type="number"
                                             min="0"
+                                            max="{{ $displayQty }}"
                                             class="form-control form-control-sm"
                                             name="returned[{{ $item->id }}]"
                                             value="{{ $displayReturnedQty }}"
-                                            {{ $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class) ? 'readonly' : '' }}>
+                                            {{ $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class) ? 'readonly' : '' }}
+                                            oninput="enforceQuantityLimits(this)"
+                                            data-min-qty="0"
+                                            data-max-qty="{{ $displayQty }}">
                                     @else
                                         -
                                     @endif
@@ -100,13 +107,18 @@
         input.closest('.item-row').classList.toggle('table-primary', input.value > 0);
     }
 
-    function enforceMinQuantity(input) {
+    function enforceQuantityLimits(input) {
         const minQty = parseInt(input.dataset.minQty) || 0;
-        const currentVal = parseInt(input.value) || 0;
+        const maxQty = parseInt(input.dataset.maxQty) || 999999;
+        let currentVal = parseInt(input.value) || 0;
+
         if (currentVal < minQty) {
             input.value = minQty;
-            updateItemHighlighting(input);
+        } else if (currentVal > maxQty) {
+            input.value = maxQty;
         }
+
+        updateItemHighlighting(input);
     }
 
     function filterItems() {
