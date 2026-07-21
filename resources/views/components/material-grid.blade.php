@@ -35,9 +35,28 @@
                             $orderedItem = isset($order) && isset($order->orderedItems) ? $order->orderedItems->where('item_id', $item->id)->first() : null;
                             $returnedQty = old('returned.'.$item->id, $orderedItem?->returned ?? ($actualQty > 0 ? $actualQty : 0));
                             $displayReturnedQty = ($item->lot > 1) ? $returnedQty / $item->lot : $returnedQty;
+                            $imageAttachments = $item->attachments->filter(fn($a) => \Illuminate\Support\Str::endsWith(strtolower($a->path), ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']));
+                            $imageUrls = $imageAttachments->map(function($img) {
+                                try {
+                                    return Storage::disk('s3')->temporaryUrl($img->path, now()->addMinutes(30));
+                                } catch (\Exception $e) {
+                                    \Illuminate\Support\Facades\Log::error("S3 URL error for {$img->path}: " . $e->getMessage());
+                                    return null;
+                                }
+                            })->filter();
                         @endphp
                         <tr class="item-row {{ $actualQty > 0 ? 'table-primary' : '' }}">
-                            <td class="item-name">{{ $item->name }}</td>
+                            <td class="item-name">
+                                {{ $item->name }}
+                                @if($imageUrls->isNotEmpty())
+                                    <i class="fa fa-image text-primary cursor-pointer ms-2"
+                                       onclick="showImageCarousel({{ json_encode($imageUrls) }}, '{{ $item->name }}')"
+                                       title="Bilder anzeigen"></i>
+                                @endif
+                                @if($item->attachments->count() > $imageAttachments->count())
+                                    <i class="fa fa-file-alt text-muted ms-1" title="Hat weitere Anhänge"></i>
+                                @endif
+                            </td>
                             <td>{{ $item->stock }}</td>
                             <td>{{ $item->lot }}</td>
                             <td>
@@ -103,5 +122,59 @@
             });
             group.style.display = visible ? '' : 'none';
         });
+    }
+</script>
+
+<!-- Image Carousel Modal -->
+<div class="modal fade" id="imageCarouselModal" tabindex="-1" aria-labelledby="imageCarouselModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageCarouselModalLabel">Bilder</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div id="itemImageCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner" id="carouselInner">
+                        <!-- Images will be injected here -->
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#itemImageCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Zurück</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#itemImageCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Weiter</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showImageCarousel(images, itemName) {
+        const modalLabel = document.getElementById('imageCarouselModalLabel');
+        const carouselInner = document.getElementById('carouselInner');
+        const carousel = document.getElementById('itemImageCarousel');
+
+        modalLabel.textContent = `Bilder: ${itemName}`;
+        carouselInner.innerHTML = '';
+
+        images.forEach((url, index) => {
+            const div = document.createElement('div');
+            div.className = `carousel-item ${index === 0 ? 'active' : ''}`;
+            div.innerHTML = `<img src="${url}" class="d-block w-100" style="max-height: 80vh; object-fit: contain;" alt="${itemName}">`;
+            carouselInner.appendChild(div);
+        });
+
+        // Hide controls if only one image
+        const controls = carousel.querySelectorAll('.carousel-control-prev, .carousel-control-next');
+        controls.forEach(control => {
+            control.style.display = images.length > 1 ? '' : 'none';
+        });
+
+        const modal = new bootstrap.Modal(document.getElementById('imageCarouselModal'));
+        modal.show();
     }
 </script>
