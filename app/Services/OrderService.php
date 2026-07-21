@@ -15,7 +15,7 @@ class OrderService
      */
     public function syncOrder(Order $order, array $data): Order
     {
-        return DB::transaction(function () use ($order, $data) {
+        return DB::transaction(function () use ($order, $data): Order {
             $order->fill([
                 'event' => $data['event'],
                 'event_start' => $data['event_start'],
@@ -49,7 +49,7 @@ class OrderService
      */
     public function syncReturnedItems(Order $order, array $returnedData): void
     {
-        DB::transaction(function () use ($order, $returnedData) {
+        DB::transaction(function () use ($order, $returnedData): void {
             foreach ($returnedData as $itemId => $qty) {
                 $qty = (int) $qty;
                 $item = Item::find($itemId);
