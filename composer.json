@@ -17,6 +17,7 @@
         "laravel/ui": "^4.6",
         "league/flysystem-aws-s3-v3": "^3.0",
         "microsoft/microsoft-graph": "^3.3",
+        "plesk/ext-laravel-integration": "^7.0",
         "socialiteproviders/microsoft": "^4.0",
         "spatie/laravel-model-states": "^2.14",
         "spatie/laravel-permission": "^8.3"
