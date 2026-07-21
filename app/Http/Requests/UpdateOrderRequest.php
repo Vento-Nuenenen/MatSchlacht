@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CheckItemStock;
+use App\Rules\CheckReturnedQuantity;
 use App\Rules\RoleInScope;
 use App\Rules\UserInScope;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -32,14 +34,13 @@ class UpdateOrderRequest extends FormRequest
             'role_id' => ['required', 'exists:roles,id', new RoleInScope],
             'user_id' => ['required', 'exists:users,id', new UserInScope],
 
-            'items' => 'nullable|array',
-            'items.*' => 'nullable|integer|min:0',
+            'items' => ['nullable', 'array', new CheckItemStock],
 
-            'collections' => 'nullable|array',
+            'collections' => ['nullable', 'array', new CheckItemStock],
             'collections.*' => 'exists:item_collections,id',
 
             'returned' => 'nullable|array',
-            'returned.*' => 'nullable|integer|min:0',
+            'returned.*' => ['nullable', 'integer', 'min:0', new CheckReturnedQuantity],
 
             'action' => 'nullable|in:save,order',
         ];
