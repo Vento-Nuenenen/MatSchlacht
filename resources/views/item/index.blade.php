@@ -49,10 +49,15 @@
                                 <th>Optionen</th>
                             </thead>
                             <tbody>
-                                @foreach($items as $item)
-                                    <tr>
-                                        <td>{{ $item->name }}</td>
-                                        <td>{{ $item->itemGroup->name }}</td>
+                            @foreach($items as $item)
+                                <tr>
+                                    <td>
+                                        {{ $item->name }}
+                                        @if($item->attachments->count() > 0)
+                                            <i class="fa fa-file text-muted ms-1" title="Hat Anhänge"></i>
+                                        @endif
+                                    </td>
+                                    <td>{{ $item->itemGroup->name }}</td>
                                         <td>{{ $item->stock }}</td>
                                         <td>{{ $item->lot }}</td>
                                         <td>{{ $item->repair }}</td>
