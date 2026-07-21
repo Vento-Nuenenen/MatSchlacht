@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\MaxServerFileSize;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -28,6 +29,26 @@ class StoreItemRequest extends FormRequest
             'lot' => 'required|integer|min:1',
             'repair' => 'integer',
             'item_group_id' => 'required|integer',
+            'files' => 'nullable|array',
+            'files.*' => ['file', 'mimes:jpg,jpeg,png,gif,webp,pdf,svg', new MaxServerFileSize],
+        ];
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'name' => 'Name',
+            'stock' => 'Bestand',
+            'lot' => 'Gebinde',
+            'repair' => 'Reparatur',
+            'item_group_id' => 'Materialgruppe',
+            'files' => 'Dateien',
+            'files.*' => 'Datei',
         ];
     }
 }
