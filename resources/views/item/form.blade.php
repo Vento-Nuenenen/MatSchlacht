@@ -44,6 +44,57 @@
     @enderror
 </div>
 
+<div class="mb-3">
+    <label for="files" class="form-label">Dateien hinzufügen</label>
+    <input type="file" class="form-control" id="files" name="files[]" multiple>
+    <div class="form-text text-muted">Maximale Dateigröße: {{ ini_get('upload_max_filesize') }}. Erlaubte Formate: Bilder (JPG, PNG, GIF, WEBP, SVG) und PDF.</div>
+    @error('files')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
+    @error('files.*')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
+</div>
+
+@if(isset($item) && $item->attachments->count() > 0)
+    <div class="mb-3">
+        <label class="form-label">Vorhandene Dateien (zum Löschen markieren)</label>
+        <div class="row">
+            @foreach($item->attachments as $attachment)
+                <div class="col-md-3 mb-2">
+                    <div class="card h-100">
+                        @if(\Illuminate\Support\Str::endsWith(strtolower($attachment->path), ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']))
+                            @php
+                                try {
+                                    $url = Storage::disk('s3')->temporaryUrl($attachment->path, now()->addMinutes(30));
+                                } catch (\Exception $e) {
+                                    $url = null;
+                                    \Illuminate\Support\Facades\Log::error("S3 URL error in form for {$attachment->path}: " . $e->getMessage());
+                                }
+                            @endphp
+                            @if($url)
+                                <img src="{{ $url }}" class="card-img-top" style="height: 100px; object-fit: cover;">
+                            @else
+                                <div class="card-img-top d-flex align-items-center justify-content-center bg-danger text-white" style="height: 100px;">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                </div>
+                            @endif
+                        @else
+                            <div class="card-img-top d-flex align-items-center justify-content-center bg-light" style="height: 100px;">
+                                <i class="bi bi-file-earmark" style="font-size: 2rem;"></i>
+                                <span class="ms-2">{{ basename($attachment->path) }}</span>
+                            </div>
+                        @endif
+                        <div class="card-body p-2 text-center">
+                            <input type="checkbox" name="remove_attachments[]" value="{{ $attachment->id }}"> Löschen
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+@endif
+
 <br />
 
 <button type="submit" class="btn btn-primary">{{ $buttonText }}</button>
