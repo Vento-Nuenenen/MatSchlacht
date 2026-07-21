@@ -6,7 +6,6 @@ parameters:
     paths:
         - app/
         - bootstrap/app.php
-        - config/
         - database/
         - routes/
 
