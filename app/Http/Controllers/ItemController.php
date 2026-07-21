@@ -4,18 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
+use App\Models\Attachment;
 use App\Models\Item;
 use App\Models\ItemGroup;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {
     public function __construct()
     {
         $this->authorizeResource(Item::class, 'item');
+    }
+
+    private function handleFileUploads(Item $item, array $files): void
+    {
+        foreach ($files as $file) {
+            $path = $file->store('items', 's3');
+            $item->attachments()->create(['path' => $path]);
+        }
     }
 
     /**
@@ -52,7 +62,11 @@ class ItemController extends Controller
      */
     public function store(StoreItemRequest $request): RedirectResponse
     {
-        Item::create($request->validated());
+        $item = Item::create($request->validated());
+
+        if ($request->hasFile('files')) {
+            $this->handleFileUploads($item, $request->file('files'));
+        }
 
         return redirect()->route('items.index')->with('success', 'Neues Material wurde erfolgreich erstellt.');
     }
@@ -73,6 +87,20 @@ class ItemController extends Controller
     public function update(UpdateItemRequest $request, Item $item): RedirectResponse
     {
         $item->update($request->validated());
+
+        if ($request->has('remove_attachments')) {
+            foreach ($request->remove_attachments as $attachmentId) {
+                $attachment = Attachment::find($attachmentId);
+                if ($attachment) {
+                    Storage::disk('s3')->delete($attachment->path);
+                    $attachment->delete();
+                }
+            }
+        }
+
+        if ($request->hasFile('files')) {
+            $this->handleFileUploads($item, $request->file('files'));
+        }
 
         return redirect()->route('items.index')->with('success', 'Material wurde erfolgreich aktualisiert.');
     }
