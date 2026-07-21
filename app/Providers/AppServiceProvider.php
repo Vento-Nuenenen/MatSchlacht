@@ -3,8 +3,11 @@
 namespace App\Providers;
 
 use App\Mail\Transport\MicrosoftGraphTransport;
+use App\Models\Attachment;
+use App\Models\Item;
 use App\Models\Order;
 use App\Observers\OrderObserver;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
@@ -35,6 +38,17 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Order::observe(OrderObserver::class);
+
+        Relation::morphMap([
+            'item' => Item::class,
+            'attachment' => Attachment::class,
+            'user' => User::class,
+            'order' => Order::class,
+            'item_group' => ItemGroup::class,
+            'ordered_item' => OrderedItem::class,
+            'item_collection' => ItemCollection::class,
+            'item_collection_item' => ItemCollectionItem::class,
+        ]);
 
         Event::listen(SocialiteWasCalled::class, MicrosoftExtendSocialite::class);
 
