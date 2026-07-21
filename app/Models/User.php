@@ -55,7 +55,7 @@ class User extends Authenticatable
             $civil_name .= ' / '.$this->scoutname;
         }
 
-        return $civil_name;
+        return (string) $civil_name;
     }
 
     public function preferredName(): string
@@ -66,7 +66,7 @@ class User extends Authenticatable
             $preferred_name = $this->firstname;
         }
 
-        return $preferred_name;
+        return (string) $preferred_name;
     }
 
     public function isPrivileged(): bool
