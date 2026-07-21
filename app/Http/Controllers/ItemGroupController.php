@@ -47,7 +47,7 @@ class ItemGroupController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ItemGroup $itemGroup)
+    public function show(ItemGroup $itemGroup): void
     {
         //
     }
