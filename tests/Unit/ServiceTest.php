@@ -28,8 +28,8 @@ class ServiceTest extends TestCase
         $role = Role::findByName('Wolfsstufe');
         $item = Item::factory()->create(['stock' => 100, 'item_group_id' => ItemGroup::factory()->create()->id]);
 
-        $service = new OrderService();
-        $order = new Order();
+        $service = new OrderService;
+        $order = new Order;
         $order = $service->syncOrder($order, [
             'event' => 'Service Test',
             'event_start' => now()->addDay()->format('Y-m-d'),
@@ -52,8 +52,8 @@ class ServiceTest extends TestCase
         $item1 = Item::factory()->create(['item_group_id' => ItemGroup::factory()->create()->id]);
         $item2 = Item::factory()->create(['item_group_id' => ItemGroup::factory()->create()->id]);
 
-        $service = new OrderService();
-        $order = new Order();
+        $service = new OrderService;
+        $order = new Order;
         $order = $service->syncOrder($order, [
             'event' => 'Initial',
             'event_start' => now()->format('Y-m-d'),
