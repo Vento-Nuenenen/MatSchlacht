@@ -40,6 +40,9 @@
             content: "\f0dd";
             color: #333;
         }
+        .cursor-pointer {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
