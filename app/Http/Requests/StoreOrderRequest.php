@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CheckItemStock;
 use App\Rules\RoleInScope;
 use App\Rules\UserInScope;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -32,10 +33,9 @@ class StoreOrderRequest extends FormRequest
             'role_id' => ['required', 'exists:roles,id', new RoleInScope],
             'user_id' => ['required', 'exists:users,id', new UserInScope],
 
-            'items' => 'nullable|array',
-            'items.*' => 'nullable|integer|min:0',
+            'items' => ['nullable', 'array', new CheckItemStock],
 
-            'collections' => 'nullable|array',
+            'collections' => ['nullable', 'array', new CheckItemStock],
             'collections.*' => 'exists:item_collections,id',
 
             'action' => 'required|in:save,order',
