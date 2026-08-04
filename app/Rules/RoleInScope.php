@@ -21,6 +21,7 @@ class RoleInScope implements ValidationRule
             return;
         }
 
+        /** @var int|string $value */
         $role = Role::find($value);
         if (! $role) {
             return;
