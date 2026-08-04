@@ -9,12 +9,13 @@ use App\States\Order\Archived;
 use App\States\Order\Committed;
 use App\States\Order\Returned;
 use App\States\Order\Stored;
+use Illuminate\View\View;
 
 class OverwatchController extends Controller
 {
     public function __construct() {}
 
-    public function index()
+    public function index(): View
     {
         $user = auth()->user();
         $stats = [];
