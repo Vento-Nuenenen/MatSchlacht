@@ -32,7 +32,7 @@ class OrderManagementController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Factory|View
+    public function index(): View
     {
         $this->authorize('manage', Order::class);
 
