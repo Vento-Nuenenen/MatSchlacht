@@ -21,6 +21,7 @@ class UserInScope implements ValidationRule
             return;
         }
 
+        /** @var int|string $value */
         $targetUser = User::find($value);
         if (! $targetUser) {
             return;
