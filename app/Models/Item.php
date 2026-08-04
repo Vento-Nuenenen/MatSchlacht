@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\ItemFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,18 +23,28 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 ])]
 class Item extends Model
 {
+    /** @use HasFactory<ItemFactory> */
     use HasFactory;
 
+    /**
+     * @return MorphMany<Attachment, $this>
+     */
     public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
     }
 
+    /**
+     * @return BelongsTo<ItemGroup, $this>
+     */
     public function itemGroup(): BelongsTo
     {
         return $this->belongsTo(ItemGroup::class);
     }
 
+    /**
+     * @return HasMany<OrderedItem, $this>
+     */
     public function orderedItems(): HasMany
     {
         return $this->hasMany(OrderedItem::class);
