@@ -25,7 +25,7 @@ class RolePermissionController extends Controller
         return view('role.index', compact('roles', 'permissions'));
     }
 
-    public function create()
+    public function create(): View
     {
         $permissions = Permission::all();
 
@@ -48,7 +48,7 @@ class RolePermissionController extends Controller
         return redirect()->route('roles.index')->with('success', 'Rolle erfolgreich erstellt!');
     }
 
-    public function edit(Role $role)
+    public function edit(Role $role): View|RedirectResponse
     {
         $role = Role::with('permissions')->findOrFail($role->id);
 
@@ -61,7 +61,7 @@ class RolePermissionController extends Controller
         return view('role.edit', compact('role', 'permissions'));
     }
 
-    public function update(UpdateRoleRequest $request, Role $role)
+    public function update(UpdateRoleRequest $request, Role $role): RedirectResponse
     {
         $data = $request->validated();
         $role = Role::findOrFail($role->id);
