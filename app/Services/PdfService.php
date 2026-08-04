@@ -136,6 +136,9 @@ class PdfService
      */
     public function output(string $filename): string
     {
-        return TCPDF::Output($filename, 'S');
+        /** @var string|TCPDF $output */
+        $output = TCPDF::Output($filename, 'S');
+
+        return (string) $output;
     }
 }
