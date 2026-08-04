@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\States\Order\OrderState;
+use Database\Factories\OrderFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,13 +24,14 @@ use Spatie\Permission\Models\Role;
 ])]
 class Order extends Model
 {
+    /** @use HasFactory<OrderFactory> */
     use HasFactory, HasStates;
 
     protected $casts = [
         'state' => OrderState::class,
     ];
 
-    /*
+    /**
      * @return BelongsTo<Role, $this>
      */
     public function role(): BelongsTo
@@ -37,7 +39,7 @@ class Order extends Model
         return $this->belongsTo(Role::class);
     }
 
-    /*
+    /**
      * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
@@ -45,7 +47,7 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    /*
+    /**
      * @return HasMany<OrderedItem, $this>
      */
     public function orderedItems(): HasMany
@@ -53,7 +55,7 @@ class Order extends Model
         return $this->hasMany(OrderedItem::class);
     }
 
-    /*
+    /**
      * @return BelongsToMany<ItemCollection, $this>
      */
     public function itemCollections(): BelongsToMany
