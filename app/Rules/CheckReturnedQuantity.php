@@ -39,10 +39,11 @@ class CheckReturnedQuantity implements DataAwareRule, ValidationRule
         $order = $this->data['order'] ?? request()->route('order');
 
         if (! $order instanceof Order) {
+            /** @var int|string|null $order */
             $order = Order::find($order);
         }
 
-        if (! $order) {
+        if (! $order instanceof Order) {
             return;
         }
 
