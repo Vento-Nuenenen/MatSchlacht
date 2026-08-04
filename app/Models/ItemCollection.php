@@ -15,11 +15,17 @@ class ItemCollection extends Model
 
     protected $fillable = ['name', 'description'];
 
+    /**
+     * @return HasMany<ItemCollectionItem, $this>
+     */
     public function collectionItems(): HasMany
     {
         return $this->hasMany(ItemCollectionItem::class);
     }
 
+    /**
+     * @return BelongsToMany<Item, $this>
+     */
     public function items(): BelongsToMany
     {
         return $this->belongsToMany(Item::class, 'item_collection_items')
