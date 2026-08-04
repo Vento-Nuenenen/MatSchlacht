@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Mail\TestMail;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 class MailTestController extends Controller
 {
-    public function sendTestMail(Request $request)
+    public function sendTestMail(Request $request): JsonResponse
     {
         $recipient = $request->query('email', config('mail.from.address'));
 
