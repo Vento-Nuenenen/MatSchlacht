@@ -18,7 +18,7 @@
                         @csrf
 
                         <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Adresse') }}</label>
+                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('E-Mail') }}</label>
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
@@ -74,7 +74,7 @@
                         <div class="row mb-3">
                             <div class="col-md-12 offset-md-4">
                                 <a href="{{ route('azure.login') }}" class="btn btn-scout-mail col-md-6">
-                                    {{ __('Login mit Pfadi Mail') }}
+                                    {{ __('Login mit Nünenen Mail') }}
                                 </a>
                             </div>
                         </div>
