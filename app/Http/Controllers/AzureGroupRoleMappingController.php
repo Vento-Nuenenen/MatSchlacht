@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAzureGroupRoleMapping;
 use App\Http\Requests\UpdateAzureGroupRoleMapping;
 use App\Models\AzureGroupRoleMapping;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 
@@ -28,7 +29,7 @@ class AzureGroupRoleMappingController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
         $roles = Role::all();
 
@@ -38,7 +39,7 @@ class AzureGroupRoleMappingController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreAzureGroupRoleMapping $request)
+    public function store(StoreAzureGroupRoleMapping $request): RedirectResponse
     {
         AzureGroupRoleMapping::create($request->validated());
 
@@ -49,7 +50,7 @@ class AzureGroupRoleMappingController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(AzureGroupRoleMapping $azureGroupRoleMapping)
+    public function edit(AzureGroupRoleMapping $azureGroupRoleMapping): View
     {
         $roles = Role::all();
 
@@ -59,7 +60,7 @@ class AzureGroupRoleMappingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAzureGroupRoleMapping $request, AzureGroupRoleMapping $azureGroupRoleMapping)
+    public function update(UpdateAzureGroupRoleMapping $request, AzureGroupRoleMapping $azureGroupRoleMapping): RedirectResponse
     {
         $azureGroupRoleMapping->update($request->validated());
 
@@ -70,7 +71,7 @@ class AzureGroupRoleMappingController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(AzureGroupRoleMapping $azureGroupRoleMapping)
+    public function destroy(AzureGroupRoleMapping $azureGroupRoleMapping): RedirectResponse
     {
         $azureGroupRoleMapping->delete();
 
