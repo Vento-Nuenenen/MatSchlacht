@@ -34,6 +34,7 @@ class StoreOrderRequest extends FormRequest
             'user_id' => ['required', 'exists:users,id', new UserInScope],
 
             'items' => ['nullable', 'array', new CheckItemStock],
+            'items.*' => ['integer', 'min:0', 'max:100000', new CheckItemStock],
 
             'collections' => ['nullable', 'array', new CheckItemStock],
             'collections.*' => 'exists:item_collections,id',

@@ -1,7 +1,10 @@
 <?php
 
+use App\Models\User;
+
 test('example', function () {
-    $response = $this->get('/');
+    $user = User::factory()->create();
+    $response = $this->actingAs($user)->get('/overwatch');
 
     $response->assertStatus(200);
 });

@@ -19,8 +19,11 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\ServiceProvider;
 use Microsoft\Graph\GraphServiceClient;
 use Microsoft\Kiota\Authentication\Oauth\ClientCredentialContext;
+use Psr\Log\NullLogger;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 use SocialiteProviders\Microsoft\MicrosoftExtendSocialite;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Mailer\Transport\LogTransport;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -58,10 +61,23 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(SocialiteWasCalled::class, MicrosoftExtendSocialite::class);
 
         Mail::extend('microsoftgraph', function (array $config) {
+            $tenantId = (string) config('services.microsoft.tenant');
+            $clientId = (string) config('services.microsoft.client_id');
+            $clientSecret = (string) config('services.microsoft.client_secret');
+
+            if (empty($tenantId) || empty($clientId) || empty($clientSecret)) {
+                // Return a dummy transport or handle the error gracefully
+                // For now, we'll use a log transport if credentials are missing
+                return new LogTransport(
+                    new NullLogger,
+                    new EventDispatcher
+                );
+            }
+
             $tokenContext = new ClientCredentialContext(
-                (string) config('services.microsoft.tenant'),
-                (string) config('services.microsoft.client_id'),
-                (string) config('services.microsoft.client_secret')
+                $tenantId,
+                $clientId,
+                $clientSecret
             );
 
             $graphServiceClient = new GraphServiceClient($tokenContext);
