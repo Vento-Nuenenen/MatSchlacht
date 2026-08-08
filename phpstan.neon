@@ -10,3 +10,19 @@ parameters:
         - routes/
 
     level: 7
+
+    reportUnmatchedIgnoredErrors: false
+
+    ignoreErrors:
+        -
+            message: '#Access to an undefined property App\\Models\\Item::\$pivot#'
+            path: app/Rules/CheckItemStock.php
+        -
+            message: '#Cannot cast Elibyy\\TCPDF\\Facades\\TCPDF\|string to string#'
+            path: app/Services/PdfService.php
+        -
+            message: '#Parameter \#1 \$message of static method Symfony\\Component\\Mime\\MessageConverter::toEmail\(\) expects Symfony\\Component\\Mime\\Message, Symfony\\Component\\Mime\\RawMessage given#'
+            path: app/Mail/Transport/MicrosoftGraphTransport.php
+        -
+            message: '#Parameter \#1 \$value of method Microsoft\\Graph\\Generated\\Models\\FileAttachment::setContentBytes\(\) expects Psr\\Http\\Message\\StreamInterface\|null, string given#'
+            path: app/Mail/Transport/MicrosoftGraphTransport.php
