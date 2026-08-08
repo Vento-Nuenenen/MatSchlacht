@@ -68,10 +68,6 @@ class AppServiceProvider extends ServiceProvider
             if (empty($tenantId) || empty($clientId) || empty($clientSecret)) {
                 // Return a dummy transport or handle the error gracefully
                 // For now, we'll use a log transport if credentials are missing
-                return new LogTransport(
-                    new NullLogger,
-                    new EventDispatcher
-                );
             }
 
             $tokenContext = new ClientCredentialContext(
