@@ -11,6 +11,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
@@ -20,11 +21,16 @@ class ItemController extends Controller
         $this->authorizeResource(Item::class, 'item');
     }
 
+    /**
+     * @param  array<int, UploadedFile>  $files
+     */
     private function handleFileUploads(Item $item, array $files): void
     {
         foreach ($files as $file) {
             $path = $file->store('items', 's3');
-            $item->attachments()->create(['path' => $path]);
+            if ($path) {
+                $item->attachments()->create(['path' => $path]);
+            }
         }
     }
 
@@ -89,9 +95,11 @@ class ItemController extends Controller
         $item->update($request->validated());
 
         if ($request->has('remove_attachments')) {
-            foreach ($request->remove_attachments as $attachmentId) {
+            /** @var array<int, int> $removeAttachments */
+            $removeAttachments = $request->remove_attachments;
+            foreach ($removeAttachments as $attachmentId) {
                 $attachment = Attachment::find($attachmentId);
-                if ($attachment) {
+                if ($attachment instanceof Attachment) {
                     Storage::disk('s3')->delete($attachment->path);
                     $attachment->delete();
                 }

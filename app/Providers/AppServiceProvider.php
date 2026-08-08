@@ -5,7 +5,12 @@ namespace App\Providers;
 use App\Mail\Transport\MicrosoftGraphTransport;
 use App\Models\Attachment;
 use App\Models\Item;
+use App\Models\ItemCollection;
+use App\Models\ItemCollectionItem;
+use App\Models\ItemGroup;
 use App\Models\Order;
+use App\Models\OrderedItem;
+use App\Models\User;
 use App\Observers\OrderObserver;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Event;
@@ -54,16 +59,16 @@ class AppServiceProvider extends ServiceProvider
 
         Mail::extend('microsoftgraph', function (array $config) {
             $tokenContext = new ClientCredentialContext(
-                (string) env('AZURE_TENANT_ID'),
-                (string) env('AZURE_CLIENT_ID'),
-                (string) env('AZURE_CLIENT_SECRET')
+                (string) config('services.microsoft.tenant'),
+                (string) config('services.microsoft.client_id'),
+                (string) config('services.microsoft.client_secret')
             );
 
             $graphServiceClient = new GraphServiceClient($tokenContext);
 
             return new MicrosoftGraphTransport(
                 $graphServiceClient,
-                env('MAIL_OFFICE365_USER_ID', config('mail.from.address'))
+                (string) config('mail.microsoft_graph.user_id', config('mail.from.address'))
             );
         });
     }

@@ -32,19 +32,27 @@ class MaxServerFileSize implements ValidationRule
      */
     protected function getServerMaxSize(): int
     {
-        $val = trim(ini_get('upload_max_filesize'));
+        $iniVal = ini_get('upload_max_filesize');
+        $val = trim($iniVal ?: '');
+
+        if ($val === '') {
+            return 0;
+        }
+
         $last = strtolower($val[strlen($val) - 1]);
-        $val = (int) $val;
+        $valInt = (int) $val;
 
         switch ($last) {
             case 'g':
-                $val *= 1024;
+                $valInt *= 1024;
+                // no break
             case 'm':
-                $val *= 1024;
+                $valInt *= 1024;
+                // no break
             case 'k':
-                $val *= 1024;
+                $valInt *= 1024;
         }
 
-        return $val;
+        return $valInt;
     }
 }

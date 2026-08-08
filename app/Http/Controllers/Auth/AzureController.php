@@ -10,12 +10,16 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\AbstractProvider;
 
 class AzureController extends Controller
 {
     public function redirectToAzure(): RedirectResponse
     {
-        return Socialite::driver('microsoft')
+        /** @var AbstractProvider $driver */
+        $driver = Socialite::driver('microsoft');
+
+        return $driver
             ->scopes(['User.Read', 'GroupMember.Read.All'])
             ->redirect();
     }
@@ -23,6 +27,7 @@ class AzureController extends Controller
     public function handleAzureCallback(): RedirectResponse
     {
         try {
+            /** @var \Laravel\Socialite\Two\User $azureUser */
             $azureUser = Socialite::driver('microsoft')->user();
         } catch (Exception $e) {
             return redirect('/login')->with('error', 'Azure authentication failed.');
@@ -65,14 +70,16 @@ class AzureController extends Controller
         return redirect()->intended(route('overwatch'));
     }
 
-    protected function syncRoles(User $user, string $token)
+    protected function syncRoles(User $user, string $token): void
     {
         // Get user groups from Microsoft Graph
         $response = Http::withToken($token)
             ->get('https://graph.microsoft.com/v1.0/me/memberOf?$select=id');
 
         if ($response->successful()) {
-            $groups = collect($response->json('value'))
+            /** @var array<int, array{id: string}> $value */
+            $value = $response->json('value');
+            $groups = collect($value)
                 ->pluck('id')
                 ->toArray();
 

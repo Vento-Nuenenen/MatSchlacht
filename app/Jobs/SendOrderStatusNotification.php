@@ -33,8 +33,8 @@ class SendOrderStatusNotification implements ShouldQueue
         }
 
         // Add material responsibles
-        $responsibles = env('MAIL_MATERIAL_RESPONSIBLES');
-        if ($responsibles) {
+        $responsibles = config('mail.material_responsibles');
+        if (is_string($responsibles) && ! empty($responsibles)) {
             foreach (explode(',', $responsibles) as $email) {
                 $recipients->push(trim($email));
             }

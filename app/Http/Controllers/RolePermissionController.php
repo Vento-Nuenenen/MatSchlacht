@@ -61,6 +61,9 @@ class RolePermissionController extends Controller
         return view('role.edit', compact('role', 'permissions'));
     }
 
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(UpdateRoleRequest $request, Role $role): RedirectResponse
     {
         $data = $request->validated();

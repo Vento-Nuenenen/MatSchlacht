@@ -30,6 +30,7 @@ class OrderStatusChanged extends Mailable
         $subject = match ($this->statusName) {
             'committed' => 'Bestellung eingereicht: '.$this->order->event,
             'accepted' => 'Bestellung bestätigt: '.$this->order->event,
+            default => 'Statusänderung Bestellung: '.$this->order->event,
         };
 
         return new Envelope(
@@ -45,6 +46,7 @@ class OrderStatusChanged extends Mailable
         $view = match ($this->statusName) {
             'committed' => 'mail.order-committed',
             'accepted' => 'mail.order-accepted',
+            default => 'mail.order-status-changed',
         };
 
         return new Content(

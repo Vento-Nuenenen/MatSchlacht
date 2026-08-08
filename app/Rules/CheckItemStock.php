@@ -81,9 +81,11 @@ class CheckItemStock implements DataAwareRule, ValidationRule
         // Sum up quantities from collections
         foreach ($collections as $collectionId) {
             $collection = ItemCollection::with('items')->find($collectionId);
-            if ($collection) {
+            if ($collection instanceof ItemCollection) {
                 foreach ($collection->items as $item) {
-                    $requestedQuantities[$item->id] = ($requestedQuantities[$item->id] ?? 0) + $item->pivot->quantity;
+                    /** @var object{quantity: int} $pivot */
+                    $pivot = $item->pivot;
+                    $requestedQuantities[$item->id] = ($requestedQuantities[$item->id] ?? 0) + $pivot->quantity;
                 }
             }
         }
@@ -91,18 +93,14 @@ class CheckItemStock implements DataAwareRule, ValidationRule
         // Check against stock
         foreach ($requestedQuantities as $itemId => $quantity) {
             $item = Item::find($itemId);
-            if ($item) {
+            if ($item instanceof Item) {
                 $totalQuantity = $quantity;
                 if ($item->lot > 1) {
                     $totalQuantity = $quantity * $item->lot;
                 }
 
                 if ($totalQuantity > $item->stock) {
-                    if (str_starts_with($attribute, 'items.')) {
-                        $fail("Vom Artikel '{$item->name}' sind nur noch {$item->stock} Stück verfügbar (angefordert: {$totalQuantity}).");
-                    } else {
-                        $fail("Durch die Auswahl der Kollektionen wird der Bestand von '{$item->name}' überschritten ({$item->stock} verfügbar, angefordert: {$totalQuantity}).");
-                    }
+                    $fail("Durch die Auswahl der Kollektionen wird der Bestand von '{$item->name}' überschritten ({$item->stock} verfügbar, angefordert: {$totalQuantity}).");
                 }
             }
         }

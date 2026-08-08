@@ -120,11 +120,11 @@ class OrderController extends Controller
             })->get();
 
             // Ensure the order's role and user are included even if they are not in current user's scope (should not happen normally but for safety)
-            if (! $roles->contains('id', $order->role_id)) {
+            if ($order->role instanceof Role && ! $roles->contains('id', $order->role_id)) {
                 $roles->push($order->role);
             }
 
-            if (! $users->contains('id', $order->user_id)) {
+            if ($order->user instanceof User && ! $users->contains('id', $order->user_id)) {
                 $users->push($order->user);
             }
         }

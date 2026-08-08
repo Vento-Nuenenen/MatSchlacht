@@ -119,4 +119,10 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    'material_responsibles' => env('MAIL_MATERIAL_RESPONSIBLES'),
+
+    'microsoft_graph' => [
+        'user_id' => env('MAIL_OFFICE365_USER_ID'),
+    ],
+
 ];

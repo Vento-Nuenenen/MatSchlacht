@@ -2,6 +2,7 @@
 
 namespace App\Mail\Transport;
 
+use GuzzleHttp\Psr7\Utils;
 use Microsoft\Graph\Generated\Models\BodyType;
 use Microsoft\Graph\Generated\Models\EmailAddress;
 use Microsoft\Graph\Generated\Models\FileAttachment;
@@ -14,6 +15,8 @@ use Microsoft\Graph\GraphServiceClient;
 use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mailer\Transport\AbstractTransport;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Message as MimeMessage;
 use Symfony\Component\Mime\MessageConverter;
 
 class MicrosoftGraphTransport extends AbstractTransport
@@ -28,16 +31,23 @@ class MicrosoftGraphTransport extends AbstractTransport
     protected function doSend(SentMessage $message): void
     {
         try {
-            $email = MessageConverter::toEmail($message->getOriginalMessage());
+            $originalMessage = $message->getOriginalMessage();
+
+            if (! $originalMessage instanceof MimeMessage) {
+                throw new \Exception('Message is not an instance of Symfony\Component\Mime\Message');
+            }
+
+            /** @var Email $email */
+            $email = MessageConverter::toEmail($originalMessage);
 
             $requestBody = new SendMailPostRequestBody;
             $graphMessage = new Message;
 
-            $graphMessage->setSubject($email->getSubject());
+            $graphMessage->setSubject($email->getSubject() ?? '');
 
             $body = new ItemBody;
             $body->setContentType(new BodyType($email->getHtmlBody() ? BodyType::HTML : BodyType::TEXT));
-            $body->setContent($email->getHtmlBody() ?: ($email->getTextBody() ?: ''));
+            $body->setContent((string) ($email->getHtmlBody() ?: ($email->getTextBody() ?: '')));
             $graphMessage->setBody($body);
 
             $graphMessage->setToRecipients($this->mapContacts($email->getTo()));
@@ -55,8 +65,11 @@ class MicrosoftGraphTransport extends AbstractTransport
                 foreach ($attachments as $attachment) {
                     $graphAttachment = new FileAttachment;
                     $graphAttachment->setName($attachment->getFilename());
-                    $graphAttachment->setContentType($attachment->getHeaders()->get('Content-Type')?->getBody() ?? 'application/octet-stream');
-                    $graphAttachment->setContentBytes($attachment->getBody());
+                    $graphAttachment->setContentType($attachment->getHeaders()->get('Content-Type')?->getBodyAsString() ?? 'application/octet-stream');
+
+                    /** @var string $attachmentBody */
+                    $attachmentBody = $attachment->getBody();
+                    $graphAttachment->setContentBytes(Utils::streamFor(base64_encode($attachmentBody)));
                     $graphAttachments[] = $graphAttachment;
                 }
                 $graphMessage->setAttachments($graphAttachments);
@@ -84,6 +97,10 @@ class MicrosoftGraphTransport extends AbstractTransport
         }
     }
 
+    /**
+     * @param  array<int, Address>  $contacts
+     * @return array<int, Recipient>
+     */
     protected function mapContacts(array $contacts): array
     {
         return array_map(function (Address $address) {
