@@ -33,14 +33,16 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-version }}
-          tools: composer:v2
-          coverage: xdebug
+            php-version: ${{ matrix.php-version }}
+            tools: composer:v2
+            coverage: xdebug
+            cache: composer
 
       - name: Setup Node
         uses: actions/setup-node@v7 # v7
         with:
-          node-version: '24'
+            node-version: '24'
+            cache: 'npm'
 
       - name: Install Node Dependencies
         run: npm i
