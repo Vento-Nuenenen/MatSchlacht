@@ -8,11 +8,7 @@
                 <div class="card-header">{{ __('Login') }}</div>
 
                 <div class="card-body">
-                    @if (session('error'))
-                        <div class="alert alert-danger" role="alert">
-                            {{ session('error') }}
-                        </div>
-                    @endif
+                    @include('components.status-alerts')
 
                     <form method="POST" action="{{ route('login') }}">
                         @csrf

@@ -4,11 +4,7 @@
     <div class="container">
         <div class="row mb-4">
             <div class="col-md-12">
-                @if(session('status'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('status') }}
-                    </div>
-                @endif
+                @include('components.status-alerts')
 
                 <h1>Dashboard</h1>
                 <p class="lead">Willkommen zurück, {{ auth()->user()->preferredName() }}!</p>

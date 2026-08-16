@@ -4,11 +4,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                @if (session('status'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('status') }}
-                    </div>
-                @endif
+                @include('components.status-alerts')
 
                 <div class="card">
                     <div class="card-header">Material</div>
