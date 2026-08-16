@@ -19,41 +19,43 @@
                             <br />
                         @endcan
 
-                        <table class="table table-hover table-bordered table-striped" id="item-groups-table">
-                            <thead>
-                                <th width="50"></th>
-                                <th class="sortable-header">Pos.</th>
-                                <th class="sortable-header">Bezeichnung</th>
-                                <th>Optionen</th>
-                            </thead>
-                            <tbody id="item-groups-body">
-                            @foreach($itemGroups as $itemGroup)
-                                <tr data-id="{{ $itemGroup->id }}">
-                                    @can('edit itemgroups')
-                                        <td class="drag-handle" style="cursor: move;">
-                                            <i class="fa fa-bars"></i>
-                                        </td>
-                                    @else
-                                        <td></td>
-                                    @endcan
-                                    <td class="position-index">{{ $loop->iteration }}</td>
-                                    <td>{{ $itemGroup->name }}</td>
-                                    <td>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped" id="item-groups-table">
+                                <thead>
+                                    <th width="50"></th>
+                                    <th class="sortable-header">Pos.</th>
+                                    <th class="sortable-header">Bezeichnung</th>
+                                    <th>Optionen</th>
+                                </thead>
+                                <tbody id="item-groups-body">
+                                @foreach($itemGroups as $itemGroup)
+                                    <tr data-id="{{ $itemGroup->id }}">
                                         @can('edit itemgroups')
-                                            <a href="{{ route('item-groups.edit', $itemGroup->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
-                                            &nbsp;
+                                            <td class="drag-handle" style="cursor: move;">
+                                                <i class="fa fa-bars"></i>
+                                            </td>
+                                        @else
+                                            <td></td>
                                         @endcan
-                                        @can('delete itemgroups')
-                                            @include('components.delete', [
-                                                'route' => 'item-groups.destroy',
-                                                'id' => $itemGroup->id,
-                                            ])
-                                        @endcan
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+                                        <td class="position-index">{{ $loop->iteration }}</td>
+                                        <td>{{ $itemGroup->name }}</td>
+                                        <td>
+                                            @can('edit itemgroups')
+                                                <a href="{{ route('item-groups.edit', $itemGroup->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                                                &nbsp;
+                                            @endcan
+                                            @can('delete itemgroups')
+                                                @include('components.delete', [
+                                                    'route' => 'item-groups.destroy',
+                                                    'id' => $itemGroup->id,
+                                                ])
+                                            @endcan
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

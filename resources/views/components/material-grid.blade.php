@@ -13,7 +13,7 @@
         @php [$pos, $groupName] = array_pad(explode('|', $groupKey, 2), 2, 'Sonstiges') @endphp
         <div class="card mb-3 item-group">
             <div class="card-header">{{ $groupName }}</div>
-            <div class="card-body">
+            <div class="card-body table-responsive">
                 <table class="table table-sm mb-0">
                     <thead>
                     <tr>

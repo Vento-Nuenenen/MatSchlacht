@@ -46,30 +46,32 @@
 
                         <h5>Details & Material</h5>
 
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Material</th>
-                                    <th>Bestellt</th>
-                                    @if($order->state->equals(\App\States\Order\Delivered::class) || $order->state->equals(\App\States\Order\Returned::class))
-                                        <th>Zurückgegeben</th>
-                                    @endif
-                                    <th>Materialgruppe</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($order->orderedItems as $orderedItem)
-                                <tr>
-                                    <td>{{ $orderedItem->item->name }}</td>
-                                    <td>{{ $orderedItem->quantity }}</td>
-                                    @if($order->state->equals(\App\States\Order\Delivered::class) || $order->state->equals(\App\States\Order\Returned::class))
-                                        <td>{{ $orderedItem->returned }}</td>
-                                    @endif
-                                    <td>{{ $orderedItem->item->itemGroup?->name ?? 'Sonstiges' }}</td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Material</th>
+                                        <th>Bestellt</th>
+                                        @if($order->state->equals(\App\States\Order\Delivered::class) || $order->state->equals(\App\States\Order\Returned::class))
+                                            <th>Zurückgegeben</th>
+                                        @endif
+                                        <th>Materialgruppe</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($order->orderedItems as $orderedItem)
+                                    <tr>
+                                        <td>{{ $orderedItem->item->name }}</td>
+                                        <td>{{ $orderedItem->quantity }}</td>
+                                        @if($order->state->equals(\App\States\Order\Delivered::class) || $order->state->equals(\App\States\Order\Returned::class))
+                                            <td>{{ $orderedItem->returned }}</td>
+                                        @endif
+                                        <td>{{ $orderedItem->item->itemGroup?->name ?? 'Sonstiges' }}</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
 
                         <div class="d-flex justify-content-between mt-4">
                             <a href="{{ route('orders.index') }}" class="btn btn-secondary">Zurück zur Übersicht</a>

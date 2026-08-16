@@ -19,38 +19,40 @@
                             <br />
                         @endcan
 
-                        <table class="table table-hover table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th class="sortable-header">Azure Group Object ID</th>
-                                    <th class="sortable-header">Rolle</th>
-                                    <th>Optionen</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($mappings as $mapping)
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped">
+                                <thead>
                                     <tr>
-                                        <td>{{ $mapping->azure_group_id }}</td>
-                                        <td>{{ $mapping->role_name }}</td>
-                                        <td>
-                                            @can('manage azure mappings')
-                                                <a href="{{ route('azure-group-role-mappings.edit', $mapping->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
-                                                &nbsp;
-                                                @include('components.delete', [
-                                                    'route' => 'azure-group-role-mappings.destroy',
-                                                    'id' => $mapping->id
-                                                ])
-                                            @endcan
-                                        </td>
+                                        <th class="sortable-header">Azure Group Object ID</th>
+                                        <th class="sortable-header">Rolle</th>
+                                        <th>Optionen</th>
                                     </tr>
-                                @endforeach
-                                @if($mappings->isEmpty())
-                                    <tr>
-                                        <td colspan="3" class="text-center">Keine Mappings vorhanden</td>
-                                    </tr>
-                                @endif
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach($mappings as $mapping)
+                                        <tr>
+                                            <td>{{ $mapping->azure_group_id }}</td>
+                                            <td>{{ $mapping->role_name }}</td>
+                                            <td>
+                                                @can('manage azure mappings')
+                                                    <a href="{{ route('azure-group-role-mappings.edit', $mapping->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                                                    &nbsp;
+                                                    @include('components.delete', [
+                                                        'route' => 'azure-group-role-mappings.destroy',
+                                                        'id' => $mapping->id
+                                                    ])
+                                                @endcan
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    @if($mappings->isEmpty())
+                                        <tr>
+                                            <td colspan="3" class="text-center">Keine Mappings vorhanden</td>
+                                        </tr>
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

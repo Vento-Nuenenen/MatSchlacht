@@ -45,44 +45,46 @@
                             </h4>
 
                             @if($filteredOrders->isNotEmpty())
-                                <table class="table table-hover table-bordered table-striped mb-4">
-                                    <thead>
-                                        <tr>
-                                            <th class="sortable-header">Anlass</th>
-                                            <th class="sortable-header">Einheit</th>
-                                            <th class="sortable-header">Besteller</th>
-                                            <th class="sortable-header">Kollektionen</th>
-                                            <th class="sortable-header">Von</th>
-                                            <th class="sortable-header">Bis</th>
-                                            <th>Optionen</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($filteredOrders as $order)
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered table-striped mb-4">
+                                        <thead>
                                             <tr>
-                                                <td>{{ $order->event }}</td>
-                                                <td>{{ $order->role->name }}</td>
-                                                <td>{{ $order->user->fullName() }}</td>
-                                                <td>
-                                                    @foreach($order->itemCollections->groupBy('id') as $collectionId => $group)
-                                                        @php $count = $group->count(); @endphp
-                                                        <span class="badge bg-info text-dark">
-                                                            {{ $group->first()->name }}
-                                                            @if($count > 1) ({{ $count }}x) @endif
-                                                        </span>
-                                                    @endforeach
-                                                </td>
-                                                <td data-sort-value="{{ \Carbon\Carbon::parse($order->event_start)->format('Ymd') }}">{{ \Carbon\Carbon::parse($order->event_start)->format('d.m.Y') }}</td>
-                                                <td data-sort-value="{{ \Carbon\Carbon::parse($order->event_end)->format('Ymd') }}">{{ \Carbon\Carbon::parse($order->event_end)->format('d.m.Y') }}</td>
-                                                <td>
-                                                    <div class="btn-group">
-                                                        <a href="{{ route('orders.manage.edit', $order->id) }}" class="btn btn-warning btn-sm">Verwalten</a>
-                                                    </div>
-                                                </td>
+                                                <th class="sortable-header">Anlass</th>
+                                                <th class="sortable-header">Einheit</th>
+                                                <th class="sortable-header">Besteller</th>
+                                                <th class="sortable-header">Kollektionen</th>
+                                                <th class="sortable-header">Von</th>
+                                                <th class="sortable-header">Bis</th>
+                                                <th>Optionen</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($filteredOrders as $order)
+                                                <tr>
+                                                    <td>{{ $order->event }}</td>
+                                                    <td>{{ $order->role->name }}</td>
+                                                    <td>{{ $order->user->fullName() }}</td>
+                                                    <td>
+                                                        @foreach($order->itemCollections->groupBy('id') as $collectionId => $group)
+                                                            @php $count = $group->count(); @endphp
+                                                            <span class="badge bg-info text-dark">
+                                                                {{ $group->first()->name }}
+                                                                @if($count > 1) ({{ $count }}x) @endif
+                                                            </span>
+                                                        @endforeach
+                                                    </td>
+                                                    <td data-sort-value="{{ \Carbon\Carbon::parse($order->event_start)->format('Ymd') }}">{{ \Carbon\Carbon::parse($order->event_start)->format('d.m.Y') }}</td>
+                                                    <td data-sort-value="{{ \Carbon\Carbon::parse($order->event_end)->format('Ymd') }}">{{ \Carbon\Carbon::parse($order->event_end)->format('d.m.Y') }}</td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <a href="{{ route('orders.manage.edit', $order->id) }}" class="btn btn-warning btn-sm">Verwalten</a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             @else
                                 <p class="text-muted mb-4">Keine Bestellungen in diesem Status.</p>
                             @endif
