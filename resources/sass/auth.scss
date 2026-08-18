@@ -1,7 +1,13 @@
 .btn-scout-mail {
     background: #7c0d61;
     color: white;
-    outline-color: white;
+}
+
+.btn-scout-mail:hover {
+    outline-color: #7c0d61;
+    outline-style: solid;
+    font-weight: bolder;
+    color: #7c0d61;
 }
 
 .btn-midata {

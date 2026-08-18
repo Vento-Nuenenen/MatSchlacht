@@ -69,7 +69,7 @@
 
                         <div class="row mb-3">
                             <div class="col-md-12 offset-md-4">
-                                <a href="{{ route('azure.login') }}" class="btn btn-scout-mail col-md-6">
+                                <a href="{{ route('azure.login') }}" class="btn btn-scout-mail col-md-6" type="button">
                                     {{ __('Login mit Nünenen Mail') }}
                                 </a>
                             </div>
