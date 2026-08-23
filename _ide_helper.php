@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 13.26.0.
+ * Generated for Laravel 13.26.1.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -25827,49 +25827,27 @@ namespace  {
         /**
          * Add a where clause on the primary key to the query.
          *
+         * @param mixed $id
          * @return \Illuminate\Database\Eloquent\Builder<static>
          * @static
          */
-        public static function whereKey($id, $boolean = 'and', $not = false)
+        public static function whereKey($id)
         {
             /** @var \Illuminate\Database\Eloquent\Builder $instance */
-            return $instance->whereKey($id, $boolean, $not);
+            return $instance->whereKey($id);
         }
 
         /**
          * Add a where clause on the primary key to the query.
          *
+         * @param mixed $id
          * @return \Illuminate\Database\Eloquent\Builder<static>
          * @static
          */
-        public static function whereKeyNot($id, $boolean = 'and')
+        public static function whereKeyNot($id)
         {
             /** @var \Illuminate\Database\Eloquent\Builder $instance */
-            return $instance->whereKeyNot($id, $boolean);
-        }
-
-        /**
-         * Add an "or where" clause on the primary key to the query.
-         *
-         * @return \Illuminate\Database\Eloquent\Builder<static>
-         * @static
-         */
-        public static function orWhereKey($id)
-        {
-            /** @var \Illuminate\Database\Eloquent\Builder $instance */
-            return $instance->orWhereKey($id);
-        }
-
-        /**
-         * Add an "or where not" clause on the primary key to the query.
-         *
-         * @return \Illuminate\Database\Eloquent\Builder<static>
-         * @static
-         */
-        public static function orWhereKeyNot($id)
-        {
-            /** @var \Illuminate\Database\Eloquent\Builder $instance */
-            return $instance->orWhereKeyNot($id);
+            return $instance->whereKeyNot($id);
         }
 
         /**
