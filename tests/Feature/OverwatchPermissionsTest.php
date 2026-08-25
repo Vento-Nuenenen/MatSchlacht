@@ -17,7 +17,7 @@ test('it shows all permissions of a user in the overwatch view', function () {
 
     $response = $this->actingAs($user)->get('/overwatch');
 
-    $response->assertStatus(200);
+    $response->assertSuccessful();
     $response->assertSee('permission-one');
     $response->assertSee('permission-two');
 });

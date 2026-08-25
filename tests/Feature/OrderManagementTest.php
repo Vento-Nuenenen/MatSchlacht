@@ -6,5 +6,5 @@ test('example', function () {
     $user = User::factory()->create();
     $response = $this->actingAs($user)->get('/overwatch');
 
-    $response->assertStatus(200);
+    $response->assertSuccessful();
 });

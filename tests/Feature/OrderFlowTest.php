@@ -10,6 +10,9 @@ use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
 
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertDatabaseMissing;
+
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
@@ -39,14 +42,14 @@ test('a user can create an order', function () {
         ->post(route('orders.store'), $orderData);
 
     $response->assertRedirect(route('orders.index'));
-    $this->assertDatabaseHas('orders', [
+    assertDatabaseHas('orders', [
         'event' => 'Summer Camp',
         'user_id' => $this->user->id,
         'role_id' => $this->role->id,
     ]);
 
     $order = Order::where('event', 'Summer Camp')->first();
-    $this->assertDatabaseHas('ordered_items', [
+    assertDatabaseHas('ordered_items', [
         'order_id' => $order->id,
         'item_id' => $this->item->id,
         'quantity' => 10,
@@ -76,7 +79,7 @@ test('a user can update their own draft order', function () {
         ->put(route('orders.update', $order), $updateData);
 
     $response->assertRedirect(route('orders.index'));
-    $this->assertDatabaseHas('orders', [
+    assertDatabaseHas('orders', [
         'id' => $order->id,
         'event' => 'Updated Event',
     ]);
@@ -114,5 +117,5 @@ test('a user can delete their own draft order', function () {
         ->delete(route('orders.destroy', $order));
 
     $response->assertRedirect(route('orders.index'));
-    $this->assertDatabaseMissing('orders', ['id' => $order->id]);
+    assertDatabaseMissing('orders', ['id' => $order->id]);
 });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CanAssignRole;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -25,12 +26,12 @@ class StoreUserRequest extends FormRequest
         return [
             'firstname' => 'required',
             'lastname' => 'required',
-            'scoutname' => '',
-            'email' => 'required|email',
-            'aktiv' => '',
+            'scoutname' => 'nullable|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'aktiv' => 'boolean',
 
             'roles' => 'array',
-            'roles.*' => 'exists:roles,name',
+            'roles.*' => ['exists:roles,name', new CanAssignRole],
         ];
     }
 }

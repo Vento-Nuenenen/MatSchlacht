@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
+#[Fillable(['path', 'attachable_id', 'attachable_type'])]
 class Attachment extends Model
 {
-    protected $fillable = ['path', 'attachable_id', 'attachable_type'];
-
     /**
      * @return MorphTo<Model, $this>
      */

@@ -6,6 +6,8 @@ use App\Models\User;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
+use function Pest\Laravel\assertDatabaseHas;
+
 beforeEach(function () {
     // Setup roles and permissions
     Permission::create(['name' => 'edit orders']);
@@ -21,7 +23,7 @@ test('can list item collections', function () {
 
     $this->actingAs($this->user)
         ->get(route('item-collections.index'))
-        ->assertStatus(200)
+        ->assertSuccessful()
         ->assertSee(ItemCollection::first()->name);
 });
 
@@ -39,8 +41,8 @@ test('can create an item collection', function () {
         ]);
 
     $response->assertRedirect(route('item-collections.index'));
-    $this->assertDatabaseHas('item_collections', ['name' => 'Test Collection']);
-    $this->assertDatabaseHas('item_collection_items', [
+    assertDatabaseHas('item_collections', ['name' => 'Test Collection']);
+    assertDatabaseHas('item_collection_items', [
         'item_id' => $items[0]->id,
         'quantity' => 5,
     ]);
@@ -51,6 +53,6 @@ test('collections are visible on order create page', function () {
 
     $this->actingAs($this->user)
         ->get(route('orders.create'))
-        ->assertStatus(200)
+        ->assertSuccessful()
         ->assertSee('Orderable Collection');
 });

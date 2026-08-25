@@ -27,9 +27,17 @@ class Order extends Model
     /** @use HasFactory<OrderFactory> */
     use HasFactory, HasStates;
 
-    protected $casts = [
-        'state' => OrderState::class,
-    ];
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'state' => OrderState::class,
+        ];
+    }
 
     /**
      * @return BelongsTo<Role, $this>
