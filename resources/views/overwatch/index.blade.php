@@ -55,7 +55,7 @@
                         </p>
                         <p>Deine aktuellen Berechtigungen: &nbsp;
                             @foreach(auth()->user()->getAllPermissions() as $permission)
-                                <span class="badge bg-info">{{ $permission->name }}</span> &nbsp;
+                                <span class="badge bg-info color-black">{{ $permission->name }}</span> &nbsp;
                             @endforeach
                         </p>
                     </div>

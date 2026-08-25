@@ -26,7 +26,11 @@
                                     @foreach($roles as $role)
                                         <tr>
                                             <td>{{ $role->name }}</td>
-                                            <td>{{ $role->permissions->pluck('name')->join(', ') }}</td>
+                                            <td>
+                                                @foreach($role->permissions as $permission)
+                                                    <span class="badge bg-info color-black">{{ $permission->name }}</span>
+                                                @endforeach
+                                            </td>
                                             <td>
                                                 @if($role->name !== 'Materialwart')
                                                     @can('edit roles')
