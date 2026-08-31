@@ -70,7 +70,7 @@
 
                         <div class="d-flex justify-content-between mt-4">
                             <a href="{{ route('orders.index') }}" class="btn btn-secondary">Zurück zur Übersicht</a>
-                            <a href="{{ route('orders.manage.contents-pdf', $order) }}" class="btn btn-info text-white shadow-sm"
+                            <a href="{{ route('orders.manage.contents-pdf', $order) }}" class="btn btn-info text-white"
                                target="_blank">
                                 <i class="fa fa-file-pdf me-1"></i> Packliste PDF
                             </a>
