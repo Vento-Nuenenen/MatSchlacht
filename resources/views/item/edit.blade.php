@@ -42,10 +42,7 @@
                                                             <td class="text-end">
                                                                 @can('edit items')
                                                                     <button type="button" class="btn btn-sm btn-outline-danger border-0"
-                                                                            onclick="if(confirm('Inhalt wirklich löschen?')) { document.getElementById('delete-content-{{ $content->id }}').submit(); }"
-                                                                            data-bs-toggle="popover"
-                                                                            data-bs-trigger="hover focus"
-                                                                            data-bs-content="Löschen">
+                                                                            onclick="if(confirm('Inhalt wirklich löschen?')) { document.getElementById('delete-content-{{ $content->id }}').submit(); }">
                                                                         <i class="fa fa-trash"></i>
                                                                     </button>
                                                                     <form id="delete-content-{{ $content->id }}" action="{{ route('items.contents.destroy', $content) }}" method="POST" style="display: none;">
