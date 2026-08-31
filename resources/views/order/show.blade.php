@@ -47,7 +47,16 @@
                                 <tbody>
                                 @foreach($order->orderedItems as $orderedItem)
                                     <tr>
-                                        <td>{{ $orderedItem->item->name }}</td>
+                                        <td>
+                                            <span class="fw-bold">{{ $orderedItem->item->name }}</span>
+                                            @if($orderedItem->item->contents->isNotEmpty())
+                                                <i class="fa fa-info-circle text-info ms-1 cursor-pointer"
+                                                   data-bs-toggle="modal"
+                                                   data-bs-target="#contentModal"
+                                                   data-bs-title="Inhaltsliste von {{ $orderedItem->item->name }}"
+                                                   data-bs-content="<ul class='list-unstyled mb-0'>@foreach($orderedItem->item->contents as $c)<li><i class='fa fa-check-square-o me-1 small text-muted'></i><strong>{{ $c->quantity }}</strong> {{ $c->name }}</li>@endforeach</ul>"></i>
+                                            @endif
+                                        </td>
                                         <td>{{ $orderedItem->quantity }}</td>
                                         @if($order->state->equals(\App\States\Order\Delivered::class) || $order->state->equals(\App\States\Order\Returned::class))
                                             <td>{{ $orderedItem->returned }}</td>
@@ -61,6 +70,10 @@
 
                         <div class="d-flex justify-content-between mt-4">
                             <a href="{{ route('orders.index') }}" class="btn btn-secondary">Zurück zur Übersicht</a>
+                            <a href="{{ route('orders.manage.contents-pdf', $order) }}" class="btn btn-info text-white shadow-sm"
+                               target="_blank">
+                                <i class="fa fa-file-pdf me-1"></i> Packliste PDF
+                            </a>
                         </div>
                     </div>
                 </div>
