@@ -57,6 +57,14 @@
                                 @if($item->attachments->count() > $imageAttachments->count())
                                     <i class="fa fa-file-alt text-muted ms-1" title="Hat weitere Anhänge"></i>
                                 @endif
+
+                                @if($item->contents->isNotEmpty())
+                                    <i class="fa fa-info-circle text-info ms-1 cursor-pointer"
+                                       data-bs-toggle="modal"
+                                       data-bs-target="#contentModal"
+                                       data-bs-title="Inhaltsliste von {{ $item->name }}"
+                                       data-bs-content="<ul class='list-unstyled mb-0'>@foreach($item->contents as $c)<li><i class='fa fa-check-square-o me-1 small text-muted'></i><strong>{{ $c->quantity }}</strong> {{ $c->name }}</li>@endforeach</ul>"></i>
+                                @endif
                             </td>
                             <td>{{ $item->stock }}</td>
                             <td>{{ $item->lot }}</td>
