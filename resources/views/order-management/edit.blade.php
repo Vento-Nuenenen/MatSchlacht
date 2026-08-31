@@ -15,7 +15,12 @@
                         <div class="d-flex">
                             <h5>Aktionen</h5>
                         </div>
-                        <div class="">
+                        <div class="mb-3">
+                            <a href="{{ route('orders.manage.contents-pdf', $order) }}" class="btn btn-info text-white me-3"
+                               target="_blank">
+                                <i class="fa fa-file-pdf me-1"></i> Packliste PDF
+                            </a>
+
                             @if($order->state->equals(\App\States\Order\Accepted::class))
                                 <a href="{{ route('orders.manage.order-pdf', $order) }}" class="btn btn-warning me-3" target="_blank">Auftragsliste PDF</a> &nbsp;
                             @endif
