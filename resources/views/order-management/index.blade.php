@@ -47,7 +47,19 @@
                                         <tbody>
                                             @foreach($filteredOrders as $order)
                                                 <tr>
-                                                    <td>{{ $order->event }}</td>
+                                                    <td>
+                                                        {{ $order->event }}
+                                                        @php
+                                                            $hasContents = $order->orderedItems->contains(fn($oi) => $oi->item->contents->isNotEmpty());
+                                                        @endphp
+                                                        @if($hasContents)
+                                                            <i class="fa fa-info-circle text-info ms-1 cursor-pointer"
+                                                               data-bs-toggle="modal"
+                                                               data-bs-target="#contentModal"
+                                                               data-bs-title="Bestellinhalte ({{ $order->event }})"
+                                                               data-bs-content="<ul class='list-unstyled mb-0'>@foreach($order->orderedItems as $oi) @if($oi->item->contents->isNotEmpty()) <li><strong>{{ $oi->item->name }}:</strong> <small>@foreach($oi->item->contents as $c){{ $c->quantity }} {{ $c->name }}@if(!$loop->last), @endif @endforeach</small></li> @endif @endforeach</ul>"></i>
+                                                        @endif
+                                                    </td>
                                                     <td>{{ $order->role->name }}</td>
                                                     <td>{{ $order->user->fullName() }}</td>
                                                     <td>
