@@ -6,6 +6,7 @@ use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Models\Attachment;
 use App\Models\Item;
+use App\Models\ItemContent;
 use App\Models\ItemGroup;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -83,8 +84,9 @@ class ItemController extends Controller
     public function edit(Item $item): Factory|View
     {
         $itemGroups = ItemGroup::all();
+        $allContentNames = ItemContent::distinct()->pluck('name');
 
-        return view('item.edit', compact('item', 'itemGroups'));
+        return view('item.edit', compact('item', 'itemGroups', 'allContentNames'));
     }
 
     /**

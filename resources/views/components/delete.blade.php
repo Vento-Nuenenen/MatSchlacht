@@ -2,5 +2,5 @@
     @csrf
     @method('DELETE')
 
-    <button type="submit" class="btn btn-danger btn-sm">Löschen</button>
+    <button type="submit" class="btn btn-danger">Löschen</button>
 </form>

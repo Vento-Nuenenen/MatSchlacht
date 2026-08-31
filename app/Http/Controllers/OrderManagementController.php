@@ -217,4 +217,62 @@ class OrderManagementController extends Controller
         return response($this->pdfService->output($order->id.'_rueckgabe.pdf'), 200)
             ->header('Content-Type', 'application/pdf');
     }
+
+    public function exportContentsPdf(Order $order): Response|RedirectResponse
+    {
+        $this->authorize('view', $order);
+
+        $order->load(['orderedItems.item.contents', 'role', 'user']);
+
+        $this->pdfService->init('Packliste - '.$order->event);
+        $this->pdfService->renderHeader('Packliste (Inhalte)', $order->event);
+        $this->pdfService->renderOrderInfo($order);
+
+        $this->pdfService->renderSectionTitle('Inhaltsübersicht');
+
+        $itemsWithContents = $order->orderedItems->filter(function ($orderedItem) {
+            return $orderedItem->item->contents->isNotEmpty();
+        });
+
+        if ($itemsWithContents->isEmpty()) {
+            TCPDF::SetFont('helvetica', 'I', 10);
+            TCPDF::Cell(180, 10, 'Keine Materialien mit Inhalten in dieser Bestellung gefunden.', 0, 1, 'L');
+
+            return response($this->pdfService->output($order->id.'_packliste.pdf'), 200)
+                ->header('Content-Type', 'application/pdf');
+        }
+
+        $columns = [
+            ['width' => 150, 'label' => 'Material / Inhalt', 'align' => 'L'],
+            ['width' => 30, 'label' => 'Anzahl / Menge', 'align' => 'C'],
+        ];
+
+        $this->pdfService->renderTableHeader($columns);
+
+        TCPDF::SetFont('helvetica', '', 10);
+        $fill = false;
+
+        foreach ($itemsWithContents as $orderedItem) {
+            $this->pdfService->checkPageBreak(250, $columns);
+
+            // Item row
+            TCPDF::SetFont('helvetica', 'B', 10);
+            TCPDF::SetFillColor(245, 245, 245);
+            TCPDF::Cell(150, 7, ' '.$orderedItem->item->name, 1, 0, 'L', true);
+            TCPDF::Cell(30, 7, $orderedItem->quantity, 1, 1, 'C', true);
+
+            // Content rows
+            TCPDF::SetFont('helvetica', '', 9);
+            foreach ($orderedItem->item->contents as $content) {
+                $this->pdfService->checkPageBreak(250, $columns);
+                TCPDF::Cell(150, 6, '    - '.$content->name, 1, 0, 'L', $fill);
+                TCPDF::Cell(30, 6, $content->quantity, 1, 1, 'C', $fill);
+                $fill = ! $fill;
+            }
+            TCPDF::Ln(2);
+        }
+
+        return response($this->pdfService->output($order->id.'_packliste.pdf'), 200)
+            ->header('Content-Type', 'application/pdf');
+    }
 }

@@ -49,4 +49,12 @@ class Item extends Model
     {
         return $this->hasMany(OrderedItem::class);
     }
+
+    /**
+     * @return HasMany<ItemContent, $this>
+     */
+    public function contents(): HasMany
+    {
+        return $this->hasMany(ItemContent::class);
+    }
 }
