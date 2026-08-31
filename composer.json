@@ -31,7 +31,6 @@
         "laravel/pail": "^1.2.7",
         "laravel/pao": "^1.1.4",
         "laravel/pint": "^1.30",
-        "laravel/sail": "^1.67",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.9.5",
         "pestphp/pest": "^5.1",
