@@ -10,13 +10,12 @@
         "spatie/laravel-permission",
         "barryvdh/laravel-debugbar"
     ],
-    "sail": false,
+    "sail": true,
     "skills": [
         "infer-conventions",
         "laravel-best-practices",
         "testing-best-practices",
         "socialite-development",
-        "pest-testing",
         "tailwindcss-development",
         "laravel-permission-development",
         "debug-using-debugbar"
