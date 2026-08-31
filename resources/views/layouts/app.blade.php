@@ -57,6 +57,22 @@
     @yield('assets-js')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Handle Content Modal
+            const contentModal = document.getElementById('contentModal');
+            if (contentModal) {
+                contentModal.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+                    const title = button.getAttribute('data-bs-title');
+                    const content = button.getAttribute('data-bs-content');
+
+                    const modalTitle = contentModal.querySelector('.modal-title');
+                    const modalBody = contentModal.querySelector('.modal-body');
+
+                    modalTitle.textContent = title;
+                    modalBody.innerHTML = content;
+                });
+            }
+
             const getCellValue = (tr, idx) => {
                 const cell = tr.children[idx];
                 return cell.dataset.sortValue || cell.innerText || cell.textContent;
@@ -89,5 +105,22 @@
             })));
         });
     </script>
+    <!-- Global Content Modal -->
+    <div class="modal fade" id="contentModal" tabindex="-1" aria-labelledby="contentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contentModalLabel">Inhaltsliste</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Content will be injected here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Schließen</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
