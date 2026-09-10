@@ -63,7 +63,7 @@
 
                         <div class="mt-4">
                             <a href="{{ route('azure.login') }}" class="btn btn-scout-mail w-100 py-2 shadow-sm text-center" role="button">
-                                <i class="fa fa-microsoft me-1"></i> {{ __('Login mit Nünenen Mail') }}
+                                {{ __('Login mit Nünenen Mail') }}
                             </a>
                         </div>
                     </form>

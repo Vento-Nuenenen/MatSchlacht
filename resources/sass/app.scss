@@ -39,7 +39,8 @@
         .table {
             font-size: 0.85rem;
 
-            th, td {
+            th,
+            td {
                 padding: 0.45rem 0.5rem;
                 vertical-align: middle;
             }
@@ -62,9 +63,18 @@
         padding: 0.875rem;
     }
 
-    h1, .h1 { font-size: 1.75rem; }
-    h2, .h2 { font-size: 1.45rem; }
-    h3, .h3 { font-size: 1.25rem; }
+    h1,
+    .h1 {
+        font-size: 1.75rem;
+    }
+    h2,
+    .h2 {
+        font-size: 1.45rem;
+    }
+    h3,
+    .h3 {
+        font-size: 1.25rem;
+    }
 }
 
 // Sortable table headers
@@ -76,19 +86,19 @@
     white-space: nowrap;
 }
 .sortable-header::after {
-    content: "\f0dc";
-    font-family: "Font Awesome 6 Free";
+    content: '\f0dc';
+    font-family: 'Font Awesome 6 Free';
     font-weight: 900;
     position: absolute;
     right: 5px;
     color: #ccc;
 }
 .sortable-header.sort-asc::after {
-    content: "\f0de";
+    content: '\f0de';
     color: #333;
 }
 .sortable-header.sort-desc::after {
-    content: "\f0dd";
+    content: '\f0dd';
     color: #333;
 }
 
