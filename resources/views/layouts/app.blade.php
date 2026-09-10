@@ -18,38 +18,12 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
     @yield('assets-css')
-    <style>
-        .sortable-header {
-            cursor: pointer;
-            position: relative;
-            padding-right: 20px !important;
-        }
-        .sortable-header::after {
-            content: "\f0dc";
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            position: absolute;
-            right: 5px;
-            color: #ccc;
-        }
-        .sortable-header.sort-asc::after {
-            content: "\f0de";
-            color: #333;
-        }
-        .sortable-header.sort-desc::after {
-            content: "\f0dd";
-            color: #333;
-        }
-        .cursor-pointer {
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
     <div id="app">
         @include('layouts.nav')
 
-        <main class="py-4">
+        <main class="py-3 py-md-4">
             @yield('content')
         </main>
     </div>
@@ -107,7 +81,7 @@
     </script>
     <!-- Global Content Modal -->
     <div class="modal fade" id="contentModal" tabindex="-1" aria-labelledby="contentModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="contentModalLabel">Inhaltsliste</h5>

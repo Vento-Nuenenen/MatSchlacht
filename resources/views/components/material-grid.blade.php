@@ -1,6 +1,9 @@
 <div class="mb-3">
-    <label class="form-label">Materialien</label>
-    <input type="text" id="itemSearch" class="form-control" placeholder="Suchen…" oninput="filterItems()" autofocus />
+    <label for="itemSearch" class="form-label fw-bold">Materialien filtern</label>
+    <div class="input-group">
+        <span class="input-group-text bg-white"><i class="fa fa-search text-muted"></i></span>
+        <input type="text" id="itemSearch" class="form-control" placeholder="Material suchen…" oninput="filterItems()" autofocus />
+    </div>
 </div>
 
 <div id="itemsContainer">
@@ -11,18 +14,18 @@
 
     @foreach($grouped as $groupKey => $groupItems)
         @php [$pos, $groupName] = array_pad(explode('|', $groupKey, 2), 2, 'Sonstiges') @endphp
-        <div class="card mb-3 item-group">
-            <div class="card-header">{{ $groupName }}</div>
-            <div class="card-body table-responsive">
-                <table class="table table-sm mb-0">
-                    <thead>
+        <div class="card mb-3 item-group shadow-sm">
+            <div class="card-header fw-bold bg-light">{{ $groupName }}</div>
+            <div class="card-body p-0 table-responsive">
+                <table class="table table-sm table-hover align-middle mb-0">
+                    <thead class="table-light">
                     <tr>
-                        <th scope="col" class="col-6">Name</th>
-                        <th scope="col" class="col-2">Verfügbar</th>
-                        <th scope="col" class="col-{{ isset($order) && isset($order->state) && ($order->state?->equals(\App\States\Order\Delivered::class) || $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class)) ? '1' : '2' }}">Packungsgrösse</th>
-                        <th scope="col" class="col-{{ isset($order) && isset($order->state) && ($order->state?->equals(\App\States\Order\Delivered::class) || $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class)) ? '1' : '2' }}">Bestellen</th>
+                        <th scope="col" style="min-width: 140px;">Name</th>
+                        <th scope="col" class="text-center" style="width: 15%; min-width: 75px;">Verfügbar</th>
+                        <th scope="col" class="text-center" style="width: 15%; min-width: 75px;">Packungsgrösse</th>
+                        <th scope="col" class="text-center" style="width: 15%; min-width: 85px;">Bestellen</th>
                         @if(isset($order) && isset($order->state) && ($order->state?->equals(\App\States\Order\Delivered::class) || $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class)))
-                            <th scope="col" class="col-2">Zurückgegeben</th>
+                            <th scope="col" class="text-center" style="width: 15%; min-width: 85px;">Zurückgegeben</th>
                         @endif
                     </tr>
                     </thead>
@@ -47,33 +50,34 @@
                             })->filter();
                         @endphp
                         <tr class="item-row {{ $actualQty > 0 ? 'table-primary' : '' }}">
-                            <td class="item-name">
-                                {{ $item->name }}
+                            <td class="item-name py-2">
+                                <span class="fw-semibold">{{ $item->name }}</span>
                                 @if($imageUrls->isNotEmpty())
-                                    <i class="fa fa-image text-primary cursor-pointer ms-2"
-                                       onclick="showImageCarousel({{ json_encode($imageUrls) }}, '{{ $item->name }}')"
+                                    <i class="fa fa-image text-primary cursor-pointer ms-2 p-1 item-carousel-trigger"
+                                       data-images="{{ json_encode($imageUrls) }}"
+                                       data-item-name="{{ $item->name }}"
                                        title="Bilder anzeigen"></i>
                                 @endif
                                 @if($item->attachments->count() > $imageAttachments->count())
-                                    <i class="fa fa-file-alt text-muted ms-1" title="Hat weitere Anhänge"></i>
+                                    <i class="fa fa-file-alt text-muted ms-1 p-1" title="Hat weitere Anhänge"></i>
                                 @endif
 
                                 @if($item->contents->isNotEmpty())
-                                    <i class="fa fa-info-circle text-info ms-1 cursor-pointer"
+                                    <i class="fa fa-info-circle text-info ms-1 cursor-pointer p-1"
                                        data-bs-toggle="modal"
                                        data-bs-target="#contentModal"
                                        data-bs-title="Inhaltsliste von {{ $item->name }}"
                                        data-bs-content="<ul class='list-unstyled mb-0'>@foreach($item->contents as $c)<li><i class='fa fa-check-square-o me-1 small text-muted'></i><strong>{{ $c->quantity }}</strong> {{ $c->name }}</li>@endforeach</ul>"></i>
                                 @endif
                             </td>
-                            <td>{{ $item->stock }}</td>
-                            <td>{{ $item->lot }}</td>
-                            <td>
+                            <td class="text-center">{{ $item->stock }}</td>
+                            <td class="text-center">{{ $item->lot }}</td>
+                            <td class="text-center">
                                 <input
                                     type="number"
                                     min="0"
                                     max="{{ $maxDisplayQty }}"
-                                    class="form-control form-control-sm"
+                                    class="form-control form-control-sm item-qty-input d-inline-block"
                                     name="items[{{ $item->id }}]"
                                     value="{{ $displayQty }}"
                                     {{ isset($order) && isset($order->state) && ($order->state?->equals(\App\States\Order\Delivered::class) || $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class)) ? 'readonly' : '' }}
@@ -83,13 +87,13 @@
                                     data-max-qty="{{ $maxDisplayQty }}">
                             </td>
                             @if(isset($order) && isset($order->state) && ($order->state?->equals(\App\States\Order\Delivered::class) || $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class)))
-                                <td>
+                                <td class="text-center">
                                     @if($actualQty > 0)
                                         <input
                                             type="number"
                                             min="0"
                                             max="{{ $displayQty }}"
-                                            class="form-control form-control-sm"
+                                            class="form-control form-control-sm item-qty-input d-inline-block"
                                             name="returned[{{ $item->id }}]"
                                             value="{{ $displayReturnedQty }}"
                                             {{ $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class) ? 'readonly' : '' }}
@@ -147,7 +151,7 @@
 
 <!-- Image Carousel Modal -->
 <div class="modal fade" id="imageCarouselModal" tabindex="-1" aria-labelledby="imageCarouselModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-fullscreen-sm-down">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="imageCarouselModalLabel">Bilder</h5>
@@ -173,6 +177,16 @@
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.item-carousel-trigger').forEach(el => {
+            el.addEventListener('click', function () {
+                const images = JSON.parse(this.dataset.images || '[]');
+                const itemName = this.dataset.itemName || '';
+                showImageCarousel(images, itemName);
+            });
+        });
+    });
+
     function showImageCarousel(images, itemName) {
         const modalLabel = document.getElementById('imageCarouselModalLabel');
         const carouselInner = document.getElementById('carouselInner');
@@ -184,7 +198,15 @@
         images.forEach((url, index) => {
             const div = document.createElement('div');
             div.className = `carousel-item ${index === 0 ? 'active' : ''}`;
-            div.innerHTML = `<img src="${url}" class="d-block w-100" style="max-height: 80vh; object-fit: contain;" alt="${itemName}">`;
+
+            const img = document.createElement('img');
+            img.src = url;
+            img.className = 'd-block w-100';
+            img.style.maxHeight = '80vh';
+            img.style.objectFit = 'contain';
+            img.alt = itemName;
+
+            div.appendChild(img);
             carouselInner.appendChild(div);
         });
 

@@ -1,14 +1,14 @@
-<nav class="navbar navbar-expand-md bg-light">
-    <div class="container">
-        <a class="navbar-brand" href="{{ url('/') }}">
+<nav class="navbar navbar-expand-md bg-light shadow-sm">
+    <div class="container-fluid px-3 px-sm-4 px-xxl-5">
+        <a class="navbar-brand fw-bold" href="{{ url('/') }}">
             {{ config('app.name', 'Laravel') }}
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse mt-2 mt-md-0" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
-            <ul class="navbar-nav me-auto">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{{ url('/') }}">Home</a>
                 </li>

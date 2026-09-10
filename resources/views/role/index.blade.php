@@ -1,53 +1,63 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
         <div class="row justify-content-center">
-            <div class="col-md-12">
+            <div class="col-12">
                 @include('components.status-alerts')
 
-                <div class="card">
-                    <div class="card-header">Einheiten & Berechtigungen</div>
-                    <div class="card-body">
+                <div class="card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <span class="h5 mb-0">Einheiten & Berechtigungen</span>
                         @can('create roles')
-                            <a href="{{ route('roles.create') }}" class="btn btn-info btn-sm col-12">Neue Einheit erstellen</a>
-                            <br />
-                            <br />
+                            <a href="{{ route('roles.create') }}" class="btn btn-info btn-sm">
+                                <i class="fa fa-plus me-1"></i> Neue Einheit erstellen
+                            </a>
                         @endcan
-
+                    </div>
+                    <div class="card-body p-0 p-sm-3">
                         <div class="table-responsive">
-                            <table class="table table-hover table-bordered table-striped">
-                                <thead>
-                                    <th scope="col" class="sortable-header">Rolle</th>
-                                    <th scope="col" class="col-8">Berechtigungen</th>
-                                    <th scope="col">Optionen</th>
+                            <table class="table table-hover table-bordered table-striped align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col" class="sortable-header" style="min-width: 140px;">Rolle / Einheit</th>
+                                        <th scope="col">Berechtigungen</th>
+                                        <th scope="col" class="text-nowrap" style="min-width: 120px;">Optionen</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($roles as $role)
+                                    @forelse($roles as $role)
                                         <tr>
-                                            <td>{{ $role->name }}</td>
+                                            <td class="fw-semibold">{{ $role->name }}</td>
                                             <td>
-                                                @foreach($role->permissions as $permission)
-                                                    <span class="badge bg-info color-black">{{ $permission->name }}</span>
-                                                @endforeach
+                                                <div class="d-flex flex-wrap gap-1">
+                                                    @foreach($role->permissions as $permission)
+                                                        <span class="badge bg-info color-black">{{ $permission->name }}</span>
+                                                    @endforeach
+                                                </div>
                                             </td>
-                                            <td>
+                                            <td class="text-nowrap">
                                                 @if($role->name !== 'Materialwart')
-                                                    @can('edit roles')
-                                                        <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
-                                                        &nbsp;
-                                                    @endcan
+                                                    <div class="d-flex gap-1 flex-wrap align-items-center">
+                                                        @can('edit roles')
+                                                            <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                                                        @endcan
 
-                                                    @can('delete roles')
-                                                        @include('components.delete', [
-                                                            'route' => 'roles.destroy',
-                                                            'id' => $role->id
-                                                        ])
-                                                    @endcan
-                                               @endif
+                                                        @can('delete roles')
+                                                            @include('components.delete', [
+                                                                'route' => 'roles.destroy',
+                                                                'id' => $role->id
+                                                            ])
+                                                        @endcan
+                                                    </div>
+                                                @endif
                                             </td>
                                         </tr>
-                                  @endforeach
+                                    @empty
+                                        <tr>
+                                            <td colspan="3" class="text-center py-4 text-muted">Keine Rollen vorhanden.</td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>

@@ -19,11 +19,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\ServiceProvider;
 use Microsoft\Graph\GraphServiceClient;
 use Microsoft\Kiota\Authentication\Oauth\ClientCredentialContext;
-use Psr\Log\NullLogger;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 use SocialiteProviders\Microsoft\MicrosoftExtendSocialite;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Mailer\Transport\LogTransport;
 
 class AppServiceProvider extends ServiceProvider
 {

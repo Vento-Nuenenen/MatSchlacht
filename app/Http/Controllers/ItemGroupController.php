@@ -77,7 +77,13 @@ class ItemGroupController extends Controller
     {
         $this->authorize('create', ItemGroup::class);
 
-        $positions = $request->input('positions');
+        $validated = $request->validate([
+            'positions' => ['required', 'array'],
+            'positions.*' => ['integer', 'exists:item_groups,id'],
+        ]);
+
+        /** @var array<int, int> $positions */
+        $positions = $validated['positions'];
 
         foreach ($positions as $position => $id) {
             ItemGroup::where('id', $id)->update(['position' => $position + 1]);

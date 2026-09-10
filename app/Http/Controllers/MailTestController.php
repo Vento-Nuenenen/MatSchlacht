@@ -11,6 +11,10 @@ class MailTestController extends Controller
 {
     public function sendTestMail(Request $request): JsonResponse
     {
+        if (! auth()->user()?->isPrivileged()) {
+            abort(403, 'Unauthorized');
+        }
+
         $recipient = $request->query('email', config('mail.from.address'));
 
         if (! $recipient) {

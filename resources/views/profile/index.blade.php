@@ -1,17 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
     <div class="row justify-content-center">
-        <div class="col-md-12">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-7">
             @include('components.status-alerts')
 
-            <div class="card">
-                <div class="card-header">Profil</div>
-                <div class="card-body">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <span class="h5 mb-0 fw-bold">Profil</span>
+                </div>
+                <div class="card-body p-3 p-md-4">
                     <div class="mb-4">
-                        <h5>Benutzerinformationen</h5>
-                        <p>
+                        <h6 class="text-muted text-uppercase small fw-bold mb-2">Benutzerinformationen</h6>
+                        <p class="mb-0">
                             <strong>Name:</strong> {{ $user->fullName() }} <br />
                             <strong>E-Mail:</strong> {{ $user->email }} <br />
                             <strong>Benutzertyp: &nbsp;</strong>
@@ -23,22 +25,22 @@
                         </p>
                     </div>
 
-                    <hr />
+                    <hr class="my-4" />
 
                     @if($user->isAzureUser())
                         <div class="alert alert-info">
-                            <i class="bi bi-info-circle"></i>
+                            <i class="fa fa-info-circle me-1"></i>
                             Da du mit einem Azure-Konto angemeldet bist, kannst du dein Passwort hier nicht ändern. Bitte verwalte dein Passwort in deinem Microsoft 365 Profil.
                         </div>
                     @else
-                        <h5 class="mb-3">Passwort ändern</h5>
+                        <h5 class="mb-3 fw-bold">Passwort ändern</h5>
 
                         <form method="POST" action="{{ route('profile.password.update') }}">
                             @csrf
                             @method('PUT')
 
                             <div class="mb-3">
-                                <label for="current_password" class="form-label">Aktuelles Passwort</label>
+                                <label for="current_password" class="form-label fw-semibold">Aktuelles Passwort</label>
                                 <input id="current_password" type="password" class="form-control @error('current_password') is-invalid @enderror" name="current_password" required autocomplete="current-password">
                                 @error('current_password')
                                     <span class="invalid-feedback" role="alert">
@@ -48,7 +50,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="password" class="form-label">Neues Passwort</label>
+                                <label for="password" class="form-label fw-semibold">Neues Passwort</label>
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
@@ -58,12 +60,12 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="password-confirm" class="form-label">Neues Passwort bestätigen</label>
+                                <label for="password-confirm" class="form-label fw-semibold">Neues Passwort bestätigen</label>
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                             </div>
 
-                            <div class="mb-0">
-                                <button type="submit" class="btn btn-primary">
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary w-100 w-sm-auto">
                                     Passwort aktualisieren
                                 </button>
                             </div>

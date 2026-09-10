@@ -100,7 +100,7 @@ class ItemController extends Controller
             /** @var array<int, int> $removeAttachments */
             $removeAttachments = $request->remove_attachments;
             foreach ($removeAttachments as $attachmentId) {
-                $attachment = Attachment::find($attachmentId);
+                $attachment = $item->attachments()->find($attachmentId);
                 if ($attachment instanceof Attachment) {
                     Storage::disk('s3')->delete($attachment->path);
                     $attachment->delete();

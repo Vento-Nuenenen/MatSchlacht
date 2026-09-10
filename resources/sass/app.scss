@@ -8,3 +8,90 @@
 
 // Fonts
 @import url('https://fonts.bunny.net/css?family=Nunito');
+
+// Responsive & UI enhancements
+
+// Fluid container constraint for ultra-wide displays
+.app-container {
+    width: 100%;
+    max-width: 1800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+// Material grid quantity inputs
+.item-qty-input {
+    min-width: 65px;
+    max-width: 95px;
+    text-align: center;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+}
+
+// Table improvements for responsiveness
+.table-responsive {
+    -webkit-overflow-scrolling: touch;
+
+    // Better scrolling experience on mobile
+    @media (max-width: 767.98px) {
+        margin-bottom: 0.75rem;
+
+        .table {
+            font-size: 0.85rem;
+
+            th, td {
+                padding: 0.45rem 0.5rem;
+                vertical-align: middle;
+            }
+        }
+    }
+}
+
+// Ensure buttons in action columns have comfortable touch spacing
+.table td .btn {
+    white-space: nowrap;
+}
+
+// Mobile touch targets and card adjustments
+@media (max-width: 575.98px) {
+    .card-header {
+        padding: 0.75rem 1rem;
+    }
+
+    .card-body {
+        padding: 0.875rem;
+    }
+
+    h1, .h1 { font-size: 1.75rem; }
+    h2, .h2 { font-size: 1.45rem; }
+    h3, .h3 { font-size: 1.25rem; }
+}
+
+// Sortable table headers
+.sortable-header {
+    cursor: pointer;
+    position: relative;
+    padding-right: 20px !important;
+    user-select: none;
+    white-space: nowrap;
+}
+.sortable-header::after {
+    content: "\f0dc";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    right: 5px;
+    color: #ccc;
+}
+.sortable-header.sort-asc::after {
+    content: "\f0de";
+    color: #333;
+}
+.sortable-header.sort-desc::after {
+    content: "\f0dd";
+    color: #333;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}

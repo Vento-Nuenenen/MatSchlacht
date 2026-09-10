@@ -1,45 +1,57 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
         <div class="row justify-content-center">
-            <div class="col-md-12">
+            <div class="col-12">
                 @include('components.status-alerts')
 
-                <div class="card mb-4">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <span>Bestellung Ansehen: <strong>{{ $order->event }}</strong></span>
-                        <span class="badge bg-{{ $order->state->color() }}">{{ $order->state->display() }}</span>
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <span class="h5 mb-0">Bestellung Ansehen: <strong>{{ $order->event }}</strong></span>
+                        <span class="badge bg-{{ $order->state->color() }} fs-6">{{ $order->state->display() }}</span>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h5>Details</h5>
-                                <p>
+                        <div class="row g-3 mb-3">
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <h6 class="text-muted text-uppercase small fw-bold">Bestelldetails</h6>
+                                <p class="mb-0">
                                     <b>Anlass:</b> {{ $order->event }} <br />
                                     <b>Einheit:</b> {{ $order->role->name }} <br />
                                     <b>Bestellt von:</b> {{ $order->user->fullName() }} <br />
-                                    <b>Von:</b> {{ \Carbon\Carbon::parse($order->event_start)->format('d.m.Y') }} <br />
-                                    <b>Bis:</b> {{ \Carbon\Carbon::parse($order->event_end)->format('d.m.Y') }} <br />
-                                    @if($order->itemCollections->isNotEmpty())
-                                        <b>Kollektionen:</b> {{ $order->itemCollections->pluck('name')->implode(', ') }} <br />
-                                    @endif
                                 </p>
                             </div>
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <h6 class="text-muted text-uppercase small fw-bold">Zeitraum</h6>
+                                <p class="mb-0">
+                                    <b>Von:</b> {{ \Carbon\Carbon::parse($order->event_start)->format('d.m.Y') }} <br />
+                                    <b>Bis:</b> {{ \Carbon\Carbon::parse($order->event_end)->format('d.m.Y') }} <br />
+                                </p>
+                            </div>
+                            @if($order->itemCollections->isNotEmpty())
+                                <div class="col-12 col-md-12 col-lg-4">
+                                    <h6 class="text-muted text-uppercase small fw-bold">Kollektionen</h6>
+                                    <div class="d-flex flex-wrap gap-1">
+                                        @foreach($order->itemCollections as $coll)
+                                            <span class="badge bg-info text-dark">{{ $coll->name }}</span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
                         </div>
 
                         <hr />
 
-                        <h5>Details & Material</h5>
+                        <h5 class="mb-3">Materialien</h5>
 
                         <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
+                            <table class="table table-hover table-striped align-middle mb-0">
+                                <thead class="table-light">
                                     <tr>
-                                        <th>Material</th>
-                                        <th>Bestellt</th>
+                                        <th style="min-width: 140px;">Material</th>
+                                        <th class="text-center" style="width: 15%; min-width: 80px;">Bestellt</th>
                                         @if($order->state->equals(\App\States\Order\Delivered::class) || $order->state->equals(\App\States\Order\Returned::class))
-                                            <th>Zurückgegeben</th>
+                                            <th class="text-center" style="width: 15%; min-width: 80px;">Zurückgegeben</th>
                                         @endif
                                         <th>Materialgruppe</th>
                                     </tr>
@@ -48,18 +60,18 @@
                                 @foreach($order->orderedItems as $orderedItem)
                                     <tr>
                                         <td>
-                                            <span class="fw-bold">{{ $orderedItem->item->name }}</span>
+                                            <span class="fw-semibold">{{ $orderedItem->item->name }}</span>
                                             @if($orderedItem->item->contents->isNotEmpty())
-                                                <i class="fa fa-info-circle text-info ms-1 cursor-pointer"
+                                                <i class="fa fa-info-circle text-info ms-1 cursor-pointer p-1"
                                                    data-bs-toggle="modal"
                                                    data-bs-target="#contentModal"
                                                    data-bs-title="Inhaltsliste von {{ $orderedItem->item->name }}"
                                                    data-bs-content="<ul class='list-unstyled mb-0'>@foreach($orderedItem->item->contents as $c)<li><i class='fa fa-check-square-o me-1 small text-muted'></i><strong>{{ $c->quantity }}</strong> {{ $c->name }}</li>@endforeach</ul>"></i>
                                             @endif
                                         </td>
-                                        <td>{{ $orderedItem->quantity }}</td>
+                                        <td class="text-center fw-bold">{{ $orderedItem->quantity }}</td>
                                         @if($order->state->equals(\App\States\Order\Delivered::class) || $order->state->equals(\App\States\Order\Returned::class))
-                                            <td>{{ $orderedItem->returned }}</td>
+                                            <td class="text-center fw-bold">{{ $orderedItem->returned }}</td>
                                         @endif
                                         <td>{{ $orderedItem->item->itemGroup?->name ?? 'Sonstiges' }}</td>
                                     </tr>
@@ -68,7 +80,7 @@
                             </table>
                         </div>
 
-                        <div class="d-flex justify-content-between mt-4">
+                        <div class="d-flex flex-column flex-sm-row justify-content-between gap-2 mt-4">
                             <a href="{{ route('orders.index') }}" class="btn btn-secondary">Zurück zur Übersicht</a>
                             <a href="{{ route('orders.manage.contents-pdf', $order) }}" class="btn btn-info text-white"
                                target="_blank">

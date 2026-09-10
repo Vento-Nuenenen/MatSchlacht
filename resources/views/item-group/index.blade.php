@@ -1,54 +1,62 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
         <div class="row justify-content-center">
-            <div class="col-md-12">
+            <div class="col-12">
                 @include('components.status-alerts')
 
-                <div class="card">
-                    <div class="card-header">Materialgruppen</div>
-                    <div class="card-body">
+                <div class="card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <span class="h5 mb-0">Materialgruppen</span>
                         @can('create itemgroups')
-                            <a href="{{ route('item-groups.create') }}" class="btn btn-info btn-sm col-12">Neue Materialgruppe erstellen</a>
-                            <br />
-                            <br />
+                            <a href="{{ route('item-groups.create') }}" class="btn btn-info btn-sm">
+                                <i class="fa fa-plus me-1"></i> Neue Materialgruppe
+                            </a>
                         @endcan
-
+                    </div>
+                    <div class="card-body p-0 p-sm-3">
                         <div class="table-responsive">
-                            <table class="table table-hover table-bordered table-striped" id="item-groups-table">
-                                <thead>
-                                    <th width="50"></th>
-                                    <th class="sortable-header">Pos.</th>
-                                    <th class="sortable-header">Bezeichnung</th>
-                                    <th>Optionen</th>
+                            <table class="table table-hover table-bordered table-striped align-middle mb-0" id="item-groups-table">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 45px;"></th>
+                                        <th class="sortable-header text-center" style="width: 70px;">Pos.</th>
+                                        <th class="sortable-header" style="min-width: 140px;">Bezeichnung</th>
+                                        <th class="text-nowrap" style="min-width: 120px;">Optionen</th>
+                                    </tr>
                                 </thead>
                                 <tbody id="item-groups-body">
-                                @foreach($itemGroups as $itemGroup)
+                                @forelse($itemGroups as $itemGroup)
                                     <tr data-id="{{ $itemGroup->id }}">
                                         @can('edit itemgroups')
-                                            <td class="drag-handle" style="cursor: move;">
-                                                <i class="fa fa-bars"></i>
+                                            <td class="drag-handle text-center text-muted p-2" style="cursor: grab;">
+                                                <i class="fa fa-bars fa-lg"></i>
                                             </td>
                                         @else
                                             <td></td>
                                         @endcan
-                                        <td class="position-index">{{ $loop->iteration }}</td>
-                                        <td>{{ $itemGroup->name }}</td>
-                                        <td>
-                                            @can('edit itemgroups')
-                                                <a href="{{ route('item-groups.edit', $itemGroup->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
-                                                &nbsp;
-                                            @endcan
-                                            @can('delete itemgroups')
-                                                @include('components.delete', [
-                                                    'route' => 'item-groups.destroy',
-                                                    'id' => $itemGroup->id,
-                                                ])
-                                            @endcan
+                                        <td class="position-index text-center fw-bold">{{ $loop->iteration }}</td>
+                                        <td class="fw-semibold">{{ $itemGroup->name }}</td>
+                                        <td class="text-nowrap">
+                                            <div class="d-flex gap-1 flex-wrap align-items-center">
+                                                @can('edit itemgroups')
+                                                    <a href="{{ route('item-groups.edit', $itemGroup->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                                                @endcan
+                                                @can('delete itemgroups')
+                                                    @include('components.delete', [
+                                                        'route' => 'item-groups.destroy',
+                                                        'id' => $itemGroup->id,
+                                                    ])
+                                                @endcan
+                                            </div>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center py-4 text-muted">Keine Materialgruppen vorhanden.</td>
+                                    </tr>
+                                @endforelse
                                 </tbody>
                             </table>
                         </div>

@@ -1,32 +1,34 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
         <div class="row justify-content-center">
-            <div class="col-md-12">
+            <div class="col-12">
                 @include('components.status-alerts')
 
-                <div class="card mb-4">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <span>Bestellung verwalten: <strong>{{ $order->event }}</strong></span>
-                        <span class="badge bg-{{ $order->state->color() }}">{{ $order->state->display() }}</span>
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <span class="h5 mb-0">Bestellung verwalten: <strong>{{ $order->event }}</strong></span>
+                        <span class="badge bg-{{ $order->state->color() }} fs-6">{{ $order->state->display() }}</span>
                     </div>
                     <div class="card-body">
-                        <div class="d-flex">
-                            <h5>Aktionen</h5>
-                        </div>
-                        <div class="mb-3">
-                            <a href="{{ route('orders.manage.contents-pdf', $order) }}" class="btn btn-info text-white me-3"
+                        <h6 class="text-muted text-uppercase small fw-bold mb-2">Aktionen</h6>
+                        <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+                            <a href="{{ route('orders.manage.contents-pdf', $order) }}" class="btn btn-info text-white"
                                target="_blank">
                                 <i class="fa fa-file-pdf me-1"></i> Packliste PDF
                             </a>
 
                             @if($order->state->equals(\App\States\Order\Accepted::class))
-                                <a href="{{ route('orders.manage.order-pdf', $order) }}" class="btn btn-warning me-3" target="_blank">Auftragsliste PDF</a> &nbsp;
+                                <a href="{{ route('orders.manage.order-pdf', $order) }}" class="btn btn-warning" target="_blank">
+                                    <i class="fa fa-file-pdf me-1"></i> Auftragsliste PDF
+                                </a>
                             @endif
 
                             @if($order->state->equals(\App\States\Order\Delivered::class))
-                                <a href="{{ route('orders.manage.return-pdf', $order) }}" class="btn btn-warning me-3" target="_blank">Retourenliste PDF</a> &nbsp;
+                                <a href="{{ route('orders.manage.return-pdf', $order) }}" class="btn btn-warning" target="_blank">
+                                    <i class="fa fa-file-pdf me-1"></i> Retourenliste PDF
+                                </a>
                             @endif
 
                             @if($order->state->canTransitionTo('stored'))
@@ -39,13 +41,13 @@
 
                             @if($order->state->canTransitionTo('accepted'))
                                 @if($order->state->equals(\App\States\Order\Committed::class))
-                                    <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline me-3 transition-form">
+                                    <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline transition-form">
                                         @csrf
                                         <input type="hidden" name="to" value="accepted">
                                         <button type="submit" class="btn btn-primary">Akzeptieren</button>
                                     </form>
                                 @else
-                                    <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline me-3 transition-form">
+                                    <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline transition-form">
                                         @csrf
                                         <input type="hidden" name="to" value="accepted">
                                         <button type="submit" class="btn btn-outline-danger">Rückgängig (Ausgeben)</button>
@@ -55,13 +57,13 @@
 
                             @if($order->state->canTransitionTo('committed'))
                                 @if($order->state->equals(\App\States\Order\Stored::class))
-                                    <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline me-3 transition-form">
+                                    <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline transition-form">
                                         @csrf
                                         <input type="hidden" name="to" value="committed">
                                         <button type="submit" class="btn btn-primary">Bestellen</button>
                                     </form>
                                 @else
-                                    <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline me-3 transition-form">
+                                    <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline transition-form">
                                         @csrf
                                         <input type="hidden" name="to" value="committed">
                                         <button type="submit" class="btn btn-outline-danger">Rückgängig (Akzeptieren)</button>
@@ -71,13 +73,13 @@
 
                             @if($order->state->canTransitionTo('delivered'))
                                 @if($order->state->equals(\App\States\Order\Accepted::class))
-                                    <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline me-3 transition-form">
+                                    <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline transition-form">
                                         @csrf
                                         <input type="hidden" name="to" value="delivered">
-                                        <button type="submit" class="btn btn-info">Ausgeben</button>
+                                        <button type="submit" class="btn btn-info text-white">Ausgeben</button>
                                     </form>
                                 @else
-                                    <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline me-3 transition-form">
+                                    <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline transition-form">
                                         @csrf
                                         <input type="hidden" name="to" value="delivered">
                                         <button type="submit" class="btn btn-outline-danger">Rückgängig (Zurückerhalten)</button>
@@ -86,7 +88,7 @@
                             @endif
 
                             @if($order->state->canTransitionTo('returned'))
-                                <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline me-3 transition-form">
+                                <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline transition-form">
                                     @csrf
                                     <input type="hidden" name="to" value="returned">
                                     <button type="submit" class="btn btn-secondary">Zurückerhalten</button>
@@ -94,7 +96,7 @@
                             @endif
 
                             @if($order->state->canTransitionTo('archived'))
-                                <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline me-3 transition-form">
+                                <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline transition-form">
                                     @csrf
                                     <input type="hidden" name="to" value="archived">
                                     <button type="submit" class="btn btn-danger">Archivieren/Stornieren</button>
@@ -104,10 +106,10 @@
 
                         <hr />
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h5>Details</h5>
-                                <p>
+                        <div class="row g-3 mb-3">
+                            <div class="col-12 col-md-6">
+                                <h6 class="text-muted text-uppercase small fw-bold">Details</h6>
+                                <p class="mb-0">
                                     <b>Einheit:</b> {{ $order->role->name }} <br />
                                     <b>Bestellt von:</b> {{ $order->user->fullName() }} <br />
                                     <b>Von:</b> {{ \Carbon\Carbon::parse($order->event_start)->format('d.m.Y') }} <br />
@@ -118,22 +120,22 @@
 
                         <hr />
 
-                        <h5>Details & Material bearbeiten</h5>
+                        <h5 class="mb-3">Details & Material bearbeiten</h5>
                         <form method="POST" action="{{ route('orders.manage.update', $order->id) }}" id="orderUpdateForm">
                             @csrf
                             @method('PUT')
 
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label for="event" class="form-label">Anlass</label>
+                            <div class="row g-3 mb-3">
+                                <div class="col-12 col-md-4">
+                                    <label for="event" class="form-label fw-semibold">Anlass</label>
                                     <input type="text" class="form-control" id="event" name="event" value="{{ old('event', $order->event) }}" required>
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="event_start" class="form-label">Start</label>
+                                <div class="col-12 col-sm-6 col-md-4">
+                                    <label for="event_start" class="form-label fw-semibold">Start</label>
                                     <input type="date" class="form-control" id="event_start" name="event_start" value="{{ old('event_start', \Carbon\Carbon::parse($order->event_start)->format('Y-m-d')) }}" required>
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="event_end" class="form-label">Ende</label>
+                                <div class="col-12 col-sm-6 col-md-4">
+                                    <label for="event_end" class="form-label fw-semibold">Ende</label>
                                     <input type="date" class="form-control" id="event_end" name="event_end" value="{{ old('event_end', \Carbon\Carbon::parse($order->event_end)->format('Y-m-d')) }}" required>
                                 </div>
                             </div>
@@ -161,12 +163,12 @@
                             @include('components.material-grid', ['items' => $items, 'order' => $order])
 
                             @if($collections->isNotEmpty())
-                                <div class="card mt-4">
-                                    <div class="card-header">Kollektionen hinzufügen</div>
+                                <div class="card mt-4 shadow-sm">
+                                    <div class="card-header fw-bold bg-light">Kollektionen hinzufügen</div>
                                     <div class="card-body">
                                         <div class="row align-items-end g-3">
-                                            <div class="col-md-8">
-                                                <label for="collectionSelect" class="form-label">Kollektion auswählen</label>
+                                            <div class="col-12 col-md-8 col-lg-9">
+                                                <label for="collectionSelect" class="form-label fw-semibold">Kollektion auswählen</label>
                                                 <select id="collectionSelect" class="form-select">
                                                     <option value="">-- Kollektion wählen --</option>
                                                     @foreach($collections as $collection)
@@ -176,9 +178,9 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-12 col-md-4 col-lg-3">
                                                 <button type="button" class="btn btn-outline-primary w-100" onclick="addSelectedCollection()">
-                                                    Hinzufügen
+                                                    <i class="fa fa-plus me-1"></i> Hinzufügen
                                                 </button>
                                             </div>
                                         </div>
@@ -186,9 +188,9 @@
                                 </div>
                             @endif
 
-                            <div class="d-flex justify-content-between mt-4">
-                                <a href="{{ route('orders.manage') }}" class="btn btn-secondary">Zurück zur Übersicht</a>
-                                <button type="submit" class="btn btn-primary">Änderungen speichern</button>
+                            <div class="d-flex flex-column flex-sm-row justify-content-between gap-2 mt-4">
+                                <a href="{{ route('orders.manage') }}" class="btn btn-secondary order-2 order-sm-1">Zurück zur Übersicht</a>
+                                <button type="submit" class="btn btn-primary order-1 order-sm-2">Änderungen speichern</button>
                             </div>
                         </form>
                     </div>
