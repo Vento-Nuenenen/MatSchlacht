@@ -30,7 +30,7 @@
         "eslint-plugin-import": "^2.32.0",
         "eslint-plugin-vue": "^10.11.1",
         "laravel-vite-plugin": "^3.2",
-        "prettier": "^3.9.9",
+        "prettier": "^3.9.10",
         "prettier-plugin-tailwindcss": "^0.8.1",
         "sass": "^1.105.0",
         "tailwindcss": "^4.3.3",
