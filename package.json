@@ -20,7 +20,7 @@
         "@types/node": "^26.6.3",
         "@vitejs/plugin-vue": "^6.0.10",
         "@vue/eslint-config-typescript": "^14.9.0",
-        "@vueuse/core": "^14.4.0",
+        "@vueuse/core": "^15.0.0",
         "axios": "^1.19.0",
         "bootstrap": "^5.3.8",
         "concurrently": "^10.0.6",
