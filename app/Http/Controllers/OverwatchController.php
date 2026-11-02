@@ -13,8 +13,6 @@ use Illuminate\View\View;
 
 class OverwatchController extends Controller
 {
-    public function __construct() {}
-
     public function index(): View
     {
         $user = auth()->user();

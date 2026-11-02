@@ -16,18 +16,13 @@ class RoleInScope implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $user = auth()->user();
-        if ($user->isPrivileged()) {
-            return;
-        }
-
         /** @var int|string $value */
         $role = Role::find($value);
         if (! $role) {
             return;
         }
 
-        if (! $user->hasRole($role->name)) {
+        if (! auth()->user()->canActForRole($role)) {
             $fail('Sie haben keine Berechtigung für diese Einheit zu bestellen.');
         }
     }

@@ -57,4 +57,12 @@ class Item extends Model
     {
         return $this->hasMany(ItemContent::class);
     }
+
+    /**
+     * Convert an ordered quantity (in lots) into individual units.
+     */
+    public function unitsFor(int $quantity): int
+    {
+        return $this->lot > 1 ? $quantity * $this->lot : $quantity;
+    }
 }

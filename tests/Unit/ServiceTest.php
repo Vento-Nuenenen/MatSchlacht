@@ -29,8 +29,7 @@ class ServiceTest extends TestCase
         $item = Item::factory()->create(['stock' => 100, 'item_group_id' => ItemGroup::factory()->create()->id]);
 
         $service = new OrderService;
-        $order = new Order;
-        $order = $service->syncOrder($order, [
+        $order = $service->createOrder([
             'event' => 'Service Test',
             'event_start' => now()->addDay()->format('Y-m-d'),
             'event_end' => now()->addDays(2)->format('Y-m-d'),
@@ -53,8 +52,7 @@ class ServiceTest extends TestCase
         $item2 = Item::factory()->create(['item_group_id' => ItemGroup::factory()->create()->id]);
 
         $service = new OrderService;
-        $order = new Order;
-        $order = $service->syncOrder($order, [
+        $order = $service->createOrder([
             'event' => 'Initial',
             'event_start' => now()->format('Y-m-d'),
             'event_end' => now()->addDay()->format('Y-m-d'),
@@ -63,7 +61,7 @@ class ServiceTest extends TestCase
             'items' => [$item1->id => 10],
         ]);
 
-        $service->syncOrder($order, [
+        $service->updateOrder($order, [
             'event' => 'Updated',
             'event_start' => now()->format('Y-m-d'),
             'event_end' => now()->addDay()->format('Y-m-d'),

@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\ModelStates\HasStates;
 use Spatie\Permission\Models\Role;
 
+/**
+ * @property OrderState $state
+ */
 #[Fillable([
     'event',
     'event_start',

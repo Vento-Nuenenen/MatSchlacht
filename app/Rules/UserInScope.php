@@ -16,19 +16,13 @@ class UserInScope implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $user = auth()->user();
-        if ($user->isPrivileged()) {
-            return;
-        }
-
         /** @var int|string $value */
         $targetUser = User::find($value);
         if (! $targetUser) {
             return;
         }
 
-        $sharedRoles = $user->roles->intersect($targetUser->roles);
-        if ($sharedRoles->isEmpty()) {
+        if (! auth()->user()->canActForUser($targetUser)) {
             $fail('Die ausgewählte Person ist nicht in Ihrem Bereich.');
         }
     }

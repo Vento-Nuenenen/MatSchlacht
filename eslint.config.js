@@ -1,8 +1,7 @@
+import js from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
-import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript';
 import prettier from 'eslint-config-prettier/flat';
 import importPlugin from 'eslint-plugin-import';
-import vue from 'eslint-plugin-vue';
 
 const controlStatements = [
     'if',
@@ -21,42 +20,27 @@ const paddingAroundControl = [
     ]),
 ];
 
-export default defineConfigWithVueTs(
-    vue.configs['flat/essential'],
-    vueTsConfigs.recommended,
+export default [
+    js.configs.recommended,
     {
+        languageOptions: {
+            ecmaVersion: 'latest',
+            sourceType: 'module',
+            globals: {
+                window: 'readonly',
+                document: 'readonly',
+            },
+        },
         plugins: {
             import: importPlugin,
         },
-        settings: {
-            'import/resolver': {
-                typescript: {
-                    alwaysTryTypes: true,
-                    project: './tsconfig.json',
-                },
-                node: true,
-            },
-        },
         rules: {
-            'vue/multi-word-component-names': 'off',
-            '@typescript-eslint/no-explicit-any': 'off',
-            '@typescript-eslint/consistent-type-imports': [
-                'error',
-                {
-                    prefer: 'type-imports',
-                    fixStyle: 'separate-type-imports',
-                },
-            ],
             'import/order': [
                 'error',
                 {
                     groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
                     alphabetize: { order: 'asc', caseInsensitive: true },
                 },
-            ],
-            'import/consistent-type-specifier-style': [
-                'error',
-                'prefer-top-level',
             ],
         },
     },
@@ -78,22 +62,13 @@ export default defineConfigWithVueTs(
             'node_modules',
             'public',
             'bootstrap/ssr',
-            'tailwind.config.js',
-            'vite.config.ts',
-            'resources/js/actions/**',
-            'resources/js/components/ui/*',
-            'resources/js/routes/**',
-            'resources/js/wayfinder/**',
+            'storage',
         ],
     },
     prettier,
     {
-        plugins: {
-            '@stylistic': stylistic,
-        },
         rules: {
             curly: ['error', 'all'],
-            '@stylistic/brace-style': ['error', '1tbs', { allowSingleLine: false }],
         },
     },
-);
+];

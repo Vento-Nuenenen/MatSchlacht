@@ -15,6 +15,7 @@ use App\Observers\OrderObserver;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\ServiceProvider;
 use Microsoft\Graph\GraphServiceClient;
@@ -62,21 +63,14 @@ class AppServiceProvider extends ServiceProvider
             $clientId = (string) config('services.microsoft.client_id');
             $clientSecret = (string) config('services.microsoft.client_secret');
 
-            if (empty($tenantId) || empty($clientId) || empty($clientSecret)) {
-                // Return a dummy transport or handle the error gracefully
-                // For now, we'll use a log transport if credentials are missing
+            if ($tenantId === '' || $clientId === '' || $clientSecret === '') {
+                Log::warning('Microsoft Graph mailer is not configured (AZURE_TENANT_ID, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET). Mails are written to the log instead.');
+
+                return Mail::createSymfonyTransport(['transport' => 'log']);
             }
 
-            $tokenContext = new ClientCredentialContext(
-                $tenantId,
-                $clientId,
-                $clientSecret
-            );
-
-            $graphServiceClient = new GraphServiceClient($tokenContext);
-
             return new MicrosoftGraphTransport(
-                $graphServiceClient,
+                new GraphServiceClient(new ClientCredentialContext($tenantId, $clientId, $clientSecret)),
                 (string) config('mail.microsoft_graph.user_id', config('mail.from.address'))
             );
         });

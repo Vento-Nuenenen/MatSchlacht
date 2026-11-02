@@ -23,17 +23,7 @@ class UserController extends Controller
      */
     public function index(): Factory|View
     {
-        $user = auth()->user();
-        if ($user->isPrivileged()) {
-            $users = User::all();
-        } else {
-            $roleIds = $user->roles->pluck('id');
-            $users = User::whereHas('roles', function ($query) use ($roleIds) {
-                $query->whereIn('roles.id', $roleIds);
-            })->get();
-        }
-
-        return view('user.index', ['users' => $users]);
+        return view('user.index', ['users' => auth()->user()->scopedUsersQuery()->get()]);
     }
 
     /**

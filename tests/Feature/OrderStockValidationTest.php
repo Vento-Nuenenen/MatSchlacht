@@ -90,3 +90,69 @@ test('it prevents ordering more items than available in stock via mixed items an
     // This might be tricky because we need to decide where the error should be attached
     $response->assertSessionHasErrors();
 });
+
+test('it checks the stock of a draft order per item', function () {
+    $response = $this->actingAs($this->user)->post(route('orders.store'), [
+        'event' => 'Draft Overstock Event',
+        'event_start' => now()->addDays(1)->format('Y-m-d'),
+        'event_end' => now()->addDays(7)->format('Y-m-d'),
+        'role_id' => $this->role->id,
+        'user_id' => $this->user->id,
+        'items' => [$this->item->id => 11],
+        'action' => 'save',
+    ]);
+
+    $response->assertSessionHasErrors(['items.'.$this->item->id]);
+});
+
+test('it counts ordered lots as units when checking the stock', function () {
+    $lotItem = Item::factory()->create([
+        'item_group_id' => $this->itemGroup->id,
+        'stock' => 10,
+        'lot' => 5,
+    ]);
+
+    $response = $this->actingAs($this->user)->post(route('orders.store'), [
+        'event' => 'Lot Event',
+        'event_start' => now()->addDays(1)->format('Y-m-d'),
+        'event_end' => now()->addDays(7)->format('Y-m-d'),
+        'role_id' => $this->role->id,
+        'user_id' => $this->user->id,
+        'items' => [$lotItem->id => 3],
+        'action' => 'order',
+    ]);
+
+    $response->assertSessionHasErrors(['items']);
+});
+
+test('it reports an overstocked item only once when ordering', function () {
+    $collection = ItemCollection::factory()->create(['name' => 'Test Collection']);
+    $collection->items()->attach($this->item->id, ['quantity' => 5]);
+
+    $response = $this->actingAs($this->user)->post(route('orders.store'), [
+        'event' => 'Single Error Event',
+        'event_start' => now()->addDays(1)->format('Y-m-d'),
+        'event_end' => now()->addDays(7)->format('Y-m-d'),
+        'role_id' => $this->role->id,
+        'user_id' => $this->user->id,
+        'items' => [$this->item->id => 6],
+        'collections' => [$collection->id],
+        'action' => 'order',
+    ]);
+
+    expect(collect($response->getSession()->get('errors')['default']['messages'])->flatten())->toHaveCount(1);
+});
+
+test('it accepts an order within the available stock', function () {
+    $response = $this->actingAs($this->user)->post(route('orders.store'), [
+        'event' => 'Fitting Event',
+        'event_start' => now()->addDays(1)->format('Y-m-d'),
+        'event_end' => now()->addDays(7)->format('Y-m-d'),
+        'role_id' => $this->role->id,
+        'user_id' => $this->user->id,
+        'items' => [$this->item->id => 10],
+        'action' => 'order',
+    ]);
+
+    $response->assertSessionHasNoErrors()->assertRedirect(route('orders.index'));
+});

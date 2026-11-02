@@ -1,5 +1,6 @@
 <?php
 
+use App\Mail\TestMail;
 use App\Models\Attachment;
 use App\Models\Item;
 use App\Models\ItemGroup;
@@ -69,4 +70,12 @@ test('user editing item A cannot delete attachments belonging to item B (IDOR pr
     // Attachment of Item B must NOT be deleted
     expect(Attachment::find($attachmentB->id))->not->toBeNull();
     Storage::disk('s3')->assertExists('items/test-file-b.jpg');
+});
+
+test('the test mail command sends a test mail to the given recipient', function () {
+    Mail::fake();
+
+    $this->artisan('mail:test', ['email' => 'test@example.com'])->assertSuccessful();
+
+    Mail::assertSent(TestMail::class, fn (TestMail $mail) => $mail->hasTo('test@example.com'));
 });

@@ -40,6 +40,6 @@
         </table>
     @endif
 
-    <p>Status: <strong>{{ $order->status }}</strong></p>
+    <p>Status: <strong>{{ $order->state->display() }}</strong></p>
 </body>
 </html>

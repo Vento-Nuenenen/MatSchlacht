@@ -25,6 +25,8 @@ class StoreOrderRequest extends FormRequest
      */
     public function rules(): array
     {
+        $stockRule = new CheckItemStock;
+
         return [
             'event' => 'required|string|max:255',
             'event_start' => 'required|date',
@@ -33,10 +35,10 @@ class StoreOrderRequest extends FormRequest
             'role_id' => ['required', 'exists:roles,id', new RoleInScope],
             'user_id' => ['required', 'exists:users,id', new UserInScope],
 
-            'items' => ['nullable', 'array', new CheckItemStock],
-            'items.*' => ['integer', 'min:0', 'max:100000', new CheckItemStock],
+            'items' => ['nullable', 'array', $stockRule],
+            'items.*' => ['integer', 'min:0', 'max:100000', $stockRule],
 
-            'collections' => ['nullable', 'array', new CheckItemStock],
+            'collections' => ['nullable', 'array', $stockRule],
             'collections.*' => 'exists:item_collections,id',
 
             'action' => 'required|in:save,order',

@@ -33,7 +33,6 @@ class MailTestController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to send test email: '.$e->getMessage(),
-                'trace' => config('app.debug') ? $e->getTraceAsString() : null,
             ], 500);
         }
     }

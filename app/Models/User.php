@@ -6,10 +6,13 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
 #[Fillable([
@@ -75,6 +78,48 @@ class User extends Authenticatable
     public function isPrivileged(): bool
     {
         return $this->hasAnyRole(['Materialwart']);
+    }
+
+    /**
+     * The roles (units) this user may act on behalf of.
+     *
+     * @return Collection<int, Role>
+     */
+    public function scopedRoles(): Collection
+    {
+        if ($this->isPrivileged()) {
+            return Role::all();
+        }
+
+        return Role::whereKey($this->roles->modelKeys())->get();
+    }
+
+    /**
+     * Query for the users this user is allowed to see and order for.
+     *
+     * @return Builder<User>
+     */
+    public function scopedUsersQuery(): Builder
+    {
+        if ($this->isPrivileged()) {
+            return User::query();
+        }
+
+        $roleIds = $this->roles->pluck('id');
+
+        return User::whereHas('roles', function (Builder $query) use ($roleIds): void {
+            $query->whereIn('roles.id', $roleIds);
+        });
+    }
+
+    public function canActForRole(Role $role): bool
+    {
+        return $this->isPrivileged() || $this->hasRole($role->name);
+    }
+
+    public function canActForUser(User $user): bool
+    {
+        return $this->isPrivileged() || $this->roles->intersect($user->roles)->isNotEmpty();
     }
 
     public function isAzureUser(): bool

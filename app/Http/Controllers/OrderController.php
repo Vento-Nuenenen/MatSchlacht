@@ -11,15 +11,14 @@ use App\Models\User;
 use App\Services\OrderService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 
 class OrderController extends Controller
 {
     public function __construct(protected OrderService $orderService)
     {
-        $this->middleware('auth');
         $this->authorizeResource(Order::class, 'order');
     }
 
@@ -28,13 +27,11 @@ class OrderController extends Controller
      */
     public function index(): Factory|View
     {
-        if (auth()->user()->isPrivileged()) {
-            $orders = Order::all()->sortBy('event_start');
-        } else {
-            $orders = Order::where('user_id', auth()->id())->orderBy('event_start')->get();
-        }
+        $orders = auth()->user()->isPrivileged()
+            ? Order::query()
+            : Order::where('user_id', auth()->id());
 
-        return view('order.index', ['orders' => $orders]);
+        return view('order.index', ['orders' => $orders->orderBy('event_start')->get()]);
     }
 
     /**
@@ -54,31 +51,14 @@ class OrderController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): Factory|View|RedirectResponse
+    public function create(): Factory|View
     {
         $user = auth()->user();
 
-        if ($user->isPrivileged()) {
-            $users = User::all();
-            $roles = Role::all();
-        } else {
-            $roles = $user->roles;
-            $roleIds = $roles->pluck('id');
-            $users = User::whereHas('roles', function ($query) use ($roleIds) {
-                $query->whereIn('roles.id', $roleIds);
-            })->get();
-        }
-
-        $items = Item::with('itemGroup')
-            ->orderBy('name')->get();
-
-        $collections = ItemCollection::with('items')->get();
-
         return view('order.create', [
-            'users' => $users,
-            'roles' => $roles,
-            'items' => $items,
-            'collections' => $collections,
+            'users' => $user->scopedUsersQuery()->get(),
+            'roles' => $user->scopedRoles(),
+            ...$this->catalog(),
         ]);
     }
 
@@ -87,17 +67,7 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request): RedirectResponse
     {
-        $data = $request->validated();
-
-        if ($data['action'] === 'save') {
-            $data['status'] = 'stored';
-        }
-
-        if ($data['action'] === 'order') {
-            $data['status'] = 'committed';
-        }
-
-        $this->orderService->syncOrder(new Order, $data);
+        $this->orderService->createOrder($request->validated());
 
         return redirect()->route('orders.index')->with('success', 'Neue Bestellung wurde erfolgreich erstellt.');
     }
@@ -108,31 +78,24 @@ class OrderController extends Controller
     public function edit(Order $order): Factory|View
     {
         $user = auth()->user();
+        $roles = $user->scopedRoles();
+        $users = $user->scopedUsersQuery()->get();
 
-        if ($user->isPrivileged()) {
-            $users = User::all();
-            $roles = Role::all();
-        } else {
-            $roles = $user->roles;
-            $roleIds = $roles->pluck('id');
-            $users = User::whereHas('roles', function ($query) use ($roleIds) {
-                $query->whereIn('roles.id', $roleIds);
-            })->get();
-
-            // Ensure the order's role and user are included even if they are not in current user's scope (should not happen normally but for safety)
-            if ($order->role instanceof Role && ! $roles->contains('id', $order->role_id)) {
-                $roles->push($order->role);
-            }
-
-            if ($order->user instanceof User && ! $users->contains('id', $order->user_id)) {
-                $users->push($order->user);
-            }
+        // Keep the order's current unit and orderer selectable even if they are out of the user's scope.
+        if ($order->role instanceof Role && ! $roles->contains('id', $order->role_id)) {
+            $roles->push($order->role);
         }
 
-        $items = Item::with('itemGroup')->orderBy('name')->get();
-        $collections = ItemCollection::with('items')->get();
+        if ($order->user instanceof User && ! $users->contains('id', $order->user_id)) {
+            $users->push($order->user);
+        }
 
-        return view('order.edit', compact('order', 'users', 'roles', 'items', 'collections'));
+        return view('order.edit', [
+            'order' => $order,
+            'users' => $users,
+            'roles' => $roles,
+            ...$this->catalog(),
+        ]);
     }
 
     /**
@@ -140,17 +103,7 @@ class OrderController extends Controller
      */
     public function update(UpdateOrderRequest $request, Order $order): RedirectResponse
     {
-        $data = $request->validated();
-
-        if ($data['action'] === 'save') {
-            $data['status'] = 'stored';
-        }
-
-        if ($data['action'] === 'order') {
-            $data['status'] = 'committed';
-        }
-
-        $this->orderService->syncOrder($order, $data);
+        $this->orderService->updateOrder($order, $request->validated());
 
         return redirect()->route('orders.index')->with('success', 'Bestellung wurde erfolgreich aktualisiert.');
     }
@@ -165,18 +118,16 @@ class OrderController extends Controller
         return redirect()->route('orders.index')->with('success', 'Bestellung wurde erfolgreich gelöscht.');
     }
 
-    public function transition(Request $request, Order $order): RedirectResponse
+    /**
+     * The orderable items and collections shown in the order form.
+     *
+     * @return array{items: Collection<int, Item>, collections: Collection<int, ItemCollection>}
+     */
+    protected function catalog(): array
     {
-        $this->authorize('update', $order);
-
-        $to = $request->input('to');
-
-        if (! $order->state->canTransitionTo($to)) {
-            return back()->with('error', 'Ungültiger Statusübergang.');
-        }
-
-        $order->state->transitionTo($to);
-
-        return back()->with('success', 'Bestellstatus wurde aktualisiert.');
+        return [
+            'items' => Item::with('itemGroup')->orderBy('name')->get(),
+            'collections' => ItemCollection::with('items')->get(),
+        ];
     }
 }
