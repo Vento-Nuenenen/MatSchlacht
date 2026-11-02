@@ -8,6 +8,7 @@ use App\Models\Attachment;
 use App\Models\Item;
 use App\Models\ItemContent;
 use App\Models\ItemGroup;
+use App\Services\ComponentManager;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {
-    public function __construct()
+    public function __construct(protected ComponentManager $components)
     {
         $this->authorizeResource(Item::class, 'item');
     }
@@ -27,6 +28,10 @@ class ItemController extends Controller
      */
     private function handleFileUploads(Item $item, array $files): void
     {
+        if (! $this->components->isEnabled('attachments')) {
+            return;
+        }
+
         foreach ($files as $file) {
             $path = $file->store('items', 's3');
             if ($path) {
@@ -96,7 +101,7 @@ class ItemController extends Controller
     {
         $item->update($request->validated());
 
-        if ($request->has('remove_attachments')) {
+        if ($request->has('remove_attachments') && $this->components->isEnabled('attachments')) {
             /** @var array<int, int> $removeAttachments */
             $removeAttachments = $request->remove_attachments;
             foreach ($removeAttachments as $attachmentId) {

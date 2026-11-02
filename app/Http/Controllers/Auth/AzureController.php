@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\AzureGroupRoleMapping;
 use App\Models\User;
+use App\Services\ComponentManager;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -63,7 +64,9 @@ class AzureController extends Controller
             ]);
         }
 
-        $this->syncRoles($user, $azureUser->token);
+        if (app(ComponentManager::class)->setting('azure_login', 'sync_group_roles')) {
+            $this->syncRoles($user, $azureUser->token);
+        }
 
         Auth::login($user);
 

@@ -151,7 +151,7 @@ class OrderService
             $this->syncItems($order, $data['items']);
         }
 
-        if (isset($data['collections'])) {
+        if (isset($data['collections']) && app(ComponentManager::class)->isEnabled('item_collections')) {
             $order->itemCollections()->sync($data['collections']);
         }
     }

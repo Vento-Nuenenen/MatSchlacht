@@ -23,6 +23,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $permissions = [
             'manage azure mappings',
+            'manage settings',
             'authenticated',
             'manage orders',
             'edit own orders',

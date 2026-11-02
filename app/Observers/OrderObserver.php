@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Mail\OrderCreated;
 use App\Models\Order;
 use App\Models\User;
+use App\Services\ComponentManager;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
 
@@ -16,6 +17,12 @@ class OrderObserver
      */
     public function created(Order $order): void
     {
+        $components = app(ComponentManager::class);
+
+        if (! $components->isEnabled('order_notifications') || ! $components->setting('order_notifications', 'notify_on_created')) {
+            return;
+        }
+
         $role = Role::find($order->role_id);
         $recipients = $role ? User::role($role->name)->get() : collect();
 

@@ -14,10 +14,12 @@
                     <div class="card-body">
                         <h6 class="text-muted text-uppercase small fw-bold mb-2">Aktionen</h6>
                         <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
-                            <a href="{{ route('orders.manage.contents-pdf', $order) }}" class="btn btn-info text-white"
-                               target="_blank">
-                                <i class="fa fa-file-pdf me-1"></i> Packliste PDF
-                            </a>
+                            @component_enabled('item_contents')
+                                <a href="{{ route('orders.manage.contents-pdf', $order) }}" class="btn btn-info text-white"
+                                   target="_blank">
+                                    <i class="fa fa-file-pdf me-1"></i> Packliste PDF
+                                </a>
+                            @endcomponent_enabled
 
                             @if($order->state->equals(\App\States\Order\Accepted::class))
                                 <a href="{{ route('orders.manage.order-pdf', $order) }}" class="btn btn-warning" target="_blank">

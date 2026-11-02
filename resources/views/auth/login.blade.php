@@ -12,6 +12,7 @@
                 <div class="card-body p-3 p-md-4">
                     @include('components.status-alerts')
 
+                    @component_enabled('password_login')
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
 
@@ -56,17 +57,23 @@
                             </button>
                         </div>
 
-                        <div class="text-center my-3 text-muted small position-relative">
-                            <hr class="my-0">
-                            <span class="position-absolute top-50 start-50 translate-middle bg-white px-2">ODER</span>
-                        </div>
+                    </form>
+                    @endcomponent_enabled
+
+                    @component_enabled('azure_login')
+                        @component_enabled('password_login')
+                            <div class="text-center my-3 text-muted small position-relative">
+                                <hr class="my-0">
+                                <span class="position-absolute top-50 start-50 translate-middle bg-white px-2">ODER</span>
+                            </div>
+                        @endcomponent_enabled
 
                         <div class="mt-4">
                             <a href="{{ route('azure.login') }}" class="btn btn-scout-mail w-100 py-2 shadow-sm text-center" role="button">
-                                {{ __('Login mit Nünenen Mail') }}
+                                {{ app(\App\Services\ComponentManager::class)->setting('azure_login', 'button_label') ?? __('Login mit Nünenen Mail') }}
                             </a>
                         </div>
-                    </form>
+                    @endcomponent_enabled
                 </div>
             </div>
         </div>

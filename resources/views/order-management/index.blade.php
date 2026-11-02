@@ -52,7 +52,8 @@
                                                     <td>
                                                         <span class="fw-semibold">{{ $order->event }}</span>
                                                         @php
-                                                            $hasContents = $order->orderedItems->contains(fn($oi) => $oi->item->contents->isNotEmpty());
+                                                            $hasContents = app(\App\Services\ComponentManager::class)->isEnabled('item_contents')
+                                                                && $order->orderedItems->contains(fn($oi) => $oi->item->contents->isNotEmpty());
                                                         @endphp
                                                         @if($hasContents)
                                                             <i class="fa fa-info-circle text-info ms-1 cursor-pointer p-1"

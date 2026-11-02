@@ -11,7 +11,7 @@
             ])
         </form>
 
-        @if(isset($item) && $item->exists)
+        @if(isset($item) && $item->exists && app(\App\Services\ComponentManager::class)->isEnabled('item_contents'))
             <div class="mt-4 pt-3 border-top">
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-white py-3">

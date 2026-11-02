@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Jobs\SendOrderStatusNotification;
 use App\Models\Order;
+use App\Services\ComponentManager;
 use App\States\Order\Accepted;
 use App\States\Order\Committed;
 use Spatie\ModelStates\Events\StateChanged;
@@ -16,6 +17,12 @@ class DispatchOrderStatusNotification
     public function handle(StateChanged $event): void
     {
         if (! $event->model instanceof Order) {
+            return;
+        }
+
+        $components = app(ComponentManager::class);
+
+        if (! $components->isEnabled('order_notifications') || ! $components->setting('order_notifications', 'notify_on_status_change')) {
             return;
         }
 

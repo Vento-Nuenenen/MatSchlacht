@@ -34,9 +34,11 @@
                             @canany(['view items', 'create items', 'edit items', 'delete items'])
                                 <a class="dropdown-item" href="{{ route('items.index') }}">Material</a>
                             @endcan
-                            @can(['view itemcollections', 'create itemcollections', 'edit itemcollections', 'delete itemcollections'])
-                                <a class="dropdown-item" href="{{ route('item-collections.index') }}">Kollektionen</a>
-                            @endcan
+                            @component_enabled('item_collections')
+                                @can(['view itemcollections', 'create itemcollections', 'edit itemcollections', 'delete itemcollections'])
+                                    <a class="dropdown-item" href="{{ route('item-collections.index') }}">Kollektionen</a>
+                                @endcan
+                            @endcomponent_enabled
                             @canany(['view itemgroups', 'create itemgroups', 'update itemgroups', 'delete itemgroups'])
                                 <a class="dropdown-item" href="{{ route('item-groups.index') }}">Materialgruppen</a>
                             @endcan
@@ -55,9 +57,11 @@
                             @canany(['view roles', 'create roles', 'update roles', 'delete roles'])
                                 <a class="dropdown-item" href="{{ route('roles.index') }}">Einheiten & Berechtigungen</a>
                             @endcan
-                            @can('manage azure mappings')
-                                <a class="dropdown-item" href="{{ route('azure-group-role-mappings.index') }}">Azure Group Mappings</a>
-                            @endcan
+                            @component_enabled('azure_login')
+                                @can('manage azure mappings')
+                                    <a class="dropdown-item" href="{{ route('azure-group-role-mappings.index') }}">Azure Group Mappings</a>
+                                @endcan
+                            @endcomponent_enabled
                         </div>
                     </li>
                 @endif
@@ -81,6 +85,12 @@
                             <a class="dropdown-item" href="{{ route('profile.edit') }}">
                                 Profil
                             </a>
+
+                            @can('manage settings')
+                                <a class="dropdown-item" href="{{ route('settings.components.index') }}">
+                                    Einstellungen
+                                </a>
+                            @endcan
 
                             <hr class="dropdown-divider">
 

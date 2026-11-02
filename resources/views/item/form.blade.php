@@ -51,6 +51,7 @@
         </div>
     </div>
 
+    @component_enabled('attachments')
     <div class="card mb-4 shadow-sm">
         <div class="card-header fw-bold bg-light">Dateianhänge</div>
         <div class="card-body">
@@ -109,6 +110,7 @@
             @endif
         </div>
     </div>
+    @endcomponent_enabled
 </div>
 
 <div class="d-flex flex-column flex-sm-row justify-content-between gap-2 mt-4">

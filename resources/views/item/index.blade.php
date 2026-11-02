@@ -51,7 +51,7 @@
                                     <tr>
                                         <td>
                                             <span class="fw-semibold">{{ $item->name }}</span>
-                                            @if($item->attachments->count() > 0)
+                                            @if(app(\App\Services\ComponentManager::class)->isEnabled('attachments') && $item->attachments->count() > 0)
                                                 <i class="fa fa-paperclip text-muted ms-1" title="Hat Anhänge ({{ $item->attachments->count() }})"></i>
                                             @endif
                                         </td>

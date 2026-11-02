@@ -8,6 +8,7 @@ use App\Models\Item;
 use App\Models\ItemCollection;
 use App\Models\Order;
 use App\Models\User;
+use App\Services\ComponentManager;
 use App\Services\OrderService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -127,7 +128,9 @@ class OrderController extends Controller
     {
         return [
             'items' => Item::with('itemGroup')->orderBy('name')->get(),
-            'collections' => ItemCollection::with('items')->get(),
+            'collections' => app(ComponentManager::class)->isEnabled('item_collections')
+                ? ItemCollection::with('items')->get()
+                : new Collection,
         ];
     }
 }

@@ -12,7 +12,9 @@ use App\Models\Order;
 use App\Models\OrderedItem;
 use App\Models\User;
 use App\Observers\OrderObserver;
+use App\Services\ComponentManager;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -30,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(ComponentManager::class);
     }
 
     /**
@@ -42,6 +44,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::before(function ($user, $ability) {
             return $user->hasRole('Materialwart') ? true : null;
         });
+
+        Blade::if('component_enabled', fn (string $component) => app(ComponentManager::class)->isEnabled($component));
 
         Order::observe(OrderObserver::class);
 
