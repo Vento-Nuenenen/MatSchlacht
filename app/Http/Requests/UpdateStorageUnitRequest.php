@@ -28,4 +28,12 @@ class UpdateStorageUnitRequest extends StoreStorageUnitRequest
 
         return $storageUnit->level;
     }
+
+    protected function ignoredStorageUnitId(): ?int
+    {
+        /** @var StorageUnit $storageUnit */
+        $storageUnit = $this->route('storage_unit');
+
+        return $storageUnit->id;
+    }
 }

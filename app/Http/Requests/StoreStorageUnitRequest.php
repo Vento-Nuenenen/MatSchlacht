@@ -4,10 +4,13 @@ namespace App\Http\Requests;
 
 use App\Enums\StorageLevel;
 use App\Models\StorageUnit;
+use App\Services\StorageCodeGenerator;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Unique;
 use Illuminate\Validation\Validator;
 
 class StoreStorageUnitRequest extends FormRequest
@@ -21,16 +24,29 @@ class StoreStorageUnitRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Codes are always stored in capital letters.
+     */
+    protected function prepareForValidation(): void
+    {
+        if (is_string($this->input('code'))) {
+            $this->merge(['code' => Str::upper(trim($this->input('code')))]);
+        }
+    }
+
+    /**
+     * Get the validation rules that apply to the request. The name and code of bins are generated.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
+        $isBin = fn (): bool => (bool) $this->storageLevel()?->holdsStock();
+
         return [
             'level' => ['required', Rule::enum(StorageLevel::class)],
             'parent_id' => ['nullable', 'integer', 'exists:storage_units,id'],
-            'name' => ['required', 'string', 'max:255'],
+            'name' => [Rule::excludeIf($isBin), 'required', 'string', 'max:255'],
+            'code' => [Rule::excludeIf($isBin), 'nullable', 'string', 'max:'.StorageCodeGenerator::MAX_LENGTH, 'regex:/^[A-Z0-9]+$/', $this->uniqueCodeRule()],
             'description' => ['nullable', 'string', 'max:2000'],
         ];
     }
@@ -71,12 +87,44 @@ class StoreStorageUnitRequest extends FormRequest
             'level' => 'Ebene',
             'parent_id' => 'Übergeordnete Lagereinheit',
             'name' => 'Bezeichnung',
+            'code' => 'Code',
             'description' => 'Beschreibung',
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'code.regex' => 'Der Code darf nur Buchstaben von A bis Z und Ziffern enthalten.',
+            'code.unique' => 'Dieser Code wird in derselben übergeordneten Lagereinheit schon verwendet.',
         ];
     }
 
     protected function storageLevel(): ?StorageLevel
     {
         return StorageLevel::tryFrom((string) $this->input('level'));
+    }
+
+    /**
+     * The unit that keeps its own code, none for a new unit.
+     */
+    protected function ignoredStorageUnitId(): ?int
+    {
+        return null;
+    }
+
+    /**
+     * A code only has to be unique among the units of the same parent.
+     */
+    protected function uniqueCodeRule(): Unique
+    {
+        $parentId = $this->filled('parent_id') ? $this->integer('parent_id') : null;
+
+        return Rule::unique('storage_units', 'code')
+            ->where(fn ($query) => $query->where('parent_id', $parentId))
+            ->ignore($this->ignoredStorageUnitId());
     }
 }

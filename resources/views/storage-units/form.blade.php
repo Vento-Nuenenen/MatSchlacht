@@ -22,14 +22,35 @@
             </div>
         @endif
 
-        <div class="mb-3">
-            <label for="name" class="form-label fw-semibold">Bezeichnung</label>
-            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
-                   value="{{ old('name', $storageUnit->name) }}" required autofocus maxlength="255">
-            @error('name')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
+        @if($level->holdsStock())
+            <p class="text-muted small mb-3">
+                @if($storageUnit->exists)
+                    Bezeichnung: <code>{{ $storageUnit->name }}</code>.
+                @endif
+                Die Bezeichnung entsteht automatisch aus den Codes der übergeordneten Ebenen und einer laufenden Nummer.
+            </p>
+        @else
+            <div class="row g-3 mb-3">
+                <div class="col-12 col-md-8">
+                    <label for="name" class="form-label fw-semibold">Bezeichnung</label>
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
+                           value="{{ old('name', $storageUnit->name) }}" required autofocus maxlength="255">
+                    @error('name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="col-12 col-md-4">
+                    <label for="code" class="form-label fw-semibold">Code <span class="text-muted fw-normal">(optional)</span></label>
+                    <input type="text" class="form-control text-uppercase @error('code') is-invalid @enderror" id="code" name="code"
+                           value="{{ old('code', $storageUnit->code) }}" maxlength="{{ \App\Services\StorageCodeGenerator::MAX_LENGTH }}"
+                           aria-describedby="code-help">
+                    <div id="code-help" class="form-text">Leer lassen = automatisch aus der Bezeichnung.</div>
+                    @error('code')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+        @endif
 
         <div class="mb-0">
             <label for="description" class="form-label fw-semibold">Beschreibung <span class="text-muted fw-normal">(optional)</span></label>

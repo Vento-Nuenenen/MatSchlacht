@@ -19,12 +19,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|null $parent_id
  * @property StorageLevel $level
  * @property string $name
+ * @property string $code
  * @property string|null $description
  */
 #[Fillable([
     'parent_id',
     'level',
     'name',
+    'code',
     'description',
 ])]
 class StorageUnit extends Model

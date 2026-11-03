@@ -4,6 +4,9 @@
             <a href="{{ route('storage-units.show', $unit) }}" class="text-decoration-none">
                 <i class="fa {{ $unit->level->icon() }} text-muted me-1" title="{{ $unit->level->label() }}"></i>
                 <span class="{{ $depth === 0 ? 'fw-bold' : '' }}">{{ $unit->name }}</span>
+                @unless($unit->level->holdsStock())
+                    <code class="small ms-1">{{ $unit->code }}</code>
+                @endunless
             </a>
             @if($unit->level->holdsStock())
                 <span class="badge bg-light text-dark border ms-1">{{ $unit->stocks_count }} Material</span>

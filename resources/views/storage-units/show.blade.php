@@ -21,6 +21,9 @@
                         <span class="h5 mb-0">
                             <i class="fa {{ $storageUnit->level->icon() }} text-muted me-1"></i>
                             {{ $storageUnit->name }}
+                            @unless($storageUnit->level->holdsStock())
+                                <code class="fs-6 ms-1">{{ $storageUnit->code }}</code>
+                            @endunless
                             <span class="badge bg-secondary ms-1 fs-6 fw-normal">{{ $storageUnit->level->label() }}</span>
                         </span>
                         <div class="d-flex flex-wrap gap-1">
@@ -70,6 +73,9 @@
                                                     <a href="{{ route('storage-units.show', $child) }}" class="fw-semibold text-decoration-none">
                                                         <i class="fa {{ $child->level->icon() }} text-muted me-1"></i>{{ $child->name }}
                                                     </a>
+                                                    @unless($child->level->holdsStock())
+                                                        <code class="small ms-1">{{ $child->code }}</code>
+                                                    @endunless
                                                 </td>
                                                 <td class="text-center">{{ $child->level->holdsStock() ? $child->stocks_count : $child->children_count }}</td>
                                             </tr>

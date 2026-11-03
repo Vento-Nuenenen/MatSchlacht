@@ -18,6 +18,7 @@ use App\Models\StorageUnit;
 use App\Models\User;
 use App\Observers\ItemStockObserver;
 use App\Observers\OrderObserver;
+use App\Observers\StorageUnitObserver;
 use App\Services\ComponentManager;
 use App\Services\FileStorage\DropboxAdapter;
 use App\Services\FileStorage\FileStorageManager;
@@ -137,6 +138,7 @@ class AppServiceProvider extends ServiceProvider
 
         Order::observe(OrderObserver::class);
         ItemStock::observe(ItemStockObserver::class);
+        StorageUnit::observe(StorageUnitObserver::class);
 
         Relation::morphMap([
             'item' => Item::class,
