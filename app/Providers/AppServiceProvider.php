@@ -8,9 +8,12 @@ use App\Models\Item;
 use App\Models\ItemCollection;
 use App\Models\ItemCollectionItem;
 use App\Models\ItemGroup;
+use App\Models\ItemStock;
 use App\Models\Order;
 use App\Models\OrderedItem;
+use App\Models\StorageUnit;
 use App\Models\User;
+use App\Observers\ItemStockObserver;
 use App\Observers\OrderObserver;
 use App\Services\ComponentManager;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -48,6 +51,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::if('component_enabled', fn (string $component) => app(ComponentManager::class)->isEnabled($component));
 
         Order::observe(OrderObserver::class);
+        ItemStock::observe(ItemStockObserver::class);
 
         Relation::morphMap([
             'item' => Item::class,
@@ -58,6 +62,8 @@ class AppServiceProvider extends ServiceProvider
             'ordered_item' => OrderedItem::class,
             'item_collection' => ItemCollection::class,
             'item_collection_item' => ItemCollectionItem::class,
+            'storage_unit' => StorageUnit::class,
+            'item_stock' => ItemStock::class,
         ]);
 
         Event::listen(SocialiteWasCalled::class, MicrosoftExtendSocialite::class);

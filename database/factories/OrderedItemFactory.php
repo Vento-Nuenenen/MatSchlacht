@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Item;
+use App\Models\Order;
 use App\Models\OrderedItem;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +20,14 @@ class OrderedItemFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'order_id' => Order::factory(),
+            'item_id' => Item::factory(),
+            'quantity' => fake()->numberBetween(1, 5),
+            'confirmed' => 0,
+            'delivered' => 0,
+            'returned' => 0,
+            'repair' => 0,
+            'broken' => 0,
         ];
     }
 }

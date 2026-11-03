@@ -28,7 +28,15 @@
             <div class="row g-3">
                 <div class="col-12 col-sm-4">
                     <label for="stock" class="form-label fw-semibold">Bestand</label>
-                    <input type="number" class="form-control" id="stock" name="stock" value="{{ old('stock', $item->stock ?? 0) }}" min="0" max="999999" required>
+                    @php
+                        $isStockFromStorage = isset($item) && $item->exists
+                            && app(\App\Services\ComponentManager::class)->isEnabled('storage')
+                            && $item->stocks->isNotEmpty();
+                    @endphp
+                    <input type="number" class="form-control" id="stock" name="stock" value="{{ old('stock', $item->stock ?? 0) }}" min="0" max="999999" required @readonly($isStockFromStorage)>
+                    @if($isStockFromStorage)
+                        <div class="form-text">Summe der Lagerplätze</div>
+                    @endif
                     @error('stock')
                         <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror

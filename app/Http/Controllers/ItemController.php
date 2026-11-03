@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\StorageLevel;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Models\Attachment;
 use App\Models\Item;
 use App\Models\ItemContent;
 use App\Models\ItemGroup;
+use App\Models\StorageUnit;
 use App\Services\ComponentManager;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -84,14 +86,35 @@ class ItemController extends Controller
     }
 
     /**
+     * Display the item with its contents and storage places.
+     */
+    public function show(Item $item): Factory|View
+    {
+        $item->load(['itemGroup', 'contents', 'stocks.storageUnit.'.StorageUnit::ANCESTORS]);
+
+        return view('item.show', compact('item'));
+    }
+
+    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Item $item): Factory|View
     {
         $itemGroups = ItemGroup::all();
         $allContentNames = ItemContent::distinct()->pluck('name');
+        $item->load('stocks.storageUnit.'.StorageUnit::ANCESTORS);
 
-        return view('item.edit', compact('item', 'itemGroups', 'allContentNames'));
+        $binOptions = $this->components->isEnabled('storage')
+            ? StorageUnit::ofLevel(StorageLevel::Bin)
+                ->with(StorageUnit::ANCESTORS)
+                ->whereNotIn('id', $item->stocks->pluck('storage_unit_id'))
+                ->get()
+                ->mapWithKeys(fn (StorageUnit $bin) => [$bin->id => $bin->path()])
+                ->sort()
+                ->all()
+            : [];
+
+        return view('item.edit', compact('item', 'itemGroups', 'allContentNames', 'binOptions'));
     }
 
     /**
@@ -100,6 +123,10 @@ class ItemController extends Controller
     public function update(UpdateItemRequest $request, Item $item): RedirectResponse
     {
         $item->update($request->validated());
+
+        if ($this->components->isEnabled('storage')) {
+            $item->syncStockFromStorage();
+        }
 
         if ($request->has('remove_attachments') && $this->components->isEnabled('attachments')) {
             /** @var array<int, int> $removeAttachments */

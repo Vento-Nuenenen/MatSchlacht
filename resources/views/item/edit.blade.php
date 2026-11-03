@@ -11,6 +11,12 @@
             ])
         </form>
 
+        @component_enabled('storage')
+            <div class="mt-4 pt-3 border-top">
+                @include('item.storage')
+            </div>
+        @endcomponent_enabled
+
         @if(isset($item) && $item->exists && app(\App\Services\ComponentManager::class)->isEnabled('item_contents'))
             <div class="mt-4 pt-3 border-top">
                 <div class="card mb-4 shadow-sm">

@@ -36,6 +36,19 @@ return [
         'settings' => [],
     ],
 
+    'storage' => [
+        'label' => 'Lagerhaltung',
+        'description' => 'Lagerorte, Lagerräume, Lagerregale, Regalebenen und Lagerplätze mit Bestand pro Platz sowie druckbare Etiketten. Hat ein Material Lagerplätze, ergibt sich sein Bestand aus deren Summe.',
+        'enabled' => (bool) env('COMPONENT_STORAGE', false),
+        'settings' => [
+            'label_caption' => [
+                'type' => 'string',
+                'label' => 'Fusszeile auf den Etiketten (leer = App-Name)',
+                'default' => null,
+            ],
+        ],
+    ],
+
     'order_notifications' => [
         'label' => 'Mail-Benachrichtigungen',
         'description' => 'E-Mails bei neuen Bestellungen und Statuswechseln.',

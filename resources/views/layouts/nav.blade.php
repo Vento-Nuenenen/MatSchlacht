@@ -42,6 +42,11 @@
                             @canany(['view itemgroups', 'create itemgroups', 'update itemgroups', 'delete itemgroups'])
                                 <a class="dropdown-item" href="{{ route('item-groups.index') }}">Materialgruppen</a>
                             @endcan
+                            @component_enabled('storage')
+                                @can('view storage')
+                                    <a class="dropdown-item" href="{{ route('storage-units.index') }}">Lager</a>
+                                @endcan
+                            @endcomponent_enabled
                         </div>
                     </li>
                 @endif

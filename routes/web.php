@@ -8,12 +8,15 @@ use App\Http\Controllers\ItemCollectionController;
 use App\Http\Controllers\ItemContentController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemGroupController;
+use App\Http\Controllers\ItemStockController;
+use App\Http\Controllers\LabelController;
 use App\Http\Controllers\MailTestController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderManagementController;
 use App\Http\Controllers\OverwatchController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RolePermissionController;
+use App\Http\Controllers\StorageUnitController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -45,6 +48,14 @@ Route::middleware('auth')->group(function () {
         Route::post('items/{item}/contents', [ItemContentController::class, 'store'])->name('items.contents.store');
         Route::delete('item-contents/{itemContent}', [ItemContentController::class, 'destroy'])->name('items.contents.destroy');
         Route::get('/manage/orders/{order}/contents-pdf', [OrderManagementController::class, 'exportContentsPdf'])->name('orders.manage.contents-pdf');
+    });
+    Route::middleware('component:storage')->group(function () {
+        Route::resource('storage-units', StorageUnitController::class);
+        Route::get('storage-units/{storageUnit}/labels', [LabelController::class, 'storageUnit'])->name('labels.storage-unit');
+        Route::get('labels/items', [LabelController::class, 'items'])->name('labels.items');
+        Route::post('item-stocks', [ItemStockController::class, 'store'])->name('item-stocks.store');
+        Route::put('item-stocks/{itemStock}', [ItemStockController::class, 'update'])->name('item-stocks.update');
+        Route::delete('item-stocks/{itemStock}', [ItemStockController::class, 'destroy'])->name('item-stocks.destroy');
     });
     Route::resource('orders', OrderController::class);
     Route::get('/manage/orders', [OrderManagementController::class, 'index'])->name('orders.manage');

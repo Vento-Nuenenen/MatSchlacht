@@ -9,11 +9,18 @@
                 <div class="card shadow-sm">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <span class="h5 mb-0">Material</span>
-                        @can('create items')
-                            <a href="{{ route('items.create') }}" class="btn btn-info btn-sm">
-                                <i class="fa fa-plus me-1"></i> Neues Material
-                            </a>
-                        @endcan
+                        <div class="d-flex flex-wrap gap-1">
+                            @component_enabled('storage')
+                                <button type="submit" form="item-label-form" class="btn btn-outline-dark btn-sm">
+                                    <i class="fa fa-print me-1"></i> Etiketten für Auswahl
+                                </button>
+                            @endcomponent_enabled
+                            @can('create items')
+                                <a href="{{ route('items.create') }}" class="btn btn-info btn-sm">
+                                    <i class="fa fa-plus me-1"></i> Neues Material
+                                </a>
+                            @endcan
+                        </div>
                     </div>
                     <div class="card-body p-2 p-sm-3">
                         <form action="{{ route('items.index') }}" method="GET" class="mb-3">
@@ -34,10 +41,20 @@
                             </div>
                         </form>
 
+                        @component_enabled('storage')
+                            <form id="item-label-form" method="GET" action="{{ route('labels.items') }}" target="_blank"></form>
+                        @endcomponent_enabled
+
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered table-striped align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
+                                        @component_enabled('storage')
+                                            <th style="width: 40px;">
+                                                <input class="form-check-input" type="checkbox" aria-label="Alle auswählen"
+                                                       onclick="document.querySelectorAll('.item-label-checkbox').forEach(cb => cb.checked = this.checked)">
+                                            </th>
+                                        @endcomponent_enabled
                                         <th class="sortable-header" style="min-width: 140px;">Bezeichnung</th>
                                         <th class="sortable-header">Materialgruppe</th>
                                         <th class="sortable-header text-center" style="min-width: 80px;">Bestand</th>
@@ -49,8 +66,14 @@
                                 <tbody>
                                 @forelse($items as $item)
                                     <tr>
+                                        @component_enabled('storage')
+                                            <td>
+                                                <input class="form-check-input item-label-checkbox" type="checkbox" name="items[]" value="{{ $item->id }}"
+                                                       form="item-label-form" aria-label="{{ $item->name }} auswählen">
+                                            </td>
+                                        @endcomponent_enabled
                                         <td>
-                                            <span class="fw-semibold">{{ $item->name }}</span>
+                                            <a href="{{ route('items.show', $item) }}" class="fw-semibold text-decoration-none">{{ $item->name }}</a>
                                             @if(app(\App\Services\ComponentManager::class)->isEnabled('attachments') && $item->attachments->count() > 0)
                                                 <i class="fa fa-paperclip text-muted ms-1" title="Hat Anhänge ({{ $item->attachments->count() }})"></i>
                                             @endif
@@ -75,7 +98,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center py-4 text-muted">Keine Materialien vorhanden.</td>
+                                        <td colspan="7" class="text-center py-4 text-muted">Keine Materialien vorhanden.</td>
                                     </tr>
                                 @endforelse
                                 </tbody>

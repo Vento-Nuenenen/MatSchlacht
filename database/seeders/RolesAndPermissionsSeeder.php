@@ -18,7 +18,7 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // Create Permissions
-        $models = ['users', 'itemgroups', 'items', 'orders', 'roles', 'itemcollections'];
+        $models = ['users', 'itemgroups', 'items', 'orders', 'roles', 'itemcollections', 'storage'];
         $actions = ['view', 'create', 'edit', 'delete'];
 
         $permissions = [
@@ -47,7 +47,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $abteilungsleitung = Role::findOrCreate('Abteilungsleitung');
         $abteilungsleitung->givePermissionTo([
             'view users',
-            'view itemgroups', 'view items',
+            'view itemgroups', 'view items', 'view storage',
             'view orders', 'create orders', 'edit orders',
         ]);
 
@@ -59,7 +59,7 @@ class RolesAndPermissionsSeeder extends Seeder
         foreach ($leitung as $roleName) {
             $role = Role::findOrCreate($roleName);
             $role->givePermissionTo([
-                'view itemgroups', 'view items',
+                'view itemgroups', 'view items', 'view storage',
                 'view orders', 'create orders',
                 'edit own orders', 'delete own orders',
             ]);
