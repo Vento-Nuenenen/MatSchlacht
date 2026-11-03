@@ -6,35 +6,30 @@
             <div class="col-12">
                 @include('components.status-alerts')
 
-                <div class="card shadow-sm">
-                    <div class="card-header">
-                        <span class="h5 mb-0">Bestellungen verwalten</span>
-                    </div>
-                    <div class="card-body p-2 p-sm-3">
+                <h2 class="mb-3">Bestellungen verwalten</h2>
+
+                @php
+                    $groupedOrders = $orders->groupBy(fn($o) => get_class($o->state));
+                @endphp
+
+                <div class="d-flex flex-column gap-4">
+                    @foreach($stateClasses as $stateClass)
                         @php
-                            $groupedOrders = $orders->groupBy(fn($o) => get_class($o->state));
+                            $filteredOrders = $groupedOrders->get($stateClass, collect());
+                            // Get an instance of the state to call display() and color()
+                            $stateInstance = new $stateClass(null);
                         @endphp
 
-                        @foreach($stateClasses as $stateClass)
-                            @php
-                                $filteredOrders = $groupedOrders->get($stateClass, collect());
-                                // Get an instance of the state to call display() and color()
-                                $stateInstance = new $stateClass(null);
-                            @endphp
-
-                            <h5 class="d-flex align-items-center gap-2 mt-{{ $loop->first ? '1' : '4' }} mb-3">
-                                <span>{{ $stateInstance->display() }}</span>
-                                <i class="color-{{ $stateInstance->color() }} d-inline-flex">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-circle-fill" viewBox="0 0 16 16">
-                                        <circle cx="8" cy="8" r="8"/>
-                                    </svg>
-                                </i>
-                                <span class="badge bg-secondary rounded-pill small ms-auto">{{ $filteredOrders->count() }}</span>
-                            </h5>
+                        <section class="card shadow-sm" aria-labelledby="state-{{ $stateInstance::getMorphClass() }}">
+                            <div class="bg-{{ $stateInstance->color() }}" style="height: 4px;"></div>
+                            <div class="card-header d-flex align-items-center gap-2">
+                                <h3 class="h6 mb-0" id="state-{{ $stateInstance::getMorphClass() }}">{{ $stateInstance->display() }}</h3>
+                                <span class="badge bg-secondary rounded-pill ms-auto">{{ $filteredOrders->count() }}</span>
+                            </div>
 
                             @if($filteredOrders->isNotEmpty())
-                                <div class="table-responsive mb-4">
-                                    <table class="table table-hover table-bordered table-striped align-middle mb-0">
+                                <div class="card-body p-0 table-responsive">
+                                    <table class="table table-hover table-striped align-middle mb-0">
                                         <thead class="table-light">
                                             <tr>
                                                 <th class="sortable-header" style="min-width: 140px;">Anlass</th>
@@ -89,10 +84,12 @@
                                     </table>
                                 </div>
                             @else
-                                <p class="text-muted mb-4 small ps-2">Keine Bestellungen in diesem Status.</p>
+                                <div class="card-body py-2">
+                                    <p class="text-muted small mb-0">Keine Bestellungen in diesem Status.</p>
+                                </div>
                             @endif
-                        @endforeach
-                    </div>
+                        </section>
+                    @endforeach
                 </div>
             </div>
         </div>

@@ -94,3 +94,22 @@ test('the avatar shows the initials of the user', function () {
         ->get(route('overwatch'))
         ->assertSee('<span class="app-avatar">MM</span>', false);
 });
+
+test('the layout offers the profile, the colour mode and the logout only once', function () {
+    $content = $this->actingAs($this->leader)->get(route('overwatch'))->assertSuccessful()->getContent();
+
+    expect(substr_count($content, 'href="'.route('profile.edit').'"'))->toBe(1)
+        ->and(substr_count($content, 'class="theme-switch'))->toBe(1)
+        ->and(substr_count($content, 'action="'.route('logout').'"'))->toBe(1);
+});
+
+test('the user menu marks the profile while it is open', function () {
+    $this->actingAs($this->leader)
+        ->get(route('profile.edit'))
+        ->assertSuccessful()
+        ->assertSee('aria-current="page"', false);
+
+    $this->get(route('overwatch'))
+        ->assertSuccessful()
+        ->assertDontSee('dropdown-item active', false);
+});

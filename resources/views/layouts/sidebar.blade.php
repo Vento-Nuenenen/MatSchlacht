@@ -19,12 +19,4 @@
             @endforeach
         @endforeach
     </nav>
-
-    <a href="{{ route('profile.edit') }}" class="app-sidebar-user {{ request()->routeIs('profile.*') ? 'active' : '' }}" title="Profil">
-        <span class="app-avatar">{{ auth()->user()->initials() }}</span>
-        <span class="app-sidebar-user-name">
-            <span class="d-block text-truncate fw-semibold">{{ auth()->user()->fullName() }}</span>
-            <span class="d-block text-truncate small text-body-secondary">Profil</span>
-        </span>
-    </a>
 </aside>

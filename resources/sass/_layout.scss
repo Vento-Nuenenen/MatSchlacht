@@ -109,8 +109,7 @@ body.has-app-shell {
     }
 
     .app-brand-name,
-    .app-nav-section,
-    .app-sidebar-user-name {
+    .app-nav-section {
         display: none;
     }
 }
@@ -169,23 +168,6 @@ body.has-app-shell {
     }
 }
 
-.app-sidebar-user {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.7rem;
-    padding: 0.55rem;
-    border-radius: 0.9rem;
-    color: var(--bs-body-color);
-    text-decoration: none;
-
-    &:hover,
-    &.active {
-        background: var(--bs-tertiary-bg);
-        color: var(--bs-body-color);
-    }
-}
-
 @media (min-width: 992px) {
     .app-sidebar {
         width: var(--app-sidebar-width);
@@ -197,17 +179,8 @@ body.has-app-shell {
         }
 
         .app-brand-name,
-        .app-nav-section,
-        .app-sidebar-user-name {
+        .app-nav-section {
             display: block;
-        }
-
-        .app-sidebar-user {
-            justify-content: flex-start;
-        }
-
-        .app-sidebar-user-name {
-            min-width: 0;
         }
     }
 

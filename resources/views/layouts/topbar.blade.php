@@ -20,7 +20,8 @@
                 <div class="small text-body-secondary text-truncate">{{ auth()->user()->email }}</div>
             </div>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{{ route('profile.edit') }}"><i class="fa fa-user fa-fw me-2"></i>Profil</a>
+            <a class="dropdown-item {{ request()->routeIs('profile.*') ? 'active' : '' }}" href="{{ route('profile.edit') }}"
+               @if(request()->routeIs('profile.*')) aria-current="page" @endif><i class="fa fa-user fa-fw me-2"></i>Profil</a>
             @can('manage settings')
                 <a class="dropdown-item" href="{{ route('settings.components.index') }}"><i class="fa fa-sliders fa-fw me-2"></i>Einstellungen</a>
             @endcan
