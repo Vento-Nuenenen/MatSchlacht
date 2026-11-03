@@ -39,6 +39,7 @@ class UpdateComponentSettingsRequest extends FormRequest
                     'bool' => ['required', 'boolean'],
                     'integer' => ['required', 'integer', 'min:0', 'max:3650'],
                     'select' => ['required', Rule::in(array_keys($setting['options'] ?? []))],
+                    'color' => ['required', 'regex:/^#[0-9a-fA-F]{6}$/'],
                     'secret' => ['nullable', 'string', 'max:10000'],
                     'email_list' => ['nullable', 'string', 'max:1000', $this->emailListRule()],
                     default => ['nullable', 'string', 'max:255'],

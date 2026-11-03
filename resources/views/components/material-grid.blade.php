@@ -17,12 +17,12 @@
         <div class="card mb-3 item-group shadow-sm">
             <div class="card-header fw-bold bg-light">{{ $groupName }}</div>
             <div class="card-body p-0 table-responsive">
-                <table class="table table-sm table-hover align-middle mb-0">
+                <table class="table table-sm table-hover align-middle mb-0 table-no-stack material-table">
                     <thead class="table-light">
                     <tr>
                         <th scope="col" style="min-width: 140px;">Name</th>
-                        <th scope="col" class="text-center" style="width: 15%; min-width: 75px;">Verfügbar</th>
-                        <th scope="col" class="text-center" style="width: 15%; min-width: 75px;">Packungsgrösse</th>
+                        <th scope="col" class="text-center d-none d-sm-table-cell" style="width: 15%; min-width: 75px;">Verfügbar</th>
+                        <th scope="col" class="text-center d-none d-sm-table-cell" style="width: 15%; min-width: 75px;">Packungsgrösse</th>
                         <th scope="col" class="text-center" style="width: 15%; min-width: 85px;">Bestellen</th>
                         @if(isset($order) && isset($order->state) && ($order->state?->equals(\App\States\Order\Delivered::class) || $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class)))
                             <th scope="col" class="text-center" style="width: 15%; min-width: 85px;">Zurückgegeben</th>
@@ -41,6 +41,7 @@
                             $displayReturnedQty = ($item->lot > 1) ? $returnedQty / $item->lot : $returnedQty;
                             $imageAttachments = $item->attachments->filter(fn($a) => \Illuminate\Support\Str::endsWith(strtolower($a->path), ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']));
                             $imageUrls = $imageAttachments->map(fn ($img) => app(\App\Services\AttachmentService::class)->url($img))->filter();
+                            $isOrderReadonly = isset($order) && isset($order->state) && ($order->state?->equals(\App\States\Order\Delivered::class) || $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class));
                         @endphp
                         <tr class="item-row {{ $actualQty > 0 ? 'table-primary' : '' }}">
                             <td class="item-name py-2">
@@ -62,10 +63,17 @@
                                        data-bs-title="Inhaltsliste von {{ $item->name }}"
                                        data-bs-content="<ul class='list-unstyled mb-0'>@foreach($item->contents as $c)<li><i class='fa fa-check-square-o me-1 small text-muted'></i><strong>{{ $c->quantity }}</strong> {{ $c->name }}</li>@endforeach</ul>"></i>
                                 @endif
+                                <div class="small text-body-secondary d-sm-none">
+                                    {{ $item->stock }} verfügbar{{ $item->lot > 1 ? ' · Packung à '.$item->lot : '' }}
+                                </div>
                             </td>
-                            <td class="text-center">{{ $item->stock }}</td>
-                            <td class="text-center">{{ $item->lot }}</td>
-                            <td class="text-center">
+                            <td class="text-center d-none d-sm-table-cell">{{ $item->stock }}</td>
+                            <td class="text-center d-none d-sm-table-cell">{{ $item->lot }}</td>
+                            <td class="text-center text-nowrap">
+                                <div class="{{ $isOrderReadonly ? '' : 'qty-stepper' }}">
+                                @unless($isOrderReadonly)
+                                    <button type="button" class="btn" data-qty-step="-1" aria-label="{{ $item->name }}: weniger"><i class="fa fa-minus"></i></button>
+                                @endunless
                                 <input
                                     type="number"
                                     min="0"
@@ -78,6 +86,10 @@
                                     oninput="enforceQuantityLimits(this)"
                                     data-min-qty="0"
                                     data-max-qty="{{ $maxDisplayQty }}">
+                                @unless($isOrderReadonly)
+                                    <button type="button" class="btn" data-qty-step="1" aria-label="{{ $item->name }}: mehr"><i class="fa fa-plus"></i></button>
+                                @endunless
+                                </div>
                             </td>
                             @if(isset($order) && isset($order->state) && ($order->state?->equals(\App\States\Order\Delivered::class) || $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class)))
                                 <td class="text-center">

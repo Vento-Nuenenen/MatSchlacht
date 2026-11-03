@@ -1,7 +1,75 @@
-// Body
-$body-bg: #f8fafc;
+// Design tokens passed to Bootstrap. The primary colour is configurable at runtime
+// (Einstellungen › Erscheinungsbild) through CSS custom properties, see _theme.scss.
 
-// Typography
-$font-family-sans-serif: 'Nunito', sans-serif;
-$font-size-base: 0.9rem;
-$line-height-base: 1.6;
+$primary: #b1138b;
+$secondary: #6b6472;
+$success: #1f9d6b;
+$info: #2f80c9;
+$warning: #e7a417;
+$danger: #d6364f;
+
+$body-bg: #f6f4f8;
+$body-color: #231d29;
+$body-secondary-color: #6b6472;
+$body-tertiary-bg: #f1eef4;
+$border-color: #e6e1ea;
+
+$body-bg-dark: #131016;
+$body-color-dark: #ece8f0;
+$body-secondary-bg-dark: #1d1922;
+$body-tertiary-bg-dark: #221d27;
+$border-color-dark: #322b39;
+
+$font-family-sans-serif:
+    'Inter',
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+$font-size-base: 0.9375rem;
+$line-height-base: 1.55;
+$headings-font-weight: 700;
+$headings-letter-spacing: -0.01em;
+
+$border-radius: 0.625rem;
+$border-radius-sm: 0.5rem;
+$border-radius-lg: 0.875rem;
+$border-radius-xl: 1.25rem;
+$border-radius-pill: 50rem;
+
+$box-shadow-sm:
+    0 1px 2px rgba(35, 29, 41, 0.06),
+    0 1px 3px rgba(35, 29, 41, 0.04);
+$box-shadow: 0 4px 16px rgba(35, 29, 41, 0.08);
+$box-shadow-lg: 0 12px 40px rgba(35, 29, 41, 0.14);
+
+$input-btn-padding-y: 0.5rem;
+$input-btn-padding-x: 0.95rem;
+$input-btn-padding-y-sm: 0.3rem;
+$input-btn-padding-x-sm: 0.7rem;
+$btn-font-weight: 600;
+
+$card-border-color: rgba(35, 29, 41, 0.07);
+$card-cap-bg: transparent;
+$card-spacer-y: 1.1rem;
+$card-spacer-x: 1.25rem;
+$card-border-radius: $border-radius-xl;
+
+$table-cell-padding-y: 0.7rem;
+$table-cell-padding-x: 0.85rem;
+$table-cell-padding-y-sm: 0.45rem;
+$table-cell-padding-x-sm: 0.6rem;
+
+$dropdown-border-radius: $border-radius-lg;
+$dropdown-padding-x: 0.35rem;
+$dropdown-item-padding-y: 0.5rem;
+$modal-content-border-radius: $border-radius-xl;
+$badge-font-weight: 600;
+$badge-padding-y: 0.4em;
+$badge-padding-x: 0.65em;
+$badge-border-radius: $border-radius-pill;
+$alert-border-radius: $border-radius-lg;
+$offcanvas-border-width: 0;

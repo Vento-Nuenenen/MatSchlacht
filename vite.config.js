@@ -12,4 +12,12 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    css: {
+        preprocessorOptions: {
+            scss: {
+                // Bootstrap 5 still uses deprecated Sass features; only show warnings of our own code.
+                quietDeps: true,
+            },
+        },
+    },
 });

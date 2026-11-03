@@ -1,12 +1,12 @@
 {
   "resources/js/app.js": {
-    "file": "assets/app-5Vc3YL3U.js",
+    "file": "assets/app-BBtvx15C.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true
   },
   "resources/sass/app.scss": {
-    "file": "assets/app-HV7n9Jkj.css",
+    "file": "assets/app-Dc9OozYL.css",
     "name": "app",
     "names": [
       "app.css"
@@ -15,7 +15,7 @@
     "isEntry": true
   },
   "resources/sass/auth.scss": {
-    "file": "assets/auth-DsSej_rF.css",
+    "file": "assets/auth-DBJxUcyc.css",
     "name": "auth",
     "names": [
       "auth.css"

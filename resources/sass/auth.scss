@@ -1,13 +1,94 @@
-.btn-scout-mail {
-    background: #7c0d61;
-    color: white;
+// Login and password pages
+
+.auth-page {
+    display: grid;
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    @media (min-width: 992px) {
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    }
 }
 
-.btn-scout-mail:hover {
-    outline-color: #7c0d61;
-    outline-style: solid;
-    font-weight: bolder;
-    color: #7c0d61;
+.auth-brand-panel {
+    position: relative;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 3rem;
+    color: #fff;
+    background:
+        radial-gradient(
+            circle at 15% 20%,
+            rgba(255, 255, 255, 0.16),
+            transparent 45%
+        ),
+        radial-gradient(
+            circle at 85% 85%,
+            rgba(0, 0, 0, 0.25),
+            transparent 50%
+        ),
+        linear-gradient(145deg, var(--app-primary), var(--app-primary-active));
+    overflow: hidden;
+
+    .app-brand {
+        color: #fff;
+    }
+
+    .app-brand-mark {
+        color: var(--app-primary);
+        background: #fff;
+        box-shadow: none;
+    }
+
+    h1 {
+        max-width: 28rem;
+        letter-spacing: -0.03em;
+    }
+}
+
+.auth-form-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: calc(2rem + env(safe-area-inset-top, 0px)) 1.25rem
+        calc(2rem + env(safe-area-inset-bottom, 0px));
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 26rem;
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1.25rem 0;
+    color: var(--bs-secondary-color);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+
+    &::before,
+    &::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--bs-border-color);
+    }
+}
+
+.btn-scout-mail {
+    --bs-btn-bg: #7c0d61;
+    --bs-btn-border-color: #7c0d61;
+    --bs-btn-color: #fff;
+    --bs-btn-hover-bg: #640a4f;
+    --bs-btn-hover-border-color: #640a4f;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: #55083f;
+    --bs-btn-active-border-color: #55083f;
+    --bs-btn-active-color: #fff;
 }
 
 .btn-midata {

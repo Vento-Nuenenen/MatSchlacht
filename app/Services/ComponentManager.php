@@ -220,6 +220,7 @@ class ComponentManager
             'bool' => (bool) $value,
             'integer' => is_numeric($value) ? (int) $value : null,
             'secret' => is_string($value) && $value !== '' ? Crypt::encryptString($value) : null,
+            'color' => is_string($value) ? strtolower(trim($value)) : null,
             'email_list' => is_string($value)
                 ? implode(', ', array_filter(array_map('trim', explode(',', $value)), fn (string $entry) => $entry !== '')) ?: null
                 : null,

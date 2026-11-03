@@ -1,0 +1,188 @@
+// Tables: calm list style on all devices; on smartphones every row becomes a card-like entry
+// with a label per value. The labels are taken from the table header by resources/js/ui/tables.js.
+
+.table {
+    --bs-table-bg: transparent;
+    --bs-table-striped-bg: rgba(var(--app-shadow-color), 0.018);
+    --bs-table-hover-bg: rgba(var(--app-primary-rgb), 0.045);
+    --bs-table-border-color: var(--bs-border-color);
+    margin-bottom: 0;
+
+    > thead th,
+    > thead.table-light th {
+        color: var(--bs-secondary-color);
+        background-color: var(--bs-tertiary-bg);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+}
+
+// The views use table-bordered: only horizontal lines for a lighter look.
+.table-bordered {
+    > :not(caption) > * {
+        border-width: 0;
+    }
+
+    > :not(caption) > * > * {
+        border-width: 0 0 1px;
+    }
+}
+
+.table > tbody > tr:last-child > * {
+    border-bottom-width: 0;
+}
+
+.card-body.p-0 > .table-responsive > .table > :not(caption) > tr > :first-child,
+.card-body.p-0.table-responsive > .table > :not(caption) > tr > :first-child {
+    padding-left: 1.25rem;
+}
+
+.card-body.p-0 > .table-responsive > .table > :not(caption) > tr > :last-child,
+.card-body.p-0.table-responsive > .table > :not(caption) > tr > :last-child {
+    padding-right: 1.25rem;
+}
+
+.table-responsive {
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--bs-border-radius-lg);
+}
+
+.table td .btn {
+    white-space: nowrap;
+}
+
+// Sortable headers
+
+.sortable-header {
+    position: relative;
+    padding-right: 1.6rem !important;
+    cursor: pointer;
+    user-select: none;
+
+    &::after {
+        position: absolute;
+        right: 0.6rem;
+        content: '\f0dc';
+        color: var(--bs-border-color);
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+    }
+
+    &.sort-asc::after {
+        content: '\f0de';
+        color: var(--app-primary-text);
+    }
+
+    &.sort-desc::after {
+        content: '\f0dd';
+        color: var(--app-primary-text);
+    }
+}
+
+// Smartphones: stacked rows
+
+@media (max-width: 767.98px) {
+    .table.table-stack {
+        > thead {
+            display: none;
+        }
+
+        > tbody,
+        > tbody > tr,
+        > tbody > tr > td {
+            display: block;
+            width: 100% !important;
+            min-width: 0 !important;
+        }
+
+        > tbody > tr {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--bs-border-color);
+
+            &:last-child {
+                border-bottom: 0;
+            }
+
+            > td {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+                padding: 0.28rem 0 !important;
+                border: 0 !important;
+                box-shadow: none !important;
+                background: transparent !important;
+                text-align: right !important;
+
+                &::before {
+                    content: attr(data-label);
+                    flex-shrink: 0;
+                    color: var(--bs-secondary-color);
+                    font-size: 0.78rem;
+                    font-weight: 600;
+                    text-align: left;
+                }
+
+                &:not([data-label])::before,
+                &[data-label='']::before {
+                    display: none;
+                }
+
+                &[data-cell-role='title'] {
+                    display: block;
+                    padding-bottom: 0.4rem !important;
+                    font-size: 1rem;
+                    text-align: left !important;
+
+                    &::before {
+                        display: none;
+                    }
+                }
+
+                &[data-cell-role='actions'] {
+                    justify-content: flex-start;
+                    padding-top: 0.6rem !important;
+
+                    &::before {
+                        display: none;
+                    }
+
+                    > .d-flex,
+                    > div {
+                        width: 100%;
+                    }
+                }
+
+                &[data-cell-role='select'] {
+                    justify-content: flex-start;
+                    margin-bottom: 0.2rem;
+
+                    &::before {
+                        display: none;
+                    }
+                }
+
+                &[colspan] {
+                    display: block;
+                    text-align: center !important;
+
+                    &::before {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        > tbody > tr.table-primary {
+            background: var(--app-primary-soft);
+        }
+    }
+
+    .table-responsive:has(> .table-stack),
+    .card-body:has(> .table-stack) {
+        overflow: visible;
+    }
+}

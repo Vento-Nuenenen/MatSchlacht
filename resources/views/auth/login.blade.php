@@ -1,15 +1,30 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
-    <div class="row justify-content-center">
-        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
-            <div class="card shadow-sm">
-                <div class="card-header bg-light">
-                    <span class="h5 mb-0 fw-bold">{{ __('Login') }}</span>
-                </div>
+<div class="auth-page">
+    <section class="auth-brand-panel d-none d-lg-flex">
+        <div class="app-brand">
+            <span class="app-brand-mark"><i class="fa fa-campground"></i></span>
+            <span class="app-brand-name">{{ config('app.name', 'MatSchlacht') }}</span>
+        </div>
+        <div>
+            <h1 class="display-6 fw-bold mb-3">Material für Lager, Übungen und Anlässe.</h1>
+            <p class="lead mb-0 opacity-75">Bestellen, bereitstellen und zurückgeben – alles an einem Ort.</p>
+        </div>
+        <p class="small mb-0 opacity-50">© {{ now()->year }} {{ config('app.name', 'MatSchlacht') }}</p>
+    </section>
 
-                <div class="card-body p-3 p-md-4">
+    <section class="auth-form-panel">
+        <div class="auth-card">
+            <div class="app-brand mb-4 d-lg-none">
+                <span class="app-brand-mark"><i class="fa fa-campground"></i></span>
+                <span class="app-brand-name">{{ config('app.name', 'MatSchlacht') }}</span>
+            </div>
+
+            <h2 class="h3 fw-bold mb-1">Willkommen zurück</h2>
+            <p class="text-body-secondary mb-4">Melde dich an, um weiterzufahren.</p>
+
+            <div class="auth-card-body">
                     @include('components.status-alerts')
 
                     @component_enabled('password_login')
@@ -62,22 +77,17 @@
 
                     @component_enabled('azure_login')
                         @component_enabled('password_login')
-                            <div class="text-center my-3 text-muted small position-relative">
-                                <hr class="my-0">
-                                <span class="position-absolute top-50 start-50 translate-middle bg-white px-2">ODER</span>
-                            </div>
+                            <div class="auth-divider"><span>oder</span></div>
                         @endcomponent_enabled
 
-                        <div class="mt-4">
-                            <a href="{{ route('azure.login') }}" class="btn btn-scout-mail w-100 py-2 shadow-sm text-center" role="button">
-                                {{ app(\App\Services\ComponentManager::class)->setting('azure_login', 'button_label') ?? __('Login mit Nünenen Mail') }}
-                            </a>
-                        </div>
+                        <a href="{{ route('azure.login') }}" class="btn btn-scout-mail w-100 py-2" role="button">
+                            <i class="fa-brands fa-microsoft me-2"></i>
+                            {{ app(\App\Services\ComponentManager::class)->setting('azure_login', 'button_label') ?? __('Login mit Nünenen Mail') }}
+                        </a>
                     @endcomponent_enabled
-                </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
 @endsection
 

@@ -25,6 +25,7 @@ use App\Services\FileStorage\GoogleDriveAdapter;
 use App\Services\FileStorage\SftpAdapter;
 use App\Services\FileStorage\SharePointAdapter;
 use App\Services\FileStorage\WebDavAdapter;
+use App\Services\ThemeService;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Blade;
@@ -49,6 +50,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ComponentManager::class);
         $this->app->singleton(FileStorageManager::class);
+        $this->app->singleton(ThemeService::class);
     }
 
     /**

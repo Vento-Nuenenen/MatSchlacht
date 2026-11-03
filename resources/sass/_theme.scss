@@ -1,0 +1,181 @@
+// Components that Bootstrap colours at compile time are re-coloured with the runtime
+// primary colour (--app-primary, rendered by App\Services\ThemeService in the layout).
+
+:root,
+[data-bs-theme='light'] {
+    --app-surface: #ffffff;
+    --app-surface-raised: #ffffff;
+    --app-glass: rgba(255, 255, 255, 0.82);
+    --app-shadow-color: 35, 29, 41;
+    --bs-focus-ring-color: rgba(var(--app-primary-rgb, 177, 19, 139), 0.25);
+}
+
+[data-bs-theme='dark'] {
+    --app-surface: #1b171f;
+    --app-surface-raised: #221d27;
+    --app-glass: rgba(27, 23, 31, 0.82);
+    --app-shadow-color: 0, 0, 0;
+    --bs-focus-ring-color: rgba(var(--app-primary-rgb, 177, 19, 139), 0.4);
+    color-scheme: dark;
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--app-primary);
+    --bs-btn-border-color: var(--app-primary);
+    --bs-btn-color: var(--app-primary-contrast);
+    --bs-btn-hover-bg: var(--app-primary-hover);
+    --bs-btn-hover-border-color: var(--app-primary-hover);
+    --bs-btn-hover-color: var(--app-primary-contrast);
+    --bs-btn-active-bg: var(--app-primary-active);
+    --bs-btn-active-border-color: var(--app-primary-active);
+    --bs-btn-active-color: var(--app-primary-contrast);
+    --bs-btn-disabled-bg: var(--app-primary);
+    --bs-btn-disabled-border-color: var(--app-primary);
+    --bs-btn-focus-shadow-rgb: var(--app-primary-rgb);
+    box-shadow: 0 2px 6px rgba(var(--app-primary-rgb), 0.25);
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--app-primary-text);
+    --bs-btn-border-color: var(--app-primary);
+    --bs-btn-hover-bg: var(--app-primary);
+    --bs-btn-hover-border-color: var(--app-primary);
+    --bs-btn-hover-color: var(--app-primary-contrast);
+    --bs-btn-active-bg: var(--app-primary-active);
+    --bs-btn-active-border-color: var(--app-primary-active);
+    --bs-btn-active-color: var(--app-primary-contrast);
+    --bs-btn-focus-shadow-rgb: var(--app-primary-rgb);
+}
+
+// "Create" buttons use btn-info throughout the app: shown as a soft primary button.
+.btn-info {
+    --bs-btn-bg: var(--app-primary-soft);
+    --bs-btn-border-color: transparent;
+    --bs-btn-color: var(--app-primary-text) !important;
+    --bs-btn-hover-bg: var(--app-primary-soft-strong);
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-hover-color: var(--app-primary-text);
+    --bs-btn-active-bg: var(--app-primary-soft-strong);
+    --bs-btn-active-border-color: transparent;
+    --bs-btn-active-color: var(--app-primary-text);
+    --bs-btn-focus-shadow-rgb: var(--app-primary-rgb);
+    color: var(--app-primary-text) !important;
+}
+
+// "Edit" buttons use btn-warning: a calm amber instead of a loud yellow.
+.btn-warning {
+    --bs-btn-bg: #fdf0d2;
+    --bs-btn-border-color: transparent;
+    --bs-btn-color: #7a5200;
+    --bs-btn-hover-bg: #fae3ae;
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-hover-color: #5f4000;
+    --bs-btn-active-bg: #f7d78c;
+    --bs-btn-active-border-color: transparent;
+    --bs-btn-active-color: #5f4000;
+}
+
+[data-bs-theme='dark'] .btn-warning {
+    --bs-btn-bg: #3d3018;
+    --bs-btn-color: #f5cf7a;
+    --bs-btn-hover-bg: #4b3b1d;
+    --bs-btn-hover-color: #ffdd92;
+    --bs-btn-active-bg: #574422;
+    --bs-btn-active-color: #ffdd92;
+}
+
+.btn-secondary {
+    --bs-btn-bg: var(--bs-tertiary-bg);
+    --bs-btn-border-color: var(--bs-border-color);
+    --bs-btn-color: var(--bs-body-color);
+    --bs-btn-hover-bg: var(--bs-secondary-bg);
+    --bs-btn-hover-border-color: var(--bs-border-color);
+    --bs-btn-hover-color: var(--bs-body-color);
+    --bs-btn-active-bg: var(--bs-secondary-bg);
+    --bs-btn-active-border-color: var(--bs-border-color);
+    --bs-btn-active-color: var(--bs-body-color);
+}
+
+.btn-link {
+    --bs-btn-color: var(--bs-link-color);
+    --bs-btn-hover-color: var(--bs-link-hover-color);
+}
+
+.text-primary {
+    color: var(--app-primary-text) !important;
+}
+
+.border-primary {
+    border-color: var(--app-primary) !important;
+}
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+    border-color: rgba(var(--app-primary-rgb), 0.6);
+    box-shadow: 0 0 0 0.22rem rgba(var(--app-primary-rgb), 0.18);
+}
+
+.form-check-input:checked {
+    background-color: var(--app-primary);
+    border-color: var(--app-primary);
+}
+
+.form-range::-webkit-slider-thumb {
+    background-color: var(--app-primary);
+}
+
+.dropdown-menu {
+    --bs-dropdown-link-active-bg: var(--app-primary);
+    --bs-dropdown-link-active-color: var(--app-primary-contrast);
+}
+
+.nav-pills {
+    --bs-nav-pills-link-active-bg: var(--app-primary);
+    --bs-nav-pills-link-active-color: var(--app-primary-contrast);
+}
+
+.pagination {
+    --bs-pagination-active-bg: var(--app-primary);
+    --bs-pagination-active-border-color: var(--app-primary);
+    --bs-pagination-color: var(--app-primary-text);
+}
+
+.table-primary {
+    --bs-table-bg: var(--app-primary-soft);
+    --bs-table-color: var(--bs-body-color);
+    --bs-table-hover-bg: var(--app-primary-soft-strong);
+    --bs-table-hover-color: var(--bs-body-color);
+    --bs-table-striped-bg: var(--app-primary-soft);
+    --bs-table-border-color: var(--bs-border-color);
+}
+
+// Fixed light utility colours used by the views follow the colour mode.
+.bg-light {
+    background-color: var(--bs-tertiary-bg) !important;
+}
+
+.bg-white {
+    background-color: var(--app-surface) !important;
+}
+
+.text-dark {
+    color: var(--bs-emphasis-color) !important;
+}
+
+[data-bs-theme='dark'] {
+    .badge.text-dark,
+    .badge.color-black {
+        color: #1f1a24 !important;
+    }
+
+    .table-light {
+        --bs-table-bg: var(--bs-tertiary-bg);
+        --bs-table-color: var(--bs-secondary-color);
+        --bs-table-border-color: var(--bs-border-color);
+    }
+
+    .btn-close {
+        filter: invert(1) grayscale(100%) brightness(200%);
+    }
+}

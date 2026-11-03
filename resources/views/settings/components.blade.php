@@ -62,6 +62,17 @@
                                                         @error($oldKey)
                                                             <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
+                                                    @elseif($setting['type'] === 'color')
+                                                        <label for="{{ $fieldId }}" class="form-label fw-semibold">{{ $setting['label'] }}</label>
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <input type="color" class="form-control form-control-color @error($oldKey) is-invalid @enderror"
+                                                                   id="{{ $fieldId }}" name="{{ $fieldName }}" value="{{ old($oldKey, $setting['value']) }}"
+                                                                   oninput="this.nextElementSibling.textContent = this.value">
+                                                            <code>{{ old($oldKey, $setting['value']) }}</code>
+                                                        </div>
+                                                        @error($oldKey)
+                                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                        @enderror
                                                     @elseif($setting['type'] === 'secret')
                                                         <label for="{{ $fieldId }}" class="form-label fw-semibold">{{ $setting['label'] }}</label>
                                                         @if($setting['multiline'] ?? false)

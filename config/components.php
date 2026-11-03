@@ -11,7 +11,7 @@ use App\Enums\FileStorageProvider;
 | configured by administrators under "Einstellungen". The values defined
 | here are the defaults; values saved in the "settings" table win.
 |
-| Supported setting types: "bool", "integer", "string", "email_list", "select"
+| Supported setting types: "bool", "integer", "string", "email_list", "color", "select"
 | (with "options") and "secret" (stored encrypted). Settings with a "group" are
 | only shown while the provider select of the component has that value.
 | Components with "toggleable" => false are always enabled. Settings with
@@ -81,6 +81,20 @@ return [
                 'type' => 'email_list',
                 'label' => 'Empfänger der Erinnerung (leer = Materialverantwortliche)',
                 'default' => null,
+            ],
+        ],
+    ],
+
+    'appearance' => [
+        'label' => 'Erscheinungsbild',
+        'description' => 'Farbe der App. Alle Abstufungen für den hellen und den dunklen Modus werden daraus berechnet.',
+        'enabled' => true,
+        'toggleable' => false,
+        'settings' => [
+            'primary_color' => [
+                'type' => 'color',
+                'label' => 'Hauptfarbe',
+                'default' => env('APP_PRIMARY_COLOR', '#b1138b'),
             ],
         ],
     ],

@@ -64,6 +64,16 @@ class User extends Authenticatable
         return (string) $civil_name;
     }
 
+    /**
+     * The initials shown in the avatar, e.g. "MM" for Max Muster.
+     */
+    public function initials(): string
+    {
+        $initials = mb_substr((string) $this->firstname, 0, 1).mb_substr((string) $this->lastname, 0, 1);
+
+        return mb_strtoupper($initials !== '' ? $initials : mb_substr((string) $this->email, 0, 1));
+    }
+
     public function preferredName(): string
     {
         if ($this->scoutname) {

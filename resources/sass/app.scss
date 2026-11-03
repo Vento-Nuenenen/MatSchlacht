@@ -1,107 +1,64 @@
-// Variables
-@use 'variables';
+// Bootstrap with the design tokens of the app
+@use 'variables' as tokens;
+@use 'bootstrap/scss/bootstrap' with (
+    $primary: tokens.$primary,
+    $secondary: tokens.$secondary,
+    $success: tokens.$success,
+    $info: tokens.$info,
+    $warning: tokens.$warning,
+    $danger: tokens.$danger,
+    $body-bg: tokens.$body-bg,
+    $body-color: tokens.$body-color,
+    $body-secondary-color: tokens.$body-secondary-color,
+    $body-tertiary-bg: tokens.$body-tertiary-bg,
+    $border-color: tokens.$border-color,
+    $body-bg-dark: tokens.$body-bg-dark,
+    $body-color-dark: tokens.$body-color-dark,
+    $body-secondary-bg-dark: tokens.$body-secondary-bg-dark,
+    $body-tertiary-bg-dark: tokens.$body-tertiary-bg-dark,
+    $border-color-dark: tokens.$border-color-dark,
+    $font-family-sans-serif: tokens.$font-family-sans-serif,
+    $font-size-base: tokens.$font-size-base,
+    $line-height-base: tokens.$line-height-base,
+    $headings-font-weight: tokens.$headings-font-weight,
+    $border-radius: tokens.$border-radius,
+    $border-radius-sm: tokens.$border-radius-sm,
+    $border-radius-lg: tokens.$border-radius-lg,
+    $border-radius-xl: tokens.$border-radius-xl,
+    $border-radius-pill: tokens.$border-radius-pill,
+    $box-shadow-sm: tokens.$box-shadow-sm,
+    $box-shadow: tokens.$box-shadow,
+    $box-shadow-lg: tokens.$box-shadow-lg,
+    $input-btn-padding-y: tokens.$input-btn-padding-y,
+    $input-btn-padding-x: tokens.$input-btn-padding-x,
+    $input-btn-padding-y-sm: tokens.$input-btn-padding-y-sm,
+    $input-btn-padding-x-sm: tokens.$input-btn-padding-x-sm,
+    $btn-font-weight: tokens.$btn-font-weight,
+    $card-border-color: tokens.$card-border-color,
+    $card-cap-bg: tokens.$card-cap-bg,
+    $card-spacer-y: tokens.$card-spacer-y,
+    $card-spacer-x: tokens.$card-spacer-x,
+    $card-border-radius: tokens.$card-border-radius,
+    $table-cell-padding-y: tokens.$table-cell-padding-y,
+    $table-cell-padding-x: tokens.$table-cell-padding-x,
+    $table-cell-padding-y-sm: tokens.$table-cell-padding-y-sm,
+    $table-cell-padding-x-sm: tokens.$table-cell-padding-x-sm,
+    $dropdown-border-radius: tokens.$dropdown-border-radius,
+    $dropdown-padding-x: tokens.$dropdown-padding-x,
+    $dropdown-item-padding-y: tokens.$dropdown-item-padding-y,
+    $modal-content-border-radius: tokens.$modal-content-border-radius,
+    $badge-font-weight: tokens.$badge-font-weight,
+    $badge-padding-y: tokens.$badge-padding-y,
+    $badge-padding-x: tokens.$badge-padding-x,
+    $badge-border-radius: tokens.$badge-border-radius,
+    $alert-border-radius: tokens.$alert-border-radius,
+    $offcanvas-border-width: tokens.$offcanvas-border-width
+);
+
+// App
+@use 'theme';
+@use 'layout';
+@use 'components';
+@use 'tables';
 @use 'badges';
 @use 'colors';
-
-// Bootstrap
-@use 'bootstrap/scss/bootstrap';
-
-// Fonts
-@import url('https://fonts.bunny.net/css?family=Nunito');
-
-// Responsive & UI enhancements
-
-// Fluid container constraint for ultra-wide displays
-.app-container {
-    width: 100%;
-    max-width: 1800px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-// Material grid quantity inputs
-.item-qty-input {
-    min-width: 65px;
-    max-width: 95px;
-    text-align: center;
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
-}
-
-// Table improvements for responsiveness
-.table-responsive {
-    -webkit-overflow-scrolling: touch;
-
-    // Better scrolling experience on mobile
-    @media (max-width: 767.98px) {
-        margin-bottom: 0.75rem;
-
-        .table {
-            font-size: 0.85rem;
-
-            th,
-            td {
-                padding: 0.45rem 0.5rem;
-                vertical-align: middle;
-            }
-        }
-    }
-}
-
-// Ensure buttons in action columns have comfortable touch spacing
-.table td .btn {
-    white-space: nowrap;
-}
-
-// Mobile touch targets and card adjustments
-@media (max-width: 575.98px) {
-    .card-header {
-        padding: 0.75rem 1rem;
-    }
-
-    .card-body {
-        padding: 0.875rem;
-    }
-
-    h1,
-    .h1 {
-        font-size: 1.75rem;
-    }
-    h2,
-    .h2 {
-        font-size: 1.45rem;
-    }
-    h3,
-    .h3 {
-        font-size: 1.25rem;
-    }
-}
-
-// Sortable table headers
-.sortable-header {
-    cursor: pointer;
-    position: relative;
-    padding-right: 20px !important;
-    user-select: none;
-    white-space: nowrap;
-}
-.sortable-header::after {
-    content: '\f0dc';
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    position: absolute;
-    right: 5px;
-    color: #ccc;
-}
-.sortable-header.sort-asc::after {
-    content: '\f0de';
-    color: #333;
-}
-.sortable-header.sort-desc::after {
-    content: '\f0dd';
-    color: #333;
-}
-
-.cursor-pointer {
-    cursor: pointer;
-}
