@@ -19,6 +19,8 @@
                             <strong>Benutzertyp: &nbsp;</strong>
                             @if($user->isAzureUser())
                                 <span class="badge bg-info text-dark">Azure Benutzer</span>
+                            @elseif($user->isHitobitoUser())
+                                <span class="badge bg-info text-dark">Hitobito Benutzer</span>
                             @else
                                 <span class="badge bg-secondary">Nativer Benutzer</span>
                             @endif
@@ -27,10 +29,10 @@
 
                     <hr class="my-4" />
 
-                    @if($user->isAzureUser())
+                    @if($user->isExternalUser())
                         <div class="alert alert-info">
                             <i class="fa fa-info-circle me-1"></i>
-                            Da du mit einem Azure-Konto angemeldet bist, kannst du dein Passwort hier nicht ändern. Bitte verwalte dein Passwort in deinem Microsoft 365 Profil.
+                            Da du mit einem externen Konto angemeldet bist, kannst du dein Passwort hier nicht ändern. Bitte verwalte dein Passwort in deinem Microsoft 365 Profil.
                         </div>
                     @else
                         <h5 class="mb-3 fw-bold">Passwort ändern</h5>

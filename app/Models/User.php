@@ -17,6 +17,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 #[Fillable([
     'azure_id',
+    'hitobito_id',
     'firstname',
     'lastname',
     'scoutname',
@@ -135,5 +136,18 @@ class User extends Authenticatable
     public function isAzureUser(): bool
     {
         return ! empty($this->azure_id);
+    }
+
+    public function isHitobitoUser(): bool
+    {
+        return ! empty($this->hitobito_id);
+    }
+
+    /**
+     * Users of an external login have no password in this app.
+     */
+    public function isExternalUser(): bool
+    {
+        return $this->isAzureUser() || $this->isHitobitoUser();
     }
 }

@@ -195,6 +195,40 @@ return [
         ],
     ],
 
+    'hitobito_login' => [
+        'label' => 'Hitobito-Login',
+        'description' => 'Anmeldung mit einem Hitobito-Konto (z. B. MiData). Zugelassen sind nur Personen, auf die eine Zugangsregel zutrifft.',
+        'enabled' => (bool) env('COMPONENT_HITOBITO_LOGIN', false),
+        'settings' => [
+            'button_label' => [
+                'type' => 'string',
+                'label' => 'Beschriftung des Login-Buttons',
+                'default' => 'Login mit MiData',
+            ],
+            'base_url' => [
+                'type' => 'string',
+                'label' => 'Adresse der Hitobito-Instanz',
+                'default' => 'https://db.scout.ch',
+                'rules' => ['required', 'url:https', 'max:255'],
+            ],
+            'client_id' => [
+                'type' => 'string',
+                'label' => 'Client-ID',
+                'default' => null,
+            ],
+            'client_secret' => [
+                'type' => 'secret',
+                'label' => 'Client-Secret',
+                'default' => null,
+            ],
+            'sync_group_roles' => [
+                'type' => 'bool',
+                'label' => 'App-Rollen beim Login anhand der Mappings und Zugangsregeln synchronisieren',
+                'default' => true,
+            ],
+        ],
+    ],
+
     'password_login' => [
         'label' => 'Passwort-Login',
         'description' => 'Anmeldung mit E-Mail und Passwort inkl. Passwort-Zurücksetzen.',

@@ -85,6 +85,17 @@
                             {{ app(\App\Services\ComponentManager::class)->setting('azure_login', 'button_label') ?? __('Login mit Nünenen Mail') }}
                         </a>
                     @endcomponent_enabled
+
+                    @component_enabled('hitobito_login')
+                        @if(app(\App\Services\Hitobito\HitobitoConnector::class)->isConfigured())
+                            <div class="auth-divider"><span>oder</span></div>
+
+                            <a href="{{ route('hitobito.login') }}" class="btn btn-outline-primary w-100 py-2" role="button">
+                                <i class="fa fa-right-to-bracket me-2"></i>
+                                {{ app(\App\Services\ComponentManager::class)->setting('hitobito_login', 'button_label') ?? 'Login mit Hitobito' }}
+                            </a>
+                        @endif
+                    @endcomponent_enabled
             </div>
         </div>
     </section>

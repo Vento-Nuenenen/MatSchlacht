@@ -23,6 +23,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $permissions = [
             'manage azure mappings',
+            'manage hitobito access',
             'manage settings',
             'manage procurements',
             'manage maintenance',

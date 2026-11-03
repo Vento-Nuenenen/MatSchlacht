@@ -28,8 +28,8 @@ class ProfileController extends Controller
      */
     public function updatePassword(Request $request)
     {
-        if ($request->user()->isAzureUser()) {
-            return back()->with('error', 'Azure-Benutzer können ihr Passwort hier nicht ändern.');
+        if ($request->user()->isExternalUser()) {
+            return back()->with('error', 'Benutzer mit externem Login können ihr Passwort hier nicht ändern.');
         }
 
         $validated = $request->validate([

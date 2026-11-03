@@ -45,6 +45,8 @@
                                             <td class="text-center">
                                                 @if($user->isAzureUser())
                                                     <span class="badge bg-primary">Azure AD</span>
+                                                @elseif($user->isHitobitoUser())
+                                                    <span class="badge bg-info text-dark">Hitobito</span>
                                                 @else
                                                     <span class="badge bg-secondary">Lokal</span>
                                                 @endif
@@ -62,7 +64,7 @@
                                                         <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
                                                     @endcan
 
-                                                    @if(!$user->isAzureUser())
+                                                    @if(!$user->isExternalUser())
                                                         <form action="{{ route('users.password-reset', $user->id) }}" method="POST" class="d-inline">
                                                             @csrf
                                                             <button type="submit" class="btn btn-secondary btn-sm">Passwort-Reset</button>

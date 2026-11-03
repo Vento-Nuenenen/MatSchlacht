@@ -2,10 +2,14 @@
 
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\Auth\AzureController;
+use App\Http\Controllers\Auth\HitobitoController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AzureGroupRoleMappingController;
 use App\Http\Controllers\ComponentSettingController;
 use App\Http\Controllers\FileStorageConnectionController;
+use App\Http\Controllers\HitobitoAccessRuleController;
+use App\Http\Controllers\HitobitoGroupRoleMappingController;
+use App\Http\Controllers\HitobitoTestController;
 use App\Http\Controllers\ItemCollectionController;
 use App\Http\Controllers\ItemContentController;
 use App\Http\Controllers\ItemController;
@@ -38,6 +42,11 @@ Route::middleware('component:password_login')->group(function () {
 Route::middleware('component:azure_login')->group(function () {
     Route::get('/auth/azure', [AzureController::class, 'redirectToAzure'])->name('azure.login');
     Route::get('/auth/azure/callback', [AzureController::class, 'handleAzureCallback'])->name('azure.callback');
+});
+
+Route::middleware('component:hitobito_login')->group(function () {
+    Route::get('/auth/hitobito', [HitobitoController::class, 'redirectToHitobito'])->name('hitobito.login');
+    Route::get('/auth/hitobito/callback', [HitobitoController::class, 'handleHitobitoCallback'])->name('hitobito.callback');
 });
 
 Route::middleware('auth')->group(function () {
@@ -84,6 +93,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/manage/orders/{order}/transition', [OrderManagementController::class, 'transition'])->name('orders.manage.transition');
     Route::resource('roles', RolePermissionController::class);
     Route::resource('azure-group-role-mappings', AzureGroupRoleMappingController::class)->except(['show'])->middleware('component:azure_login');
+    Route::middleware('component:hitobito_login')->group(function () {
+        Route::resource('hitobito-access-rules', HitobitoAccessRuleController::class)->except(['show']);
+        Route::resource('hitobito-group-role-mappings', HitobitoGroupRoleMappingController::class)->except(['show']);
+        Route::get('/hitobito-test', [HitobitoTestController::class, 'index'])->name('hitobito-test.index');
+        Route::post('/hitobito-test', [HitobitoTestController::class, 'start'])->name('hitobito-test.start');
+    });
     Route::get('attachments/{attachment}', [AttachmentController::class, 'show'])->name('attachments.show');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');

@@ -11,7 +11,7 @@
             ])
         </form>
 
-        @if(!$user->isAzureUser())
+        @if(!$user->isExternalUser())
             <hr class="my-4" />
             <div>
                 <form action="{{ route('users.password-reset', $user->id) }}" method="POST">

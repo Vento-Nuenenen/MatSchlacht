@@ -51,7 +51,7 @@ class UserController extends Controller
         // Assign selected roles (if any)
         $user->syncRoles($request->input('roles', []));
 
-        if (! $user->isAzureUser()) {
+        if (! $user->isExternalUser()) {
             Password::broker()->sendResetLink(['email' => $user->email]);
         }
 
@@ -65,8 +65,8 @@ class UserController extends Controller
     {
         $this->authorize('sendResetLink', $user);
 
-        if ($user->isAzureUser()) {
-            return redirect()->back()->with('error', 'Passwort-Reset für Office 365 Benutzer nicht möglich.');
+        if ($user->isExternalUser()) {
+            return redirect()->back()->with('error', 'Passwort-Reset für Benutzer mit externem Login nicht möglich.');
         }
 
         Password::broker()->sendResetLink(['email' => $user->email]);

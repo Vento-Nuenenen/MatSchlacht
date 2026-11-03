@@ -101,6 +101,13 @@
                                             @endforeach
                                         </div>
 
+                                        @if($key === 'hitobito_login')
+                                            <p class="small text-muted mt-3 mb-1">
+                                                In Hitobito unter Einstellungen › OAuth eine Applikation mit dem Scope <code>with_roles</code> anlegen. Als Redirect-URI eintragen:
+                                            </p>
+                                            <code class="small user-select-all">{{ route('hitobito.callback') }}</code>
+                                        @endif
+
                                         @if($key === 'file_storage')
                                             <p class="small text-muted mt-3 mb-0" data-setting-group="sharepoint">
                                                 SharePoint / OneDrive nutzt die Azure-App aus der .env (AZURE_TENANT_ID, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET).
