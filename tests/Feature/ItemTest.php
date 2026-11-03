@@ -15,7 +15,7 @@ beforeEach(function () {
 });
 
 test('can upload multiple files for an item', function () {
-    Storage::fake('s3');
+    Storage::fake('attachments');
 
     $response = $this->actingAs($this->user)
         ->post(route('items.store'), [
@@ -35,12 +35,12 @@ test('can upload multiple files for an item', function () {
     $item = Item::where('name', 'Test Item')->first();
     expect($item->attachments)->toHaveCount(2);
 
-    Storage::disk('s3')->assertExists($item->attachments[0]->path);
-    Storage::disk('s3')->assertExists($item->attachments[1]->path);
+    Storage::disk('attachments')->assertExists($item->attachments[0]->path);
+    Storage::disk('attachments')->assertExists($item->attachments[1]->path);
 });
 
 test('can upload any file type', function () {
-    Storage::fake('s3');
+    Storage::fake('attachments');
 
     $response = $this->actingAs($this->user)
         ->post(route('items.store'), [

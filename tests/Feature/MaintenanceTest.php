@@ -162,10 +162,10 @@ test('no reminder mail is sent when nothing is due or reminders are off', functi
 ]);
 
 test('a maintenance entry can be edited with photos and keeps its author', function () {
-    Storage::fake('s3');
+    Storage::fake('attachments');
     $author = User::factory()->create();
     $maintenance = ItemMaintenance::factory()->create(['user_id' => $author->id, 'type' => MaintenanceType::Inspection]);
-    $photo = $maintenance->attachments()->create(['path' => UploadedFile::fake()->image('vorher.jpg')->store('maintenances', 's3')]);
+    $photo = $maintenance->attachments()->create(['path' => UploadedFile::fake()->image('vorher.jpg')->store('maintenances', 'attachments')]);
 
     $this->actingAs($this->materialwart)
         ->get(route('items.maintenances.edit', $maintenance))
@@ -187,12 +187,12 @@ test('a maintenance entry can be edited with photos and keeps its author', funct
         ->and($maintenance->description)->toBe('Stange geschweisst')
         ->and($maintenance->user_id)->toBe($author->id)
         ->and($maintenance->attachments)->toHaveCount(1);
-    Storage::disk('s3')->assertMissing($photo->path);
-    Storage::disk('s3')->assertExists($maintenance->attachments->first()->path);
+    Storage::disk('attachments')->assertMissing($photo->path);
+    Storage::disk('attachments')->assertExists($maintenance->attachments->first()->path);
 
     $this->actingAs($this->materialwart)->delete(route('items.maintenances.destroy', $maintenance));
 
-    Storage::disk('s3')->assertMissing($maintenance->attachments->first()->path);
+    Storage::disk('attachments')->assertMissing($maintenance->attachments->first()->path);
 });
 
 test('leaders cannot edit maintenance entries', function () {

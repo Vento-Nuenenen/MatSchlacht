@@ -3,7 +3,7 @@
 @if($attachmentService->isEnabled() && $attachments->isNotEmpty())
     <div class="d-flex flex-wrap gap-2 {{ ($removable ?? false) ? 'mt-1' : '' }}">
         @foreach($attachments as $attachment)
-            @php($url = $attachmentService->temporaryUrl($attachment))
+            @php($url = $attachmentService->url($attachment))
             @php($isPdf = \Illuminate\Support\Str::endsWith(strtolower($attachment->path), '.pdf'))
             <span class="d-inline-flex align-items-center gap-1 border rounded px-2 py-1 bg-white small">
                 <i class="fa {{ $isPdf ? 'fa-file-pdf text-danger' : 'fa-file-image text-primary' }}"></i>

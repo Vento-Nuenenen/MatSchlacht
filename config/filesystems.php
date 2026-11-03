@@ -47,6 +47,20 @@ return [
             'report' => false,
         ],
 
+        /*
+         * Uploaded files (item images, receipts, maintenance photos). "attachments" always uses the
+         * provider chosen under Einstellungen › Dateispeicher, "attachments_{provider}" a specific one.
+         */
+        'attachments' => ['driver' => 'attachments'],
+        'attachments_s3' => ['driver' => 'attachment_provider', 'provider' => 's3'],
+        'attachments_local' => ['driver' => 'attachment_provider', 'provider' => 'local'],
+        'attachments_sftp' => ['driver' => 'attachment_provider', 'provider' => 'sftp'],
+        'attachments_ftp' => ['driver' => 'attachment_provider', 'provider' => 'ftp'],
+        'attachments_sharepoint' => ['driver' => 'attachment_provider', 'provider' => 'sharepoint'],
+        'attachments_nextcloud' => ['driver' => 'attachment_provider', 'provider' => 'nextcloud'],
+        'attachments_dropbox' => ['driver' => 'attachment_provider', 'provider' => 'dropbox'],
+        'attachments_google_drive' => ['driver' => 'attachment_provider', 'provider' => 'google_drive'],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

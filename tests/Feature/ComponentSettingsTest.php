@@ -192,7 +192,7 @@ test('collections are neither offered nor linked when the component is disabled'
 });
 
 test('uploads are ignored when attachments are disabled', function () {
-    Storage::fake('s3');
+    Storage::fake('attachments');
     configureComponent('attachments', false);
     $group = ItemGroup::factory()->create();
 

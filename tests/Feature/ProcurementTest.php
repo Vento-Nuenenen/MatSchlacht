@@ -157,7 +157,7 @@ test('the stock contribution cannot change once the item is stored in bins', fun
 });
 
 test('receipts can be attached to a procurement, removed and are deleted with it', function () {
-    Storage::fake('s3');
+    Storage::fake('attachments');
 
     $this->actingAs($this->materialwart)
         ->post(route('items.procurements.store', $this->item), procurementPayload([
@@ -167,22 +167,22 @@ test('receipts can be attached to a procurement, removed and are deleted with it
 
     $procurement = ItemProcurement::sole();
     [$invoice, $warranty] = $procurement->attachments->all();
-    Storage::disk('s3')->assertExists([$invoice->path, $warranty->path]);
+    Storage::disk('attachments')->assertExists([$invoice->path, $warranty->path]);
 
     $this->actingAs($this->materialwart)
         ->put(route('items.procurements.update', $procurement), procurementPayload(['remove_attachments' => [$invoice->id]]))
         ->assertSessionHasNoErrors();
 
-    Storage::disk('s3')->assertMissing($invoice->path);
+    Storage::disk('attachments')->assertMissing($invoice->path);
     expect($procurement->attachments()->pluck('id')->all())->toBe([$warranty->id]);
 
     $this->actingAs($this->materialwart)->delete(route('items.procurements.destroy', $procurement));
 
-    Storage::disk('s3')->assertMissing($warranty->path);
+    Storage::disk('attachments')->assertMissing($warranty->path);
 });
 
 test('receipts are ignored while attachments are disabled', function () {
-    Storage::fake('s3');
+    Storage::fake('attachments');
     app(ComponentManager::class)->update(['attachments' => ['enabled' => false, 'settings' => []]]);
 
     $this->actingAs($this->materialwart)

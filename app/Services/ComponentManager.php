@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\Models\Setting;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Crypt;
 use InvalidArgumentException;
 
 /**
@@ -21,11 +23,11 @@ class ComponentManager
     protected ?array $storedValues = null;
 
     /**
-     * @return array<string, array{label: string, description: string, enabled: bool, settings: array<string, array{type: string, label: string, default: mixed}>}>
+     * @return array<string, array{label: string, description: string, enabled: bool, toggleable?: bool, settings: array<string, array{type: string, label: string, default: mixed, options?: array<string, string>, group?: string, multiline?: bool, hidden?: bool, rules?: array<int, mixed>}>}>
      */
     public function definitions(): array
     {
-        /** @var array<string, array{label: string, description: string, enabled: bool, settings: array<string, array{type: string, label: string, default: mixed}>}> $definitions */
+        /** @var array<string, array{label: string, description: string, enabled: bool, toggleable?: bool, settings: array<string, array{type: string, label: string, default: mixed, options?: array<string, string>, group?: string, multiline?: bool, hidden?: bool, rules?: array<int, mixed>}>}> $definitions */
         $definitions = config('components', []);
 
         return $definitions;
@@ -34,6 +36,10 @@ class ComponentManager
     public function isEnabled(string $component): bool
     {
         $definition = $this->definition($component);
+
+        if (! $this->isToggleable($component)) {
+            return true;
+        }
 
         return (bool) $this->storedValue("{$component}.enabled", $definition['enabled']);
     }
@@ -46,7 +52,30 @@ class ComponentManager
             throw new InvalidArgumentException("Unknown setting [{$key}] for component [{$component}].");
         }
 
-        return $this->storedValue("{$component}.{$key}", $definition['settings'][$key]['default']);
+        $settingDefinition = $definition['settings'][$key];
+        $storageKey = "{$component}.{$key}";
+
+        if ($settingDefinition['type'] === 'secret' && $this->hasStoredValue($storageKey)) {
+            return $this->decrypt($this->storedValue($storageKey, null));
+        }
+
+        return $this->storedValue($storageKey, $settingDefinition['default']);
+    }
+
+    /**
+     * Whether a secret has been saved (its value is never shown in the settings form).
+     */
+    public function hasStoredSecret(string $component, string $key): bool
+    {
+        return $this->hasStoredValue("{$component}.{$key}") && $this->storedValue("{$component}.{$key}", null) !== null;
+    }
+
+    /**
+     * Components that cannot be switched off, e.g. the file storage, are always enabled.
+     */
+    public function isToggleable(string $component): bool
+    {
+        return $this->definition($component)['toggleable'] ?? true;
     }
 
     /**
@@ -77,13 +106,20 @@ class ComponentManager
                 continue;
             }
 
-            Setting::updateOrCreate(
-                ['key' => "{$component}.enabled"],
-                ['value' => (bool) ($values[$component]['enabled'] ?? false)]
-            );
+            if ($definition['toggleable'] ?? true) {
+                Setting::updateOrCreate(
+                    ['key' => "{$component}.enabled"],
+                    ['value' => (bool) ($values[$component]['enabled'] ?? false)]
+                );
+            }
 
             foreach ($definition['settings'] as $key => $settingDefinition) {
                 $value = $values[$component]['settings'][$key] ?? null;
+
+                // An empty secret field keeps the saved secret, the form never shows it.
+                if ($settingDefinition['type'] === 'secret' && ($value === null || $value === '')) {
+                    continue;
+                }
 
                 Setting::updateOrCreate(
                     ['key' => "{$component}.{$key}"],
@@ -95,6 +131,25 @@ class ComponentManager
         $this->flush();
     }
 
+    /**
+     * Save a single setting without touching the other settings of the component, e.g. an OAuth token.
+     */
+    public function updateSetting(string $component, string $key, mixed $value): void
+    {
+        $definition = $this->definition($component);
+
+        if (! array_key_exists($key, $definition['settings'])) {
+            throw new InvalidArgumentException("Unknown setting [{$key}] for component [{$component}].");
+        }
+
+        Setting::updateOrCreate(
+            ['key' => "{$component}.{$key}"],
+            ['value' => $this->normalize($definition['settings'][$key]['type'], $value)]
+        );
+
+        $this->flush();
+    }
+
     public function flush(): void
     {
         $this->storedValues = null;
@@ -102,7 +157,7 @@ class ComponentManager
     }
 
     /**
-     * @return array{label: string, description: string, enabled: bool, settings: array<string, array{type: string, label: string, default: mixed}>}
+     * @return array{label: string, description: string, enabled: bool, toggleable?: bool, settings: array<string, array{type: string, label: string, default: mixed, options?: array<string, string>, group?: string, multiline?: bool, hidden?: bool, rules?: array<int, mixed>}>}
      */
     protected function definition(string $component): array
     {
@@ -113,6 +168,26 @@ class ComponentManager
         }
 
         return $definitions[$component];
+    }
+
+    protected function hasStoredValue(string $key): bool
+    {
+        $values = $this->storedValues ??= $this->loadStoredValues();
+
+        return array_key_exists($key, $values);
+    }
+
+    protected function decrypt(mixed $value): ?string
+    {
+        if (! is_string($value) || $value === '') {
+            return null;
+        }
+
+        try {
+            return Crypt::decryptString($value);
+        } catch (DecryptException) {
+            return null;
+        }
     }
 
     protected function storedValue(string $key, mixed $default): mixed
@@ -144,6 +219,7 @@ class ComponentManager
         return match ($type) {
             'bool' => (bool) $value,
             'integer' => is_numeric($value) ? (int) $value : null,
+            'secret' => is_string($value) && $value !== '' ? Crypt::encryptString($value) : null,
             'email_list' => is_string($value)
                 ? implode(', ', array_filter(array_map('trim', explode(',', $value)), fn (string $entry) => $entry !== '')) ?: null
                 : null,

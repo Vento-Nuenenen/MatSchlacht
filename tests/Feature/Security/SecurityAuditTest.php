@@ -40,7 +40,7 @@ test('privileged user can trigger test emails', function () {
 });
 
 test('user editing item A cannot delete attachments belonging to item B (IDOR prevention)', function () {
-    Storage::fake('s3');
+    Storage::fake('attachments');
 
     $group = ItemGroup::factory()->create();
 
@@ -50,7 +50,7 @@ test('user editing item A cannot delete attachments belonging to item B (IDOR pr
     $attachmentB = $itemB->attachments()->create([
         'path' => 'items/test-file-b.jpg',
     ]);
-    Storage::disk('s3')->put('items/test-file-b.jpg', 'content');
+    Storage::disk('attachments')->put('items/test-file-b.jpg', 'content');
 
     $user = User::factory()->create();
     $user->assignRole('Materialwart');
@@ -69,7 +69,7 @@ test('user editing item A cannot delete attachments belonging to item B (IDOR pr
 
     // Attachment of Item B must NOT be deleted
     expect(Attachment::find($attachmentB->id))->not->toBeNull();
-    Storage::disk('s3')->assertExists('items/test-file-b.jpg');
+    Storage::disk('attachments')->assertExists('items/test-file-b.jpg');
 });
 
 test('the test mail command sends a test mail to the given recipient', function () {

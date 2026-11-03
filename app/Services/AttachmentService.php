@@ -6,18 +6,21 @@ use App\Models\Attachment;
 use App\Models\Item;
 use App\Models\ItemMaintenance;
 use App\Models\ItemProcurement;
+use App\Services\FileStorage\FileStorageManager;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Throwable;
 
 /**
- * Stores and removes files attached to items, procurements and maintenance entries on the S3 disk.
- * Does nothing while the attachments component is disabled.
+ * Stores, serves and removes files attached to items, procurements and maintenance entries.
+ * The files are stored on the provider chosen under Einstellungen › Dateispeicher.
+ * Uploads are ignored while the attachments component is disabled.
  */
 class AttachmentService
 {
-    public const DISK = 's3';
+    public const DISK = FileStorageManager::DISK;
 
     public function __construct(protected ComponentManager $components) {}
 
@@ -67,17 +70,31 @@ class AttachmentService
     }
 
     /**
-     * A temporary download link, null if the disk cannot create one.
+     * The link to a file. Files are always served through the app, so that every provider works
+     * the same way and the permissions of the attached record are checked.
      */
-    public function temporaryUrl(Attachment $attachment): ?string
+    public function url(Attachment $attachment): string
     {
-        try {
-            return Storage::disk(self::DISK)->temporaryUrl($attachment->path, now()->addMinutes(30));
-        } catch (Throwable $exception) {
-            Log::error("S3 URL error for {$attachment->path}: ".$exception->getMessage());
+        return route('attachments.show', $attachment);
+    }
 
-            return null;
+    /**
+     * The file as inline response, e.g. to show an image or open a PDF in the browser.
+     */
+    public function response(Attachment $attachment): StreamedResponse
+    {
+        $disk = Storage::disk(self::DISK);
+
+        try {
+            $exists = $disk->exists($attachment->path);
+        } catch (Throwable $exception) {
+            Log::error("File storage error for {$attachment->path}: ".$exception->getMessage());
+            abort(503, 'Der Dateispeicher ist nicht erreichbar.');
         }
+
+        abort_unless($exists, 404);
+
+        return $disk->response($attachment->path, basename($attachment->path));
     }
 
     protected function delete(Attachment $attachment): void

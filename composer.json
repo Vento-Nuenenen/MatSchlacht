@@ -16,6 +16,7 @@
         "laravel/tinker": "^3.0",
         "laravel/ui": "^4.6",
         "league/flysystem-aws-s3-v3": "^3.35",
+        "league/flysystem-ftp": "^3.35",
         "microsoft/microsoft-graph": "^3.6",
         "plesk/ext-laravel-integration": "^8.0",
         "socialiteproviders/microsoft": "^4.10",

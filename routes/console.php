@@ -1,8 +1,11 @@
 <?php
 
+use App\Enums\FileStorageProvider;
 use App\Mail\MaintenanceDueReminder;
 use App\Mail\TestMail;
+use App\Models\Attachment;
 use App\Services\ComponentManager;
+use App\Services\FileStorage\FileStorageManager;
 use App\Services\MaintenanceService;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
@@ -59,3 +62,69 @@ Artisan::command('maintenance:remind', function (ComponentManager $components, M
 })->purpose('Send a reminder mail about due maintenance');
 
 Schedule::command('maintenance:remind')->weeklyOn(1, '07:00')->timezone('Europe/Zurich');
+
+Artisan::command('attachments:transfer
+    {from : Provider, von dem kopiert wird (s3, local, sftp, ftp, sharepoint)}
+    {to? : Ziel-Provider, Standard ist der unter Einstellungen gewählte}
+    {--delete-source : Dateien nach erfolgreichem Kopieren an der Quelle löschen}', function (FileStorageManager $fileStorage, string $from, ?string $to = null) {
+    $source = FileStorageProvider::tryFrom($from);
+    $target = $to !== null ? FileStorageProvider::tryFrom($to) : $fileStorage->activeProvider();
+    $validProviders = implode(', ', array_map(fn (FileStorageProvider $provider) => $provider->value, FileStorageProvider::cases()));
+
+    if ($source === null || $target === null) {
+        $this->error("Unbekannter Provider. Möglich sind: {$validProviders}.");
+
+        return 1;
+    }
+
+    if ($source === $target) {
+        $this->error('Quelle und Ziel sind derselbe Provider.');
+
+        return 1;
+    }
+
+    $sourceDisk = $fileStorage->disk($source);
+    $targetDisk = $fileStorage->disk($target);
+    $counts = ['kopiert' => 0, 'bereits vorhanden' => 0, 'an der Quelle nicht gefunden' => 0, 'fehlgeschlagen' => 0];
+
+    $this->info("Dateien werden von «{$source->label()}» nach «{$target->label()}» kopiert …");
+
+    foreach (Attachment::query()->lazyById() as $attachment) {
+        try {
+            if (! $sourceDisk->exists($attachment->path)) {
+                $counts['an der Quelle nicht gefunden']++;
+                $this->warn("Nicht gefunden: {$attachment->path}");
+
+                continue;
+            }
+
+            if ($targetDisk->exists($attachment->path)) {
+                $counts['bereits vorhanden']++;
+            } else {
+                $stream = $sourceDisk->readStream($attachment->path);
+                $targetDisk->writeStream($attachment->path, $stream);
+
+                if (is_resource($stream)) {
+                    fclose($stream);
+                }
+
+                $counts['kopiert']++;
+            }
+
+            if ($this->option('delete-source')) {
+                $sourceDisk->delete($attachment->path);
+            }
+        } catch (Throwable $exception) {
+            $counts['fehlgeschlagen']++;
+            $this->error("Fehler bei {$attachment->path}: {$exception->getMessage()}");
+        }
+    }
+
+    $this->table(['Ergebnis', 'Dateien'], collect($counts)->map(fn (int $count, string $label) => [$label, $count])->values()->all());
+
+    if ($target !== $fileStorage->activeProvider()) {
+        $this->comment("Hinweis: Aktiv ist weiterhin «{$fileStorage->activeProvider()->label()}». Den Provider unter Einstellungen › Dateispeicher umstellen.");
+    }
+
+    return $counts['fehlgeschlagen'] > 0 ? 1 : 0;
+})->purpose('Move all uploaded files to another file storage provider');

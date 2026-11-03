@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\FileStorageProvider;
 use App\Services\ComponentManager;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
 class UpdateComponentSettingsRequest extends FormRequest
@@ -28,12 +30,16 @@ class UpdateComponentSettingsRequest extends FormRequest
         $rules = ['components' => ['required', 'array']];
 
         foreach (app(ComponentManager::class)->definitions() as $component => $definition) {
-            $rules["components.{$component}.enabled"] = ['required', 'boolean'];
+            if ($definition['toggleable'] ?? true) {
+                $rules["components.{$component}.enabled"] = ['required', 'boolean'];
+            }
 
             foreach ($definition['settings'] as $key => $setting) {
-                $rules["components.{$component}.settings.{$key}"] = match ($setting['type']) {
+                $rules["components.{$component}.settings.{$key}"] = $setting['rules'] ?? match ($setting['type']) {
                     'bool' => ['required', 'boolean'],
                     'integer' => ['required', 'integer', 'min:0', 'max:3650'],
+                    'select' => ['required', Rule::in(array_keys($setting['options'] ?? []))],
+                    'secret' => ['nullable', 'string', 'max:10000'],
                     'email_list' => ['nullable', 'string', 'max:1000', $this->emailListRule()],
                     default => ['nullable', 'string', 'max:255'],
                 };
@@ -57,6 +63,26 @@ class UpdateComponentSettingsRequest extends FormRequest
 
                 if (! $isPasswordLoginEnabled && ! $isAzureLoginEnabled) {
                     $validator->errors()->add('components.password_login.enabled', 'Mindestens eine Login-Methode (Passwort oder Azure) muss aktiv bleiben.');
+                }
+            },
+            function (Validator $validator): void {
+                $provider = FileStorageProvider::tryFrom((string) $this->input('components.file_storage.settings.provider'));
+                $requiredSettings = match ($provider) {
+                    FileStorageProvider::S3 => ['s3_region', 's3_bucket'],
+                    FileStorageProvider::Sftp => ['sftp_host', 'sftp_username'],
+                    FileStorageProvider::Ftp => ['ftp_host', 'ftp_username'],
+                    FileStorageProvider::SharePoint => ['sharepoint_drive_id'],
+                    FileStorageProvider::Nextcloud => ['nextcloud_url', 'nextcloud_username'],
+                    FileStorageProvider::Dropbox => ['dropbox_app_key'],
+                    FileStorageProvider::GoogleDrive => ['google_client_id'],
+                    default => [],
+                };
+
+                foreach ($requiredSettings as $key) {
+                    if (blank($this->input("components.file_storage.settings.{$key}"))) {
+                        $label = config("components.file_storage.settings.{$key}.label");
+                        $validator->errors()->add("components.file_storage.settings.{$key}", "«{$label}» ist für {$provider->label()} erforderlich.");
+                    }
                 }
             },
         ];

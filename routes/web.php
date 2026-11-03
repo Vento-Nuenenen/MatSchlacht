@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\Auth\AzureController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AzureGroupRoleMappingController;
 use App\Http\Controllers\ComponentSettingController;
+use App\Http\Controllers\FileStorageConnectionController;
 use App\Http\Controllers\ItemCollectionController;
 use App\Http\Controllers\ItemContentController;
 use App\Http\Controllers\ItemController;
@@ -82,9 +84,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/manage/orders/{order}/transition', [OrderManagementController::class, 'transition'])->name('orders.manage.transition');
     Route::resource('roles', RolePermissionController::class);
     Route::resource('azure-group-role-mappings', AzureGroupRoleMappingController::class)->except(['show'])->middleware('component:azure_login');
+    Route::get('attachments/{attachment}', [AttachmentController::class, 'show'])->name('attachments.show');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::get('/settings/components', [ComponentSettingController::class, 'index'])->name('settings.components.index');
     Route::put('/settings/components', [ComponentSettingController::class, 'update'])->name('settings.components.update');
+    Route::post('/settings/file-storage/test', [ComponentSettingController::class, 'testFileStorage'])->name('settings.file-storage.test');
+    Route::get('/settings/file-storage/{provider}/connect', [FileStorageConnectionController::class, 'connect'])->name('settings.file-storage.connect');
+    Route::get('/settings/file-storage/{provider}/callback', [FileStorageConnectionController::class, 'callback'])->name('settings.file-storage.callback');
     Route::get('/test-mail', [MailTestController::class, 'sendTestMail'])->name('test-mail');
 });

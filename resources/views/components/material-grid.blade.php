@@ -40,7 +40,7 @@
                             $returnedQty = old('returned.'.$item->id, $orderedItem?->returned ?? ($actualQty > 0 ? $actualQty : 0));
                             $displayReturnedQty = ($item->lot > 1) ? $returnedQty / $item->lot : $returnedQty;
                             $imageAttachments = $item->attachments->filter(fn($a) => \Illuminate\Support\Str::endsWith(strtolower($a->path), ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']));
-                            $imageUrls = $imageAttachments->map(fn ($img) => app(\App\Services\AttachmentService::class)->temporaryUrl($img))->filter();
+                            $imageUrls = $imageAttachments->map(fn ($img) => app(\App\Services\AttachmentService::class)->url($img))->filter();
                         @endphp
                         <tr class="item-row {{ $actualQty > 0 ? 'table-primary' : '' }}">
                             <td class="item-name py-2">

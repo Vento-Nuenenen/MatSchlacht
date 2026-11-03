@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Enums\FileStorageProvider;
 use App\Mail\Transport\MicrosoftGraphTransport;
 use App\Models\Attachment;
 use App\Models\Item;
@@ -18,13 +19,22 @@ use App\Models\User;
 use App\Observers\ItemStockObserver;
 use App\Observers\OrderObserver;
 use App\Services\ComponentManager;
+use App\Services\FileStorage\DropboxAdapter;
+use App\Services\FileStorage\FileStorageManager;
+use App\Services\FileStorage\GoogleDriveAdapter;
+use App\Services\FileStorage\SftpAdapter;
+use App\Services\FileStorage\SharePointAdapter;
+use App\Services\FileStorage\WebDavAdapter;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
+use League\Flysystem\Filesystem;
 use Microsoft\Graph\GraphServiceClient;
 use Microsoft\Kiota\Authentication\Oauth\ClientCredentialContext;
 use SocialiteProviders\Manager\SocialiteWasCalled;
@@ -38,6 +48,77 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(ComponentManager::class);
+        $this->app->singleton(FileStorageManager::class);
+    }
+
+    /**
+     * Disks for uploaded files, configured through the "Dateispeicher" settings.
+     */
+    protected function registerFileStorageDrivers(): void
+    {
+        Storage::extend('attachments', fn () => app(FileStorageManager::class)->disk(app(FileStorageManager::class)->activeProvider()));
+
+        Storage::extend('attachment_provider', fn ($app, array $config) => Storage::build(
+            app(FileStorageManager::class)->diskConfig(FileStorageProvider::from($config['provider']))
+        ));
+
+        Storage::extend('matschlacht-sftp', function ($app, array $config): FilesystemAdapter {
+            $adapter = new SftpAdapter(
+                (string) $config['host'],
+                (int) $config['port'],
+                (string) $config['username'],
+                $config['password'] ?? null,
+                $config['private_key'] ?? null,
+                (string) ($config['root'] ?? '/'),
+            );
+
+            return new FilesystemAdapter(new Filesystem($adapter, $config), $adapter, $config);
+        });
+
+        Storage::extend('webdav', function ($app, array $config): FilesystemAdapter {
+            $adapter = new WebDavAdapter(
+                (string) $config['base_url'],
+                (string) $config['username'],
+                (string) $config['password'],
+                (string) ($config['folder'] ?? ''),
+            );
+
+            return new FilesystemAdapter(new Filesystem($adapter, $config), $adapter, $config);
+        });
+
+        Storage::extend('dropbox', function ($app, array $config): FilesystemAdapter {
+            $adapter = new DropboxAdapter(
+                (string) $config['app_key'],
+                (string) $config['app_secret'],
+                (string) $config['refresh_token'],
+                (string) ($config['folder'] ?? ''),
+            );
+
+            return new FilesystemAdapter(new Filesystem($adapter, $config), $adapter, $config);
+        });
+
+        Storage::extend('google_drive', function ($app, array $config): FilesystemAdapter {
+            $adapter = new GoogleDriveAdapter(
+                (string) $config['client_id'],
+                (string) $config['client_secret'],
+                (string) $config['refresh_token'],
+                (string) ($config['folder'] ?? 'MatSchlacht'),
+            );
+
+            return new FilesystemAdapter(new Filesystem($adapter, $config), $adapter, $config);
+        });
+
+        Storage::extend('sharepoint', function ($app, array $config): FilesystemAdapter {
+            $adapter = new SharePointAdapter(
+                (string) $config['tenant_id'],
+                (string) $config['client_id'],
+                (string) $config['client_secret'],
+                (string) $config['drive_id'],
+                (string) ($config['folder'] ?? ''),
+            );
+
+            return new FilesystemAdapter(new Filesystem($adapter, $config), $adapter, $config);
+        });
     }
 
     /**
@@ -69,6 +150,8 @@ class AppServiceProvider extends ServiceProvider
             'item_procurement' => ItemProcurement::class,
             'item_maintenance' => ItemMaintenance::class,
         ]);
+
+        $this->registerFileStorageDrivers();
 
         Event::listen(SocialiteWasCalled::class, MicrosoftExtendSocialite::class);
 

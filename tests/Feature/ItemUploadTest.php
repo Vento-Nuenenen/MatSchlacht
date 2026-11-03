@@ -12,7 +12,7 @@ use function Pest\Laravel\seed;
 
 test('authenticated user with permission can upload files to an item', function () {
     seed(RolesAndPermissionsSeeder::class);
-    Storage::fake('s3');
+    Storage::fake('attachments');
     $user = User::factory()->create();
     $user->assignRole('Materialwart');
 
@@ -32,12 +32,12 @@ test('authenticated user with permission can upload files to an item', function 
 
     $item = Item::where('name', 'Test Item')->first();
     expect($item->attachments)->toHaveCount(1);
-    Storage::disk('s3')->assertExists($item->attachments->first()->path);
+    Storage::disk('attachments')->assertExists($item->attachments->first()->path);
 });
 
 test('authenticated user with permission can upload files when updating an item', function () {
     seed(RolesAndPermissionsSeeder::class);
-    Storage::fake('s3');
+    Storage::fake('attachments');
     $user = User::factory()->create();
     $user->assignRole('Materialwart');
 
@@ -64,12 +64,12 @@ test('authenticated user with permission can upload files when updating an item'
     $item->refresh();
     expect($item->name)->toBe('Updated Item');
     expect($item->attachments)->toHaveCount(1);
-    Storage::disk('s3')->assertExists($item->attachments->first()->path);
+    Storage::disk('attachments')->assertExists($item->attachments->first()->path);
 });
 
 test('it validates file size against server limits', function () {
     seed(RolesAndPermissionsSeeder::class);
-    Storage::fake('s3');
+    Storage::fake('attachments');
     $user = User::factory()->create();
     $user->assignRole('Materialwart');
 
