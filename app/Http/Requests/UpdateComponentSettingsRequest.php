@@ -33,6 +33,7 @@ class UpdateComponentSettingsRequest extends FormRequest
             foreach ($definition['settings'] as $key => $setting) {
                 $rules["components.{$component}.settings.{$key}"] = match ($setting['type']) {
                     'bool' => ['required', 'boolean'],
+                    'integer' => ['required', 'integer', 'min:0', 'max:3650'],
                     'email_list' => ['nullable', 'string', 'max:1000', $this->emailListRule()],
                     default => ['nullable', 'string', 'max:255'],
                 };

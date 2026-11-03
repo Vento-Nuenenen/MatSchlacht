@@ -8,9 +8,12 @@ use App\Http\Controllers\ItemCollectionController;
 use App\Http\Controllers\ItemContentController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemGroupController;
+use App\Http\Controllers\ItemMaintenanceController;
+use App\Http\Controllers\ItemProcurementController;
 use App\Http\Controllers\ItemStockController;
 use App\Http\Controllers\LabelController;
 use App\Http\Controllers\MailTestController;
+use App\Http\Controllers\MaintenanceOverviewController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderManagementController;
 use App\Http\Controllers\OverwatchController;
@@ -56,6 +59,19 @@ Route::middleware('auth')->group(function () {
         Route::post('item-stocks', [ItemStockController::class, 'store'])->name('item-stocks.store');
         Route::put('item-stocks/{itemStock}', [ItemStockController::class, 'update'])->name('item-stocks.update');
         Route::delete('item-stocks/{itemStock}', [ItemStockController::class, 'destroy'])->name('item-stocks.destroy');
+    });
+    Route::middleware('component:procurement')->group(function () {
+        Route::post('items/{item}/procurements', [ItemProcurementController::class, 'store'])->name('items.procurements.store');
+        Route::get('item-procurements/{itemProcurement}/edit', [ItemProcurementController::class, 'edit'])->name('items.procurements.edit');
+        Route::put('item-procurements/{itemProcurement}', [ItemProcurementController::class, 'update'])->name('items.procurements.update');
+        Route::delete('item-procurements/{itemProcurement}', [ItemProcurementController::class, 'destroy'])->name('items.procurements.destroy');
+    });
+    Route::middleware('component:maintenance')->group(function () {
+        Route::get('maintenance', [MaintenanceOverviewController::class, 'index'])->name('maintenance.index');
+        Route::post('items/{item}/maintenances', [ItemMaintenanceController::class, 'store'])->name('items.maintenances.store');
+        Route::get('item-maintenances/{itemMaintenance}/edit', [ItemMaintenanceController::class, 'edit'])->name('items.maintenances.edit');
+        Route::put('item-maintenances/{itemMaintenance}', [ItemMaintenanceController::class, 'update'])->name('items.maintenances.update');
+        Route::delete('item-maintenances/{itemMaintenance}', [ItemMaintenanceController::class, 'destroy'])->name('items.maintenances.destroy');
     });
     Route::resource('orders', OrderController::class);
     Route::get('/manage/orders', [OrderManagementController::class, 'index'])->name('orders.manage');

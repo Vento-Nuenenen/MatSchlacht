@@ -54,6 +54,53 @@
                     </div>
                 @endcomponent_enabled
 
+                @component_enabled('maintenance')
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <span class="h6 mb-0"><i class="fa fa-screwdriver-wrench me-2"></i>Wartung</span>
+                            @include('maintenance.status', ['item' => $item, 'status' => $maintenanceStatus])
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            @forelse($item->maintenances as $maintenanceEntry)
+                                <li class="list-group-item">
+                                    <span class="text-nowrap fw-semibold">{{ $maintenanceEntry->performed_on->format('d.m.Y') }}</span>
+                                    <span class="badge bg-secondary ms-1">{{ $maintenanceEntry->type->label() }}</span>
+                                    @if($maintenanceEntry->description)
+                                        <span class="ms-1">{{ $maintenanceEntry->description }}</span>
+                                    @endif
+                                    @include('components.attachment-list', ['attachments' => $maintenanceEntry->attachments])
+                                </li>
+                            @empty
+                                <li class="list-group-item text-muted">Noch keine Wartungen erfasst.</li>
+                            @endforelse
+                        </ul>
+                    </div>
+                @endcomponent_enabled
+
+                @component_enabled('procurement')
+                    @can('manage procurements')
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-header h6 mb-0 py-3"><i class="fa fa-cart-shopping me-2"></i>Beschaffungen</div>
+                            <ul class="list-group list-group-flush">
+                                @forelse($item->procurements as $procurement)
+                                    <li class="list-group-item d-flex justify-content-between flex-wrap gap-2">
+                                        <span>
+                                            <span class="fw-semibold">{{ $procurement->procured_on->format('d.m.Y') }}</span>:
+                                            {{ $procurement->quantity }} Stk.{{ $procurement->supplier ? ' bei '.$procurement->supplier : '' }}
+                                        </span>
+                                        @if($procurement->warranty_until)
+                                            <span class="badge {{ $procurement->isUnderWarranty() ? 'bg-success' : 'bg-secondary' }}">Garantie bis {{ $procurement->warranty_until->format('d.m.Y') }}</span>
+                                        @endif
+                                        <div class="w-100">@include('components.attachment-list', ['attachments' => $procurement->attachments])</div>
+                                    </li>
+                                @empty
+                                    <li class="list-group-item text-muted">Noch keine Beschaffungen erfasst.</li>
+                                @endforelse
+                            </ul>
+                        </div>
+                    @endcan
+                @endcomponent_enabled
+
                 @component_enabled('item_contents')
                     @if($item->contents->isNotEmpty())
                         <div class="card shadow-sm mb-4">

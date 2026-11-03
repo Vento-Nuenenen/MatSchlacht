@@ -47,6 +47,11 @@
                                     <a class="dropdown-item" href="{{ route('storage-units.index') }}">Lager</a>
                                 @endcan
                             @endcomponent_enabled
+                            @component_enabled('maintenance')
+                                @can('view items')
+                                    <a class="dropdown-item" href="{{ route('maintenance.index') }}">Wartung</a>
+                                @endcan
+                            @endcomponent_enabled
                         </div>
                     </li>
                 @endif

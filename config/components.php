@@ -9,7 +9,7 @@
 | configured by administrators under "Einstellungen". The values defined
 | here are the defaults; values saved in the "settings" table win.
 |
-| Supported setting types: "bool", "string", "email_list".
+| Supported setting types: "bool", "integer", "string", "email_list".
 |
 */
 
@@ -44,6 +44,36 @@ return [
             'label_caption' => [
                 'type' => 'string',
                 'label' => 'Fusszeile auf den Etiketten (leer = App-Name)',
+                'default' => null,
+            ],
+        ],
+    ],
+
+    'procurement' => [
+        'label' => 'Beschaffung',
+        'description' => 'Beschaffungen pro Material erfassen: Datum, Menge, Lieferant, Preis, Beleg-Nr. und Garantie.',
+        'enabled' => (bool) env('COMPONENT_PROCUREMENT', false),
+        'settings' => [],
+    ],
+
+    'maintenance' => [
+        'label' => 'Wartung',
+        'description' => 'Wartungsprotokoll und Wartungsintervalle pro Material mit Übersicht der fälligen Wartungen.',
+        'enabled' => (bool) env('COMPONENT_MAINTENANCE', false),
+        'settings' => [
+            'reminders' => [
+                'type' => 'bool',
+                'label' => 'Wöchentliche Erinnerungsmail für fällige Wartungen senden',
+                'default' => true,
+            ],
+            'reminder_days_ahead' => [
+                'type' => 'integer',
+                'label' => 'Als fällig gilt eine Wartung so viele Tage im Voraus',
+                'default' => 30,
+            ],
+            'reminder_recipients' => [
+                'type' => 'email_list',
+                'label' => 'Empfänger der Erinnerung (leer = Materialverantwortliche)',
                 'default' => null,
             ],
         ],

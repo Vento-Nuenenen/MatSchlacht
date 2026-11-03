@@ -40,14 +40,7 @@
                             $returnedQty = old('returned.'.$item->id, $orderedItem?->returned ?? ($actualQty > 0 ? $actualQty : 0));
                             $displayReturnedQty = ($item->lot > 1) ? $returnedQty / $item->lot : $returnedQty;
                             $imageAttachments = $item->attachments->filter(fn($a) => \Illuminate\Support\Str::endsWith(strtolower($a->path), ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']));
-                            $imageUrls = $imageAttachments->map(function($img) {
-                                try {
-                                    return Storage::disk('s3')->temporaryUrl($img->path, now()->addMinutes(30));
-                                } catch (\Exception $e) {
-                                    \Illuminate\Support\Facades\Log::error("S3 URL error for {$img->path}: " . $e->getMessage());
-                                    return null;
-                                }
-                            })->filter();
+                            $imageUrls = $imageAttachments->map(fn ($img) => app(\App\Services\AttachmentService::class)->temporaryUrl($img))->filter();
                         @endphp
                         <tr class="item-row {{ $actualQty > 0 ? 'table-primary' : '' }}">
                             <td class="item-name py-2">

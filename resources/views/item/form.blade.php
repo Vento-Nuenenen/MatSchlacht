@@ -56,6 +56,19 @@
                     @enderror
                 </div>
             </div>
+
+            @component_enabled('maintenance')
+                <div class="row g-3 mt-0">
+                    <div class="col-12 col-sm-4">
+                        <label for="maintenance_interval_months" class="form-label fw-semibold">Wartungsintervall (Monate)</label>
+                        <input type="number" class="form-control" id="maintenance_interval_months" name="maintenance_interval_months"
+                               value="{{ old('maintenance_interval_months', $item->maintenance_interval_months ?? '') }}" min="1" max="240" placeholder="kein Intervall">
+                        @error('maintenance_interval_months')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+            @endcomponent_enabled
         </div>
     </div>
 
@@ -83,14 +96,7 @@
                             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
                                 <div class="card h-100 shadow-sm">
                                     @if(\Illuminate\Support\Str::endsWith(strtolower($attachment->path), ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']))
-                                        @php
-                                            try {
-                                                $url = Storage::disk('s3')->temporaryUrl($attachment->path, now()->addMinutes(30));
-                                            } catch (\Exception $e) {
-                                                $url = null;
-                                                \Illuminate\Support\Facades\Log::error("S3 URL error in form for {$attachment->path}: " . $e->getMessage());
-                                            }
-                                        @endphp
+                                        @php($url = app(\App\Services\AttachmentService::class)->temporaryUrl($attachment))
                                         @if($url)
                                             <img src="{{ $url }}" class="card-img-top" style="height: 100px; object-fit: cover;">
                                         @else

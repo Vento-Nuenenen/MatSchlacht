@@ -8,6 +8,8 @@ use App\Models\Item;
 use App\Models\ItemCollection;
 use App\Models\ItemCollectionItem;
 use App\Models\ItemGroup;
+use App\Models\ItemMaintenance;
+use App\Models\ItemProcurement;
 use App\Models\ItemStock;
 use App\Models\Order;
 use App\Models\OrderedItem;
@@ -64,6 +66,8 @@ class AppServiceProvider extends ServiceProvider
             'item_collection_item' => ItemCollectionItem::class,
             'storage_unit' => StorageUnit::class,
             'item_stock' => ItemStock::class,
+            'item_procurement' => ItemProcurement::class,
+            'item_maintenance' => ItemMaintenance::class,
         ]);
 
         Event::listen(SocialiteWasCalled::class, MicrosoftExtendSocialite::class);

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\User;
+use App\Services\ComponentManager;
+use App\Services\MaintenanceService;
 use App\States\Order\Archived;
 use App\States\Order\Committed;
 use App\States\Order\Returned;
@@ -13,7 +15,7 @@ use Illuminate\View\View;
 
 class OverwatchController extends Controller
 {
-    public function index(): View
+    public function index(ComponentManager $components, MaintenanceService $maintenance): View
     {
         $user = auth()->user();
         $stats = [];
@@ -31,6 +33,10 @@ class OverwatchController extends Controller
             'active_orders' => $user->orders()->whereNotState('state', [Archived::class, Returned::class])->count(),
         ];
 
-        return view('overwatch.index', compact('stats', 'user_stats'));
+        $dueMaintenanceCount = $components->isEnabled('maintenance') && $user->can('manage maintenance')
+            ? $maintenance->dueItems()->count()
+            : 0;
+
+        return view('overwatch.index', compact('stats', 'user_stats', 'dueMaintenanceCount'));
     }
 }

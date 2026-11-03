@@ -44,7 +44,7 @@
                                                     </div>
                                                 @else
                                                     <label for="{{ $fieldId }}" class="form-label fw-semibold">{{ $setting['label'] }}</label>
-                                                    <input type="text"
+                                                    <input type="{{ $setting['type'] === 'integer' ? 'number' : 'text' }}"
                                                            class="form-control @error($oldKey) is-invalid @enderror"
                                                            id="{{ $fieldId }}" name="{{ $fieldName }}"
                                                            value="{{ old($oldKey, $setting['value']) }}">

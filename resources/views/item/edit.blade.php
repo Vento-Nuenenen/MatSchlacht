@@ -17,6 +17,20 @@
             </div>
         @endcomponent_enabled
 
+        @component_enabled('maintenance')
+            <div class="mt-4 pt-3 border-top">
+                @include('item.maintenance')
+            </div>
+        @endcomponent_enabled
+
+        @component_enabled('procurement')
+            @can('manage procurements')
+                <div class="mt-4 pt-3 border-top">
+                    @include('item.procurements')
+                </div>
+            @endcan
+        @endcomponent_enabled
+
         @if(isset($item) && $item->exists && app(\App\Services\ComponentManager::class)->isEnabled('item_contents'))
             <div class="mt-4 pt-3 border-top">
                 <div class="card mb-4 shadow-sm">

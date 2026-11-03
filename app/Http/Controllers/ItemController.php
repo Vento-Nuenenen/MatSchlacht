@@ -5,41 +5,25 @@ namespace App\Http\Controllers;
 use App\Enums\StorageLevel;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
-use App\Models\Attachment;
 use App\Models\Item;
 use App\Models\ItemContent;
 use App\Models\ItemGroup;
 use App\Models\StorageUnit;
+use App\Services\AttachmentService;
 use App\Services\ComponentManager;
+use App\Services\MaintenanceService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {
-    public function __construct(protected ComponentManager $components)
-    {
+    public function __construct(
+        protected ComponentManager $components,
+        protected AttachmentService $attachments,
+    ) {
         $this->authorizeResource(Item::class, 'item');
-    }
-
-    /**
-     * @param  array<int, UploadedFile>  $files
-     */
-    private function handleFileUploads(Item $item, array $files): void
-    {
-        if (! $this->components->isEnabled('attachments')) {
-            return;
-        }
-
-        foreach ($files as $file) {
-            $path = $file->store('items', 's3');
-            if ($path) {
-                $item->attachments()->create(['path' => $path]);
-            }
-        }
     }
 
     /**
@@ -78,9 +62,7 @@ class ItemController extends Controller
     {
         $item = Item::create($request->validated());
 
-        if ($request->hasFile('files')) {
-            $this->handleFileUploads($item, $request->file('files'));
-        }
+        $this->attachments->store($item, $request->file('files', []), 'items');
 
         return redirect()->route('items.index')->with('success', 'Neues Material wurde erfolgreich erstellt.');
     }
@@ -88,21 +70,23 @@ class ItemController extends Controller
     /**
      * Display the item with its contents and storage places.
      */
-    public function show(Item $item): Factory|View
+    public function show(Item $item, MaintenanceService $maintenance): Factory|View
     {
-        $item->load(['itemGroup', 'contents', 'stocks.storageUnit.'.StorageUnit::ANCESTORS]);
+        $item->load(['itemGroup', 'contents', 'stocks.storageUnit.'.StorageUnit::ANCESTORS, 'procurements.attachments', 'maintenances.user', 'maintenances.attachments', 'latestMaintenance']);
+        $maintenanceStatus = $maintenance->status($item);
 
-        return view('item.show', compact('item'));
+        return view('item.show', compact('item', 'maintenanceStatus'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Item $item): Factory|View
+    public function edit(Item $item, MaintenanceService $maintenance): Factory|View
     {
         $itemGroups = ItemGroup::all();
         $allContentNames = ItemContent::distinct()->pluck('name');
-        $item->load('stocks.storageUnit.'.StorageUnit::ANCESTORS);
+        $item->load(['stocks.storageUnit.'.StorageUnit::ANCESTORS, 'procurements.attachments', 'maintenances.user', 'maintenances.attachments', 'latestMaintenance']);
+        $maintenanceStatus = $maintenance->status($item);
 
         $binOptions = $this->components->isEnabled('storage')
             ? StorageUnit::ofLevel(StorageLevel::Bin)
@@ -114,7 +98,7 @@ class ItemController extends Controller
                 ->all()
             : [];
 
-        return view('item.edit', compact('item', 'itemGroups', 'allContentNames', 'binOptions'));
+        return view('item.edit', compact('item', 'itemGroups', 'allContentNames', 'binOptions', 'maintenanceStatus'));
     }
 
     /**
@@ -128,21 +112,10 @@ class ItemController extends Controller
             $item->syncStockFromStorage();
         }
 
-        if ($request->has('remove_attachments') && $this->components->isEnabled('attachments')) {
-            /** @var array<int, int> $removeAttachments */
-            $removeAttachments = $request->remove_attachments;
-            foreach ($removeAttachments as $attachmentId) {
-                $attachment = $item->attachments()->find($attachmentId);
-                if ($attachment instanceof Attachment) {
-                    Storage::disk('s3')->delete($attachment->path);
-                    $attachment->delete();
-                }
-            }
-        }
-
-        if ($request->hasFile('files')) {
-            $this->handleFileUploads($item, $request->file('files'));
-        }
+        /** @var array<int, int> $removeAttachments */
+        $removeAttachments = $request->validated('remove_attachments', []);
+        $this->attachments->remove($item, $removeAttachments);
+        $this->attachments->store($item, $request->file('files', []), 'items');
 
         return redirect()->route('items.index')->with('success', 'Material wurde erfolgreich aktualisiert.');
     }

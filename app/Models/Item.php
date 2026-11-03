@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Carbon\CarbonImmutable;
 use Database\Factories\ItemFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 #[Fillable([
@@ -18,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
     'repair',
     'consumable',
     'item_price_cents',
+    'maintenance_interval_months',
 
     'item_group_id',
 ])]
@@ -56,6 +59,45 @@ class Item extends Model
     public function contents(): HasMany
     {
         return $this->hasMany(ItemContent::class);
+    }
+
+    /**
+     * @return HasMany<ItemProcurement, $this>
+     */
+    public function procurements(): HasMany
+    {
+        return $this->hasMany(ItemProcurement::class)->orderByDesc('procured_on')->orderByDesc('id');
+    }
+
+    /**
+     * @return HasMany<ItemMaintenance, $this>
+     */
+    public function maintenances(): HasMany
+    {
+        return $this->hasMany(ItemMaintenance::class)->orderByDesc('performed_on')->orderByDesc('id');
+    }
+
+    /**
+     * @return HasOne<ItemMaintenance, $this>
+     */
+    public function latestMaintenance(): HasOne
+    {
+        return $this->hasOne(ItemMaintenance::class)->ofMany(['performed_on' => 'max', 'id' => 'max']);
+    }
+
+    /**
+     * When the next maintenance is due: the last maintenance plus the interval.
+     * Items with an interval that were never maintained are due today, items without an interval never.
+     */
+    public function nextMaintenanceDue(): ?CarbonImmutable
+    {
+        if (! $this->maintenance_interval_months) {
+            return null;
+        }
+
+        $lastMaintenance = $this->latestMaintenance?->performed_on;
+
+        return $lastMaintenance?->addMonthsNoOverflow($this->maintenance_interval_months) ?? CarbonImmutable::today();
     }
 
     /**

@@ -8,6 +8,13 @@
 
                 <h1 class="h2 fw-bold">Dashboard</h1>
                 <p class="lead text-muted">Willkommen zurück, {{ auth()->user()->preferredName() }}!</p>
+
+                @if($dueMaintenanceCount > 0)
+                    <div class="alert alert-warning d-flex justify-content-between align-items-center flex-wrap gap-2 shadow-sm" role="alert">
+                        <span><i class="fa fa-screwdriver-wrench me-1"></i> Für <strong>{{ $dueMaintenanceCount }}</strong> Material ist eine Wartung fällig.</span>
+                        <a href="{{ route('maintenance.index', ['due' => 1]) }}" class="btn btn-sm btn-warning">Zur Wartungsübersicht</a>
+                    </div>
+                @endif
             </div>
         </div>
 

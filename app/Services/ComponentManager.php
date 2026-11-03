@@ -143,6 +143,7 @@ class ComponentManager
     {
         return match ($type) {
             'bool' => (bool) $value,
+            'integer' => is_numeric($value) ? (int) $value : null,
             'email_list' => is_string($value)
                 ? implode(', ', array_filter(array_map('trim', explode(',', $value)), fn (string $entry) => $entry !== '')) ?: null
                 : null,
