@@ -4,8 +4,6 @@
     <div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
         <div class="row justify-content-center">
             <div class="col-12">
-                @include('components.status-alerts')
-
                 <h2 class="mb-3">Bestellungen verwalten</h2>
 
                 <div class="d-flex flex-column gap-4">

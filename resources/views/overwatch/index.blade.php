@@ -2,8 +2,6 @@
 
 @section('content')
     <div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
-        @include('components.status-alerts')
-
         <div class="dashboard-hero mb-4">
             <div>
                 <p class="text-body-secondary mb-1 small fw-semibold text-uppercase">{{ now()->locale('de')->isoFormat('dddd, D. MMMM') }}</p>

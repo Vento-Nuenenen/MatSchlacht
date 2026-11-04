@@ -4,8 +4,6 @@
     <div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
         <div class="row justify-content-center">
             <div class="col-12 col-xl-10">
-                @include('components.status-alerts')
-
                 <div class="card shadow-sm mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <span class="h5 mb-0">{{ $item->name }}</span>

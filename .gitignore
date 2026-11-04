@@ -391,3 +391,7 @@ $RECYCLE.BIN/
 # .pnp.*
 
 # End of https://www.toptal.com/developers/gitignore/api/vue,node,yarn,linux,macos,laravel,windows,composer,phpstorm+all
+
+# Browser tests
+/tests/Browser/Screenshots
+/tests/Browser/Traces

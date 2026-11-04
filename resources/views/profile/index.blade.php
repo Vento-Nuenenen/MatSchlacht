@@ -4,8 +4,6 @@
 <div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
     <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8 col-xl-7">
-            @include('components.status-alerts')
-
             <div class="card shadow-sm">
                 <div class="card-header bg-light">
                     <span class="h5 mb-0 fw-bold">Profil</span>

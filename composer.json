@@ -35,6 +35,7 @@
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.9.5",
         "pestphp/pest": "^5.1",
+        "pestphp/pest-plugin-browser": "^5.2",
         "pestphp/pest-plugin-laravel": "^5.0"
     },
     "autoload": {
@@ -76,6 +77,9 @@
             "@lint:check",
             "@types:check",
             "@php artisan test"
+        ],
+        "test:browser": [
+            "pest --testsuite=Browser"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

@@ -77,6 +77,19 @@ npm run format         # Frontend formatieren (Prettier)
 npm run lint           # JavaScript prüfen (ESLint)
 ```
 
+### Browser-Tests
+
+Die End-to-End-Tests in `tests/Browser` prüfen die wichtigsten Abläufe in einem echten Browser, auch in Smartphone- und Tablet-Grösse. Sie ergänzen die Feature-Tests und laufen weder mit `php artisan test` noch in den GitHub-Workflows, sondern nur von Hand:
+
+```bash
+npx playwright install chromium   # einmalig
+npm run build                     # die Tests nutzen die gebauten Assets
+composer test:browser             # in Chromium
+composer test:browser -- --browser firefox
+```
+
+Schlägt ein Test fehl, liegt ein Screenshot in `tests/Browser/Screenshots`. Echte Datei-Uploads lassen sich mit dem Test-Server des Plugins nicht prüfen, sie sind in den Feature-Tests abgedeckt.
+
 ## Badges
 
 - **Tests:** PHPStan und Pest auf PHP 8.4 und 8.5 (`.github/workflows/tests.yml`)

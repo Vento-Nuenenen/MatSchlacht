@@ -2,7 +2,6 @@
 
 @section('content')
     <div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
-        @include('components.status-alerts')
         <h2 class="mb-3">Wartung bearbeiten: {{ $item->name }}</h2>
         <form method="POST" action="{{ route('items.maintenances.update', $maintenanceEntry) }}" enctype="multipart/form-data">
             @method('PUT')

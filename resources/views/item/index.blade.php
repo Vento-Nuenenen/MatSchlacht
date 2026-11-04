@@ -4,8 +4,6 @@
     <div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
         <div class="row justify-content-center">
             <div class="col-12">
-                @include('components.status-alerts')
-
                 <div class="card shadow-sm">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <span class="h5 mb-0">Material</span>
@@ -28,7 +26,7 @@
                                 <div class="col-12 col-md-6 col-lg-4">
                                     <div class="input-group">
                                         <span class="input-group-text bg-white"><i class="fa fa-filter me-1 text-muted"></i> Gruppe:</span>
-                                        <select name="item_group_id" class="form-select" onchange="this.form.submit()">
+                                        <select name="item_group_id" class="form-select" onchange="this.form.submit()" aria-label="Nach Materialgruppe filtern">
                                             <option value="">Alle Materialgruppen</option>
                                             @foreach($itemGroups as $group)
                                                 <option value="{{ $group->id }}" {{ isset($currentGroupId) && $currentGroupId == $group->id ? 'selected' : '' }}>

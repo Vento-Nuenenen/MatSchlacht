@@ -4,8 +4,6 @@
     <div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
         <div class="row justify-content-center">
             <div class="col-12 col-xl-10">
-                @include('components.status-alerts')
-
                 <h2 class="mb-3">Hitobito-Login testen</h2>
 
                 <div class="card shadow-sm mb-4">

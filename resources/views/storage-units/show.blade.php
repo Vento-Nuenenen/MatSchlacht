@@ -4,8 +4,6 @@
     <div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
         <div class="row justify-content-center">
             <div class="col-12">
-                @include('components.status-alerts')
-
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('storage-units.index') }}">Lager</a></li>

@@ -1,6 +1,11 @@
 <?php
 
+use App\Models\Item;
+use App\Models\User;
+use App\Services\ComponentManager;
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 /*
@@ -16,7 +21,12 @@ use Tests\TestCase;
 
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
-    ->in('Feature');
+    ->in('Feature', 'Browser');
+
+pest()->beforeEach(function () {
+    $this->seed(RolesAndPermissionsSeeder::class);
+    Mail::fake();
+})->in('Browser');
 
 /*
 |--------------------------------------------------------------------------
@@ -47,4 +57,46 @@ expect()->extend('toBeOne', function () {
 function something()
 {
     // ..
+}
+
+/**
+ * A valid PNG image of one pixel, base64 encoded.
+ */
+const E2E_PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+
+/**
+ * Log in a new user for a browser test.
+ *
+ * @param  array<string, mixed>  $attributes
+ */
+function e2eLogin(string $role = 'Materialwart', array $attributes = []): User
+{
+    $user = User::factory()->create($attributes);
+    $user->assignRole($role);
+    test()->actingAs($user);
+
+    return $user;
+}
+
+/**
+ * Switch on app components, keeping the defaults of their settings.
+ */
+function e2eEnable(string ...$components): void
+{
+    $manager = app(ComponentManager::class);
+
+    foreach ($components as $component) {
+        $manager->update([$component => [
+            'enabled' => true,
+            'settings' => collect($manager->definitions()[$component]['settings'])->map(fn (array $setting) => $setting['default'])->all(),
+        ]]);
+    }
+}
+
+/**
+ * @param  array<string, mixed>  $attributes
+ */
+function e2eItem(string $name, int $stock = 10, array $attributes = []): Item
+{
+    return Item::factory()->create(['name' => $name, 'stock' => $stock, 'lot' => 1, ...$attributes]);
 }

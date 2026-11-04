@@ -74,6 +74,7 @@
                                     max="{{ $maxDisplayQty }}"
                                     class="form-control form-control-sm item-qty-input d-inline-block"
                                     name="items[{{ $item->id }}]"
+                                    aria-label="{{ $item->name }}: Menge"
                                     value="{{ $displayQty }}"
                                     @readonly($isOrderReadonly)
                                     onchange="updateItemHighlighting(this)"
@@ -94,6 +95,7 @@
                                             max="{{ $displayQty }}"
                                             class="form-control form-control-sm item-qty-input d-inline-block"
                                             name="returned[{{ $item->id }}]"
+                                            aria-label="{{ $item->name }}: zurückgegebene Menge"
                                             value="{{ $displayReturnedQty }}"
                                             {{ $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class) ? 'readonly' : '' }}
                                             oninput="enforceQuantityLimits(this)"

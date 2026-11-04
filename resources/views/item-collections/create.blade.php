@@ -4,8 +4,6 @@
     <div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
         <h2 class="mb-3">Neue Kollektion erstellen</h2>
 
-        @include('components.status-alerts')
-
         <form method="POST" action="{{ route('item-collections.store') }}">
             @csrf
 
