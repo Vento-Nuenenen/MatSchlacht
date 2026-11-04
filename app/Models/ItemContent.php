@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\ItemContentFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 ])]
 class ItemContent extends Model
 {
+    /** @use HasFactory<ItemContentFactory> */
     use HasFactory;
 
     /**

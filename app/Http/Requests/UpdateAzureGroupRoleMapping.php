@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Models\AzureGroupRoleMapping;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateAzureGroupRoleMapping extends FormRequest
 {
@@ -23,11 +23,12 @@ class UpdateAzureGroupRoleMapping extends FormRequest
      */
     public function rules(): array
     {
-        $mapping = $this->route('azure_group_role_mapping');
-        $mappingId = $mapping instanceof AzureGroupRoleMapping ? $mapping->id : $mapping;
-
         return [
-            'azure_group_id' => 'required|string|unique:azure_group_role_mappings,azure_group_id,'.$mappingId,
+            'azure_group_id' => [
+                'required',
+                'string',
+                Rule::unique('azure_group_role_mappings', 'azure_group_id')->ignore($this->route('azure_group_role_mapping')),
+            ],
             'role_name' => 'required|string|exists:roles,name',
         ];
     }

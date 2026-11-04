@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\User;
 use App\States\Order\Accepted;
 use App\States\Order\Committed;
+use App\States\Order\Delivered;
 use App\States\Order\Stored;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Support\Facades\Mail;
@@ -130,4 +131,15 @@ test('the status notification mails the orderer and the material responsibles', 
     Mail::assertSent(OrderStatusChanged::class, fn (OrderStatusChanged $mail) => $mail->hasTo($this->orderer->email)
         && $mail->hasTo('lager@example.com')
         && $mail->hasTo('chef@example.com'));
+});
+
+test('the status mail can be rendered for every other status', function () {
+    $order = Order::factory()->create([
+        'user_id' => $this->orderer->id,
+        'role_id' => $this->role->id,
+        'state' => Delivered::class,
+        'event' => 'Herbstlager',
+    ]);
+
+    expect((new OrderStatusChanged($order, 'delivered'))->render())->toContain('Herbstlager');
 });
