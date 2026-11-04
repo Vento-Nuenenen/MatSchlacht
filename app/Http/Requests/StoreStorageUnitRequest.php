@@ -70,9 +70,9 @@ class StoreStorageUnitRequest extends FormRequest
                 $expectedParentLevel = $level->parentLevel();
 
                 if ($expectedParentLevel === null && $parent !== null) {
-                    $validator->errors()->add('parent_id', "Ein {$level->label()} kann nicht in einer anderen Lagereinheit liegen.");
+                    $validator->errors()->add('parent_id', __('Ein :label kann nicht in einer anderen Lagereinheit liegen.', ['label' => $level->label()]));
                 } elseif ($expectedParentLevel !== null && $parent?->level !== $expectedParentLevel) {
-                    $validator->errors()->add('parent_id', "Ein {$level->label()} muss in einem {$expectedParentLevel->label()} liegen.");
+                    $validator->errors()->add('parent_id', __('Ein :label muss in einem :label2 liegen.', ['label' => $level->label(), 'label2' => $expectedParentLevel->label()]));
                 }
             },
         ];
@@ -84,11 +84,11 @@ class StoreStorageUnitRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'level' => 'Ebene',
-            'parent_id' => 'Übergeordnete Lagereinheit',
-            'name' => 'Bezeichnung',
-            'code' => 'Code',
-            'description' => 'Beschreibung',
+            'level' => __('Ebene'),
+            'parent_id' => __('Übergeordnete Lagereinheit'),
+            'name' => __('Bezeichnung'),
+            'code' => __('Code'),
+            'description' => __('Beschreibung'),
         ];
     }
 
@@ -98,8 +98,8 @@ class StoreStorageUnitRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'code.regex' => 'Der Code darf nur Buchstaben von A bis Z und Ziffern enthalten.',
-            'code.unique' => 'Dieser Code wird in derselben übergeordneten Lagereinheit schon verwendet.',
+            'code.regex' => __('Der Code darf nur Buchstaben von A bis Z und Ziffern enthalten.'),
+            'code.unique' => __('Dieser Code wird in derselben übergeordneten Lagereinheit schon verwendet.'),
         ];
     }
 

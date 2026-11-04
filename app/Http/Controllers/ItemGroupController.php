@@ -41,7 +41,7 @@ class ItemGroupController extends Controller
     {
         ItemGroup::create($request->validated());
 
-        return redirect()->route('item-groups.index')->with('success', 'Neue Materialgruppe wurde erfolgreich erstellt.');
+        return redirect()->route('item-groups.index')->with('success', __('Neue Materialgruppe wurde erfolgreich erstellt.'));
     }
 
     /**
@@ -67,7 +67,7 @@ class ItemGroupController extends Controller
     {
         $itemGroup->update($request->validated());
 
-        return redirect()->route('item-groups.index')->with('success', 'Materialgruppe wurde erfolgreich aktualisiert.');
+        return redirect()->route('item-groups.index')->with('success', __('Materialgruppe wurde erfolgreich aktualisiert.'));
     }
 
     /**
@@ -98,11 +98,11 @@ class ItemGroupController extends Controller
     public function destroy(ItemGroup $itemGroup): RedirectResponse
     {
         if ($itemGroup->items()->exists()) {
-            return back()->with('error', "«{$itemGroup->name}» enthält noch Material und kann nicht gelöscht werden.");
+            return back()->with('error', __('«:name» enthält noch Material und kann nicht gelöscht werden.', ['name' => $itemGroup->name]));
         }
 
         $itemGroup->delete();
 
-        return redirect()->route('item-groups.index')->with('success', 'Materialgruppe wurde erfolgreich gelöscht.');
+        return redirect()->route('item-groups.index')->with('success', __('Materialgruppe wurde erfolgreich gelöscht.'));
     }
 }

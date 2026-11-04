@@ -51,7 +51,7 @@ class StoreItemStockRequest extends FormRequest
                 $storageUnit = StorageUnit::find($this->integer('storage_unit_id'));
 
                 if ($storageUnit !== null && $storageUnit->level !== StorageLevel::Bin) {
-                    $validator->errors()->add('storage_unit_id', 'Material kann nur auf einem Lagerplatz eingelagert werden.');
+                    $validator->errors()->add('storage_unit_id', __('Material kann nur auf einem Lagerplatz eingelagert werden.'));
                 }
             },
         ];
@@ -63,9 +63,9 @@ class StoreItemStockRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'storage_unit_id' => 'Lagerplatz',
-            'item_id' => 'Material',
-            'quantity' => 'Menge',
+            'storage_unit_id' => __('Lagerplatz'),
+            'item_id' => __('Material'),
+            'quantity' => __('Menge'),
         ];
     }
 
@@ -75,7 +75,7 @@ class StoreItemStockRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'item_id.unique' => 'Dieses Material liegt bereits auf diesem Lagerplatz. Bitte die bestehende Menge anpassen.',
+            'item_id.unique' => __('Dieses Material liegt bereits auf diesem Lagerplatz. Bitte die bestehende Menge anpassen.'),
         ];
     }
 }

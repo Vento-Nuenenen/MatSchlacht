@@ -1,10 +1,10 @@
 @csrf
 
 <div class="card mb-4 shadow-sm">
-    <div class="card-header fw-bold bg-light">Einheitendetails</div>
+    <div class="card-header fw-bold bg-light">{{ __('Einheitendetails') }}</div>
     <div class="card-body">
         <div class="mb-3">
-            <label for="name" class="form-label fw-semibold">Einheit Name</label>
+            <label for="name" class="form-label fw-semibold">{{ __('Einheit Name') }}</label>
             <input type="text" class="form-control"
                    id="name"
                    name="name"
@@ -16,12 +16,12 @@
 </div>
 
 <div class="card mb-4 shadow-sm">
-    <div class="card-header fw-bold bg-light">Berechtigungen</div>
+    <div class="card-header fw-bold bg-light">{{ __('Berechtigungen') }}</div>
     <div class="card-body">
         @php
             $groupedPermissions = $permissions->groupBy(function($permission) {
                 $parts = explode(' ', $permission->name);
-                return count($parts) > 1 ? $parts[1] : 'Andere';
+                return count($parts) > 1 ? $parts[1] : __('Andere');
             });
         @endphp
 
@@ -50,7 +50,7 @@
             @endif
         @empty
             <div class="text-muted">
-                Keine Berechtigungen gefunden.
+                {{ __('Keine Berechtigungen gefunden.') }}
             </div>
         @endforelse
 
@@ -58,6 +58,6 @@
 </div>
 
 <div class="d-flex flex-column flex-sm-row justify-content-between gap-2 mt-4">
-    <a href="{{ route('roles.index') }}" class="btn btn-secondary order-2 order-sm-1">Abbrechen</a>
+    <a href="{{ route('roles.index') }}" class="btn btn-secondary order-2 order-sm-1">{{ __('Abbrechen') }}</a>
     <button type="submit" class="btn btn-primary order-1 order-sm-2">{{ $buttonText }}</button>
 </div>

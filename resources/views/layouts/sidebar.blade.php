@@ -1,5 +1,5 @@
 {{-- Sidebar for tablets and desktops: an icon rail on tablets in portrait, a full sidebar from 992px --}}
-<aside class="app-sidebar d-none d-md-flex" aria-label="Hauptnavigation">
+<aside class="app-sidebar d-none d-md-flex" aria-label="{{ __('Hauptnavigation') }}">
     <a class="app-brand" href="{{ route('overwatch') }}">
         <span class="app-brand-mark"><i class="fa fa-campground"></i></span>
         <span class="app-brand-name">{{ config('app.name', 'MatSchlacht') }}</span>

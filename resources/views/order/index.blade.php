@@ -6,10 +6,10 @@
             <div class="col-12">
                 <div class="card shadow-sm">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-                        <span class="h5 mb-0">Bestellungen</span>
+                        <span class="h5 mb-0">{{ __('Bestellungen') }}</span>
                         @can('create orders')
                             <a href="{{ route('orders.create') }}" class="btn btn-info btn-sm">
-                                <i class="fa fa-plus me-1"></i> Neue Bestellung
+                                <i class="fa fa-plus me-1"></i> {{ __('Neue Bestellung') }}
                             </a>
                         @endcan
                     </div>
@@ -18,13 +18,13 @@
                             <table class="table table-hover table-bordered table-striped align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th class="sortable-header">Anlass</th>
-                                        <th class="sortable-header">Einheit</th>
-                                        <th class="sortable-header">Verantwortlich</th>
-                                        <th class="sortable-header text-nowrap">Von</th>
-                                        <th class="sortable-header text-nowrap">Bis</th>
-                                        <th class="sortable-header">Status</th>
-                                        <th class="text-nowrap" style="min-width: 140px;">Optionen</th>
+                                        <th class="sortable-header">{{ __('Anlass') }}</th>
+                                        <th class="sortable-header">{{ __('Einheit') }}</th>
+                                        <th class="sortable-header">{{ __('Verantwortlich') }}</th>
+                                        <th class="sortable-header text-nowrap">{{ __('Von') }}</th>
+                                        <th class="sortable-header text-nowrap">{{ __('Bis') }}</th>
+                                        <th class="sortable-header">{{ __('Status') }}</th>
+                                        <th class="text-nowrap" style="min-width: 140px;">{{ __('Optionen') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -32,7 +32,7 @@
                                     <tr>
                                         <td>
                                             <span class="fw-semibold">{{ $order->event }}</span>
-@include('components.content-info', ['title' => "Bestellinhalte ({$order->event})", 'lines' => $order->contentLines()])
+@include('components.content-info', ['title' => __('Bestellinhalte (:event)', ['event' => $order->event]), 'lines' => $order->contentLines()])
                                         </td>
                                         <td>{{ $order->role->name }}</td>
                                         <td>{{ $order->user->preferredName() }}</td>
@@ -46,11 +46,11 @@
                                         <td class="text-nowrap">
                                             <div class="d-flex gap-1 flex-wrap align-items-center">
                                                 <a href="{{ route('orders.show', $order->id) }}" class="btn btn-info btn-sm shadow-sm text-white">
-                                                    <i class="fa fa-eye me-1"></i> Anzeigen
+                                                    <i class="fa fa-eye me-1"></i> {{ __('Anzeigen') }}
                                                 </a>
                                                 @if($order->state->equals(\App\States\Order\Stored::class))
                                                     @if(auth()->user()->can('edit orders') || (auth()->user()->can('edit own orders') && $order->user_id === auth()->id()))
-                                                        <a href="{{ route('orders.edit', $order->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                                                        <a href="{{ route('orders.edit', $order->id) }}" class="btn btn-warning btn-sm">{{ __('Bearbeiten') }}</a>
                                                     @endif
                                                     @if(auth()->user()->can('delete orders') || (auth()->user()->can('delete own orders') && $order->user_id === auth()->id()))
                                                         @include('components.delete', [
@@ -64,7 +64,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center py-4 text-muted">Keine Bestellungen vorhanden.</td>
+                                        <td colspan="7" class="text-center py-4 text-muted">{{ __('Keine Bestellungen vorhanden.') }}</td>
                                     </tr>
                                 @endforelse
                                 </tbody>

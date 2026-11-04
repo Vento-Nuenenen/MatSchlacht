@@ -12,10 +12,10 @@ enum MaintenanceType: string
     public function label(): string
     {
         return match ($this) {
-            self::Inspection => 'Kontrolle',
-            self::Cleaning => 'Reinigung',
-            self::Repair => 'Reparatur',
-            self::Other => 'Sonstiges',
+            self::Inspection => __('Kontrolle'),
+            self::Cleaning => __('Reinigung'),
+            self::Repair => __('Reparatur'),
+            self::Other => __('Sonstiges'),
         };
     }
 }

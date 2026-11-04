@@ -44,7 +44,7 @@ class AzureGroupRoleMappingController extends Controller
         AzureGroupRoleMapping::create($request->validated());
 
         return redirect()->route('azure-group-role-mappings.index')
-            ->with('success', 'Mapping wurde erstellt.');
+            ->with('success', __('Mapping wurde erstellt.'));
     }
 
     /**
@@ -65,7 +65,7 @@ class AzureGroupRoleMappingController extends Controller
         $azureGroupRoleMapping->update($request->validated());
 
         return redirect()->route('azure-group-role-mappings.index')
-            ->with('success', 'Mapping wurde aktualisiert.');
+            ->with('success', __('Mapping wurde aktualisiert.'));
     }
 
     /**
@@ -76,6 +76,6 @@ class AzureGroupRoleMappingController extends Controller
         $azureGroupRoleMapping->delete();
 
         return redirect()->route('azure-group-role-mappings.index')
-            ->with('success', 'Mapping wurde gelöscht.');
+            ->with('success', __('Mapping wurde gelöscht.'));
     }
 }

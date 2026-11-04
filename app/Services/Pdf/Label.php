@@ -34,7 +34,7 @@ readonly class Label
         $places = $item->stocks->map(fn ($stock) => $stock->storageUnit->path())->implode("\n");
 
         return new self(
-            kind: 'Material',
+            kind: __('Material'),
             title: $item->name,
             subtitle: $places !== '' ? $places : ($item->itemGroup->name ?? ''),
             url: route('items.show', $item),

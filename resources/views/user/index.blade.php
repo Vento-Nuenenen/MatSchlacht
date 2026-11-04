@@ -6,10 +6,10 @@
             <div class="col-12">
                 <div class="card shadow-sm">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-                        <span class="h5 mb-0">Benutzer</span>
+                        <span class="h5 mb-0">{{ __('Benutzer') }}</span>
                         @can('create users')
                             <a href="{{ route('users.create') }}" class="btn btn-info btn-sm">
-                                <i class="fa fa-plus me-1"></i> Neuer Benutzer
+                                <i class="fa fa-plus me-1"></i> {{ __('Neuer Benutzer') }}
                             </a>
                         @endcan
                     </div>
@@ -18,13 +18,13 @@
                             <table class="table table-hover table-bordered table-striped align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col" class="sortable-header" style="min-width: 120px;">Pfadiname</th>
-                                        <th scope="col" class="sortable-header" style="min-width: 140px;">Name</th>
-                                        <th scope="col" class="sortable-header">Mail</th>
-                                        <th scope="col" class="sortable-header">Einheiten</th>
-                                        <th scope="col" class="sortable-header text-center" style="min-width: 90px;">Login</th>
-                                        <th scope="col" class="sortable-header text-center" style="min-width: 70px;">Aktiv</th>
-                                        <th scope="col" class="text-nowrap" style="min-width: 140px;">Optionen</th>
+                                        <th scope="col" class="sortable-header" style="min-width: 120px;">{{ __('Pfadiname') }}</th>
+                                        <th scope="col" class="sortable-header" style="min-width: 140px;">{{ __('Name') }}</th>
+                                        <th scope="col" class="sortable-header">{{ __('Mail') }}</th>
+                                        <th scope="col" class="sortable-header">{{ __('Einheiten') }}</th>
+                                        <th scope="col" class="sortable-header text-center" style="min-width: 90px;">{{ __('Login') }}</th>
+                                        <th scope="col" class="sortable-header text-center" style="min-width: 70px;">{{ __('Aktiv') }}</th>
+                                        <th scope="col" class="text-nowrap" style="min-width: 140px;">{{ __('Optionen') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -42,30 +42,30 @@
                                             </td>
                                             <td class="text-center">
                                                 @if($user->isAzureUser())
-                                                    <span class="badge bg-primary">Azure AD</span>
+                                                    <span class="badge bg-primary">{{ __('Azure AD') }}</span>
                                                 @elseif($user->isHitobitoUser())
-                                                    <span class="badge bg-info text-dark">Hitobito</span>
+                                                    <span class="badge bg-info text-dark">{{ __('Hitobito') }}</span>
                                                 @else
-                                                    <span class="badge bg-secondary">Lokal</span>
+                                                    <span class="badge bg-secondary">{{ __('Lokal') }}</span>
                                                 @endif
                                             </td>
                                             <td class="text-center">
                                                 @if($user->aktiv)
-                                                    <span class="badge bg-success">Ja</span>
+                                                    <span class="badge bg-success">{{ __('Ja') }}</span>
                                                 @else
-                                                    <span class="badge bg-danger">Nein</span>
+                                                    <span class="badge bg-danger">{{ __('Nein') }}</span>
                                                 @endif
                                             </td>
                                             <td class="text-nowrap">
                                                 <div class="d-flex gap-1 flex-wrap align-items-center">
                                                     @can('edit users')
-                                                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                                                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">{{ __('Bearbeiten') }}</a>
                                                     @endcan
 
                                                     @if(!$user->isExternalUser())
                                                         <form action="{{ route('users.password-reset', $user->id) }}" method="POST" class="d-inline">
                                                             @csrf
-                                                            <button type="submit" class="btn btn-secondary btn-sm">Passwort-Reset</button>
+                                                            <button type="submit" class="btn btn-secondary btn-sm">{{ __('Passwort-Reset') }}</button>
                                                         </form>
                                                     @endif
 
@@ -80,7 +80,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="7" class="text-center py-4 text-muted">Keine Benutzer vorhanden.</td>
+                                            <td colspan="7" class="text-center py-4 text-muted">{{ __('Keine Benutzer vorhanden.') }}</td>
                                         </tr>
                                     @endforelse
                                 </tbody>

@@ -19,9 +19,9 @@ class PackingListPdf extends OrderPdfDocument
 
     protected function render(Order $order): void
     {
-        $this->begin('Packliste', 'Packliste (Inhalte)', $order);
+        $this->begin(__('Packliste'), __('Packliste (Inhalte)'), $order);
 
-        $this->pdf->renderSectionTitle('Inhaltsübersicht');
+        $this->pdf->renderSectionTitle(__('Inhaltsübersicht'));
 
         $itemsWithContents = $order->orderedItems->filter(
             fn ($orderedItem): bool => $orderedItem->item->contents->isNotEmpty()
@@ -29,14 +29,14 @@ class PackingListPdf extends OrderPdfDocument
 
         if ($itemsWithContents->isEmpty()) {
             TCPDF::SetFont('helvetica', 'I', 10);
-            TCPDF::Cell(180, 10, 'Keine Materialien mit Inhalten in dieser Bestellung gefunden.', 0, 1, 'L');
+            TCPDF::Cell(180, 10, __('Keine Materialien mit Inhalten in dieser Bestellung gefunden.'), 0, 1, 'L');
 
             return;
         }
 
         $columns = [
-            ['width' => 150, 'label' => 'Material / Inhalt', 'align' => 'L'],
-            ['width' => 30, 'label' => 'Anzahl / Menge', 'align' => 'C'],
+            ['width' => 150, 'label' => __('Material / Inhalt'), 'align' => 'L'],
+            ['width' => 30, 'label' => __('Anzahl / Menge'), 'align' => 'C'],
         ];
 
         $this->pdf->renderTableHeader($columns);

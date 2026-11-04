@@ -20,7 +20,7 @@ class ItemContentController extends Controller
 
         $item->contents()->create($validated);
 
-        return back()->with('success', 'Inhalt hinzugefügt.');
+        return back()->with('success', __('Inhalt hinzugefügt.'));
     }
 
     public function destroy(ItemContent $itemContent): RedirectResponse
@@ -29,6 +29,6 @@ class ItemContentController extends Controller
 
         $itemContent->delete();
 
-        return back()->with('success', 'Inhalt entfernt.');
+        return back()->with('success', __('Inhalt entfernt.'));
     }
 }

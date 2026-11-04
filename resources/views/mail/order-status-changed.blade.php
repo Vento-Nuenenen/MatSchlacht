@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
 
-    <title>Status der Materialbestellung geändert</title>
+    <title>{{ __('Status der Materialbestellung geändert') }}</title>
 
     <style>
         body { font-family: Arial, sans-serif; color: #1C1C1C; }
@@ -17,26 +17,26 @@
 </head>
 <body>
     <div class="header">
-        <h3>Status der Materialbestellung geändert</h3>
-        <p>Der Status deiner Materialbestellung für <strong>{{ $order->event }}</strong> hat sich geändert.</p>
-        <p>Status: <span class="status-badge">{{ $order->state->display() }}</span></p>
+        <h3>{{ __('Status der Materialbestellung geändert') }}</h3>
+        <p>{{ __('Der Status deiner Materialbestellung für') }} <strong>{{ $order->event }}</strong> {{ __('hat sich geändert.') }}</p>
+        <p>{{ __('Status:') }} <span class="status-badge">{{ $order->state->display() }}</span></p>
     </div>
 
     <div class="details">
         <p>
-            <strong>Einheit:</strong> {{ $role?->name }}<br>
-            <strong>Zeitraum:</strong> {{ $order->event_start }} bis {{ $order->event_end }}<br>
-            <strong>Verantwortlich:</strong> {{ $user?->firstname }} {{ $user?->lastname }}
+            <strong>{{ __('Einheit:') }}</strong> {{ $role?->name }}<br>
+            <strong>{{ __('Zeitraum:') }}</strong> {{ __(':event_start bis :event_end', ['event_start' => $order->event_start, 'event_end' => $order->event_end]) }}<br>
+            <strong>{{ __('Verantwortlich:') }}</strong> {{ $user?->firstname }} {{ $user?->lastname }}
         </p>
     </div>
 
     @if($items->count())
-        <h4>Artikel</h4>
+        <h4>{{ __('Artikel') }}</h4>
         <table>
             <thead>
                 <tr>
-                    <th>Artikel</th>
-                    <th>Menge</th>
+                    <th>{{ __('Artikel') }}</th>
+                    <th>{{ __('Menge') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -51,7 +51,7 @@
     @endif
 
     <p class="footer">
-        Dies ist eine automatisch generierte Nachricht von <a href="https://github.com/Vento-Nuenenen/MatSchlacht">MatSchlacht</a>.
+        {{ __('Dies ist eine automatisch generierte Nachricht von') }} <a href="https://github.com/Vento-Nuenenen/MatSchlacht">MatSchlacht</a>.
     </p>
 </body>
 </html>

@@ -27,49 +27,52 @@ class NavigationService
             [
                 'title' => null,
                 'items' => [
-                    $this->item('Übersicht', 'fa-house', 'overwatch', ['overwatch'], 1),
+                    $this->item(__('Übersicht'), 'fa-house', 'overwatch', ['overwatch'], 1),
                 ],
             ],
             [
-                'title' => 'Bestellungen',
+                'title' => __('Bestellungen'),
                 'items' => [
-                    $this->item('Bestellen', 'fa-cart-shopping', 'orders.index', ['orders.index', 'orders.create', 'orders.show', 'orders.edit'], 2,
+                    $this->item(__('Bestellen'), 'fa-cart-shopping', 'orders.index', ['orders.index', 'orders.create', 'orders.show', 'orders.edit'], 2,
                         $user->canAny(['view orders', 'create orders', 'edit orders', 'delete orders'])),
-                    $this->item('Verwalten', 'fa-clipboard-check', 'orders.manage', ['orders.manage*'], 3, $user->can('manage orders')),
+                    $this->item(__('Verwalten'), 'fa-clipboard-check', 'orders.manage', ['orders.manage*'], 3, $user->can('manage orders')),
                 ],
             ],
             [
-                'title' => 'Material',
+                'title' => __('Material'),
                 'items' => [
-                    $this->item('Material', 'fa-box-open', 'items.index', ['items.*'], 4, $user->canAny(['view items', 'create items', 'edit items', 'delete items'])),
-                    $this->item('Lager', 'fa-warehouse', 'storage-units.index', ['storage-units.*'], 5,
+                    $this->item(__('Material'), 'fa-box-open', 'items.index', ['items.*'], 4, $user->canAny(['view items', 'create items', 'edit items', 'delete items'])),
+                    $this->item(__('Lager'), 'fa-warehouse', 'storage-units.index', ['storage-units.*'], 5,
                         $this->components->isEnabled('storage') && $user->can('view storage')),
-                    $this->item('Wartung', 'fa-screwdriver-wrench', 'maintenance.index', ['maintenance.*'], 6,
+                    $this->item(__('Wartung'), 'fa-screwdriver-wrench', 'maintenance.index', ['maintenance.*'], 6,
                         $this->components->isEnabled('maintenance') && $user->can('view items')),
-                    $this->item('Kollektionen', 'fa-layer-group', 'item-collections.index', ['item-collections.*'], null,
+                    $this->item(__('Kollektionen'), 'fa-layer-group', 'item-collections.index', ['item-collections.*'], null,
                         $this->components->isEnabled('item_collections') && $user->canAny(['view itemcollections', 'create itemcollections', 'edit itemcollections', 'delete itemcollections'])),
-                    $this->item('Materialgruppen', 'fa-tags', 'item-groups.index', ['item-groups.*'], null,
+                    $this->item(__('Materialgruppen'), 'fa-tags', 'item-groups.index', ['item-groups.*'], null,
                         $user->canAny(['view itemgroups', 'create itemgroups', 'update itemgroups', 'delete itemgroups'])),
                 ],
             ],
             [
-                'title' => 'Administration',
+                'title' => __('Administration'),
                 'items' => [
-                    $this->item('Benutzer', 'fa-users', 'users.index', ['users.*'], null, $user->canAny(['view users', 'create users', 'update users', 'delete users'])),
-                    $this->item('Einheiten & Rechte', 'fa-user-shield', 'roles.index', ['roles.*'], null, $user->canAny(['view roles', 'create roles', 'update roles', 'delete roles'])),
-                    $this->item('Azure Mappings', 'fa-diagram-project', 'azure-group-role-mappings.index', ['azure-group-role-mappings.*'], null,
+                    $this->item(__('Benutzer'), 'fa-users', 'users.index', ['users.*'], null, $user->canAny(['view users', 'create users', 'update users', 'delete users'])),
+                    $this->item(__('Einheiten & Rechte'), 'fa-user-shield', 'roles.index', ['roles.*'], null, $user->canAny(['view roles', 'create roles', 'update roles', 'delete roles'])),
+                    $this->item(__('Azure Mappings'), 'fa-diagram-project', 'azure-group-role-mappings.index', ['azure-group-role-mappings.*'], null,
                         $this->components->isEnabled('azure_login') && $user->can('manage azure mappings')),
-                    $this->item('Hitobito-Regeln', 'fa-id-card', 'hitobito-access-rules.index', ['hitobito-access-rules.*'], null,
+                    $this->item(__('Hitobito-Regeln'), 'fa-id-card', 'hitobito-access-rules.index', ['hitobito-access-rules.*'], null,
                         $this->components->isEnabled('hitobito_login') && $user->can('manage hitobito access')),
-                    $this->item('Hitobito-Test', 'fa-vial', 'hitobito-test.index', ['hitobito-test.*'], null,
+                    $this->item(__('Hitobito-Test'), 'fa-vial', 'hitobito-test.index', ['hitobito-test.*'], null,
                         $this->components->isEnabled('hitobito_login') && $user->can('manage hitobito access')),
-                    $this->item('Einstellungen', 'fa-sliders', 'settings.components.index', ['settings.*'], null, $user->can('manage settings')),
+                    $this->item(__('Einstellungen'), 'fa-sliders', 'settings.components.index', ['settings.*'], null, $user->can('manage settings')),
                 ],
             ],
         ];
 
         return collect($sections)
-            ->map(fn (array $section) => [...$section, 'items' => array_values(array_filter($section['items']))])
+            ->map(fn (array $section) => [
+                'title' => is_string($section['title']) ? $section['title'] : null,
+                'items' => array_values(array_filter($section['items'])),
+            ])
             ->filter(fn (array $section) => $section['items'] !== [])
             ->values()
             ->all();

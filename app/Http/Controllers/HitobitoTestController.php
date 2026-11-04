@@ -56,7 +56,7 @@ class HitobitoTestController extends Controller
         Gate::authorize('manage hitobito access');
 
         if (! $this->connector->isConfigured()) {
-            return redirect()->route('hitobito-test.index')->with('error', 'Trage zuerst Client-ID und Client-Secret in den Einstellungen ein.');
+            return redirect()->route('hitobito-test.index')->with('error', __('Trage zuerst Client-ID und Client-Secret in den Einstellungen ein.'));
         }
 
         session()->put(self::SESSION_KEY, true);

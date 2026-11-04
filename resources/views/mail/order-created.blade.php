@@ -10,23 +10,23 @@
     </style>
 </head>
 <body>
-    <h3>Neue Materialbestellung</h3>
-    <p>Es wurde eine neue Bestellung erfasst.</p>
+    <h3>{{ __('Neue Materialbestellung') }}</h3>
+    <p>{{ __('Es wurde eine neue Bestellung erfasst.') }}</p>
 
     <p>
-        Einheit: <strong>{{ $role?->name }}</strong><br>
-        Anlass: <strong>{{ $order->event }}</strong><br>
-        Zeitraum: <strong>{{ $order->event_start }}</strong> bis <strong>{{ $order->event_end }}</strong><br>
-        Bestellt von: <strong>{{ $user?->firstname }} {{ $user?->lastname }}</strong>
+        {{ __('Einheit:') }} <strong>{{ $role?->name }}</strong><br>
+        {{ __('Anlass:') }} <strong>{{ $order->event }}</strong><br>
+        {{ __('Zeitraum:') }} <strong>{{ $order->event_start }}</strong> {{ __('bis') }} <strong>{{ $order->event_end }}</strong><br>
+        {{ __('Bestellt von:') }} <strong>{{ $user?->firstname }} {{ $user?->lastname }}</strong>
     </p>
 
     @if($items->count())
-        <h4>Bestellte Artikel</h4>
+        <h4>{{ __('Bestellte Artikel') }}</h4>
         <table>
             <thead>
                 <tr>
-                    <th>Artikel</th>
-                    <th>Menge</th>
+                    <th>{{ __('Artikel') }}</th>
+                    <th>{{ __('Menge') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,6 +40,6 @@
         </table>
     @endif
 
-    <p>Status: <strong>{{ $order->state->display() }}</strong></p>
+    <p>{{ __('Status:') }} <strong>{{ $order->state->display() }}</strong></p>
 </body>
 </html>

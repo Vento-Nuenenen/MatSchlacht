@@ -19,7 +19,7 @@ class ItemStockController extends Controller
 
         ItemStock::create($request->validated());
 
-        return back()->with('success', 'Material wurde eingelagert.');
+        return back()->with('success', __('Material wurde eingelagert.'));
     }
 
     /**
@@ -31,7 +31,7 @@ class ItemStockController extends Controller
 
         $itemStock->update($request->validated());
 
-        return back()->with('success', 'Lagerbestand wurde aktualisiert.');
+        return back()->with('success', __('Lagerbestand wurde aktualisiert.'));
     }
 
     /**
@@ -43,6 +43,6 @@ class ItemStockController extends Controller
 
         $itemStock->delete();
 
-        return back()->with('success', 'Material wurde vom Lagerplatz entfernt.');
+        return back()->with('success', __('Material wurde vom Lagerplatz entfernt.'));
     }
 }

@@ -8,7 +8,7 @@ class Accepted extends OrderState
 
     public function display(): string
     {
-        return 'Bestätigt';
+        return __('Bestätigt');
     }
 
     public function color(): string

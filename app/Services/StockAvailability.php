@@ -64,6 +64,6 @@ class StockAvailability
 
     public static function shortageMessage(Item $item, int $available, int $requested): string
     {
-        return "Vom Artikel '{$item->name}' sind im gewählten Zeitraum nur noch {$available} Stück verfügbar (angefordert: {$requested}).";
+        return __('Vom Artikel \':name\' sind im gewählten Zeitraum nur noch :available Stück verfügbar (angefordert: :requested).', ['name' => $item->name, 'available' => $available, 'requested' => $requested]);
     }
 }

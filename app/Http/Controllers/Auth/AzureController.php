@@ -31,7 +31,7 @@ class AzureController extends Controller
             /** @var \Laravel\Socialite\Two\User $azureUser */
             $azureUser = Socialite::driver('microsoft')->user();
         } catch (Exception $e) {
-            return redirect('/login')->with('error', 'Azure authentication failed.');
+            return redirect('/login')->with('error', __('Azure authentication failed.'));
         }
 
         // Check for specific tenant if AZURE_TENANT_ID is set and not 'common'

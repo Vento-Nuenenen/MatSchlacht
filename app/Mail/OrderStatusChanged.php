@@ -28,9 +28,9 @@ class OrderStatusChanged extends Mailable
     public function envelope(): Envelope
     {
         $subject = match ($this->statusName) {
-            'committed' => 'Bestellung eingereicht: '.$this->order->event,
-            'accepted' => 'Bestellung bestätigt: '.$this->order->event,
-            default => 'Statusänderung Bestellung: '.$this->order->event,
+            'committed' => __('Bestellung eingereicht: ').$this->order->event,
+            'accepted' => __('Bestellung bestätigt: ').$this->order->event,
+            default => __('Statusänderung Bestellung: ').$this->order->event,
         };
 
         return new Envelope(

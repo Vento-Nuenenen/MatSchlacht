@@ -70,7 +70,7 @@ abstract class HttpFilesystemAdapter implements FilesystemAdapter
         $token = $response->json('access_token');
 
         if (! $response->successful() || ! is_string($token)) {
-            throw new RuntimeException("Anmeldung bei {$this->serviceName()} fehlgeschlagen: ".($response->json('error_description') ?? $response->status()));
+            throw new RuntimeException(__('Anmeldung bei :servicename fehlgeschlagen: ', ['servicename' => $this->serviceName()]).($response->json('error_description') ?? $response->status()));
         }
 
         Cache::put($cacheKey, $token, max(60, (int) $response->json('expires_in', 3600) - 120));

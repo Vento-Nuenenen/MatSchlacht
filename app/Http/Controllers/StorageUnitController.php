@@ -57,7 +57,7 @@ class StorageUnitController extends Controller
         $storageUnit = StorageUnit::create($request->validated());
 
         return redirect()->route('storage-units.show', $storageUnit->parent_id ?? $storageUnit)
-            ->with('success', "{$storageUnit->level->label()} «{$storageUnit->name}» wurde erstellt.");
+            ->with('success', __(':label «:name» wurde erstellt.', ['label' => $storageUnit->level->label(), 'name' => $storageUnit->name]));
     }
 
     /**
@@ -104,14 +104,14 @@ class StorageUnitController extends Controller
     public function destroy(StorageUnit $storageUnit): RedirectResponse
     {
         if ($storageUnit->children()->exists() || $storageUnit->stocks()->exists()) {
-            return back()->with('error', "{$storageUnit->level->label()} «{$storageUnit->name}» ist nicht leer und kann nicht gelöscht werden.");
+            return back()->with('error', __(':label «:name» ist nicht leer und kann nicht gelöscht werden.', ['label' => $storageUnit->level->label(), 'name' => $storageUnit->name]));
         }
 
         $parentId = $storageUnit->parent_id;
         $storageUnit->delete();
 
         return ($parentId !== null ? redirect()->route('storage-units.show', $parentId) : redirect()->route('storage-units.index'))
-            ->with('success', "{$storageUnit->level->label()} «{$storageUnit->name}» wurde gelöscht.");
+            ->with('success', __(':label «:name» wurde gelöscht.', ['label' => $storageUnit->level->label(), 'name' => $storageUnit->name]));
     }
 
     /**

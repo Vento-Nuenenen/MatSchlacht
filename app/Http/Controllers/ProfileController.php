@@ -7,6 +7,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class ProfileController extends Controller
@@ -22,6 +23,20 @@ class ProfileController extends Controller
     }
 
     /**
+     * Change the language of the user.
+     */
+    public function updateLocale(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'locale' => ['required', Rule::in(array_keys(config('app.available_locales')))],
+        ]);
+
+        $request->user()->update($validated);
+
+        return back();
+    }
+
+    /**
      * Update the user's password.
      *
      * @return RedirectResponse
@@ -29,7 +44,7 @@ class ProfileController extends Controller
     public function updatePassword(Request $request)
     {
         if ($request->user()->isExternalUser()) {
-            return back()->with('error', 'Benutzer mit externem Login können ihr Passwort hier nicht ändern.');
+            return back()->with('error', __('Benutzer mit externem Login können ihr Passwort hier nicht ändern.'));
         }
 
         $validated = $request->validate([
@@ -41,6 +56,6 @@ class ProfileController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return back()->with('success', 'Passwort erfolgreich aktualisiert.');
+        return back()->with('success', __('Passwort erfolgreich aktualisiert.'));
     }
 }

@@ -2,5 +2,5 @@
 @component_enabled('attachments')
     <label for="{{ $id ?? 'files' }}" class="form-label small fw-semibold">{{ $label ?? 'Belege / Fotos' }}</label>
     <input type="file" class="form-control" id="{{ $id ?? 'files' }}" name="files[]" multiple accept=".jpg,.jpeg,.png,.gif,.webp,.svg,.pdf">
-    <div class="form-text">Bilder oder PDF, max. {{ ini_get('upload_max_filesize') }} pro Datei.</div>
+    <div class="form-text">{{ __('Bilder oder PDF, max. :ini_get pro Datei.', ['ini_get' => ini_get('upload_max_filesize')]) }}</div>
 @endcomponent_enabled

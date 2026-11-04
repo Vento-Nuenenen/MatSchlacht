@@ -78,9 +78,19 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => env('APP_LOCALE', 'de'),
 
-    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
+    /*
+    | The languages of the app, with their names as they are shown to the user. German is the
+    | source language: its texts are the translation keys. To add a language, translate the
+    | texts into lang/{code}.json, the messages into lang/{code}/ and list it here.
+    | "php artisan lang:check {code}" shows what is still missing.
+    */
+    'available_locales' => [
+        'de' => 'Deutsch',
+    ],
+
+    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'de'),
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 

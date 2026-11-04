@@ -8,8 +8,8 @@
             <span class="app-brand-name">{{ config('app.name', 'MatSchlacht') }}</span>
         </div>
         <div>
-            <h1 class="display-6 fw-bold mb-3">Material für Lager, Übungen und Anlässe.</h1>
-            <p class="lead mb-0 opacity-75">Bestellen, bereitstellen und zurückgeben – alles an einem Ort.</p>
+            <h1 class="display-6 fw-bold mb-3">{{ __('Material für Lager, Übungen und Anlässe.') }}</h1>
+            <p class="lead mb-0 opacity-75">{{ __('Bestellen, bereitstellen und zurückgeben – alles an einem Ort.') }}</p>
         </div>
         <p class="small mb-0 opacity-50">© {{ now()->year }} {{ config('app.name', 'MatSchlacht') }}</p>
     </section>
@@ -21,8 +21,8 @@
                 <span class="app-brand-name">{{ config('app.name', 'MatSchlacht') }}</span>
             </div>
 
-            <h2 class="h3 fw-bold mb-1">Willkommen zurück</h2>
-            <p class="text-body-secondary mb-4">Melde dich an, um weiterzufahren.</p>
+            <h2 class="h3 fw-bold mb-1">{{ __('Willkommen zurück') }}</h2>
+            <p class="text-body-secondary mb-4">{{ __('Melde dich an, um weiterzufahren.') }}</p>
 
             <div class="auth-card-body">
                     @component_enabled('password_login')
@@ -65,7 +65,7 @@
 
                     @component_enabled('azure_login')
                         @component_enabled('password_login')
-                            <div class="auth-divider"><span>oder</span></div>
+                            <div class="auth-divider"><span>{{ __('oder') }}</span></div>
                         @endcomponent_enabled
 
                         <a href="{{ route('azure.login') }}" class="btn btn-scout-mail w-100 py-2" role="button">
@@ -76,11 +76,11 @@
 
                     @component_enabled('hitobito_login')
                         @if(app(\App\Services\Hitobito\HitobitoConnector::class)->isConfigured())
-                            <div class="auth-divider"><span>oder</span></div>
+                            <div class="auth-divider"><span>{{ __('oder') }}</span></div>
 
                             <a href="{{ route('hitobito.login') }}" class="btn btn-outline-primary w-100 py-2" role="button">
                                 <i class="fa fa-right-to-bracket me-2"></i>
-                                {{ app(\App\Services\ComponentManager::class)->setting('hitobito_login', 'button_label') ?? 'Login mit Hitobito' }}
+                                {{ app(\App\Services\ComponentManager::class)->setting('hitobito_login', 'button_label') ?? __('Login mit Hitobito') }}
                             </a>
                         @endif
                     @endcomponent_enabled

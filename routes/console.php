@@ -9,8 +9,10 @@ use App\Services\FileStorage\FileStorageManager;
 use App\Services\MaintenanceService;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schedule;
+use Symfony\Component\Finder\SplFileInfo;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
@@ -62,6 +64,42 @@ Artisan::command('maintenance:remind', function (ComponentManager $components, M
 })->purpose('Send a reminder mail about due maintenance');
 
 Schedule::command('maintenance:remind')->weeklyOn(1, '07:00')->timezone('Europe/Zurich');
+
+Artisan::command('lang:check {locale : Zu prüfende Sprache, z. B. fr} {--write : Fehlende Texte leer in die JSON-Datei der Sprache eintragen}', function (string $locale) {
+    $keys = collect(File::allFiles(app_path()))
+        ->merge(File::allFiles(resource_path('views')))
+        ->flatMap(function (SplFileInfo $file) {
+            preg_match_all("/__\(\s*'((?:[^'\\\\]|\\\\.)*)'/", $file->getContents(), $matches);
+
+            return array_map(stripslashes(...), $matches[1]);
+        })
+        ->merge(collect(config()->array('components'))->flatMap(fn (array $component) => [
+            $component['label'],
+            $component['description'],
+            ...collect((array) ($component['settings'] ?? []))->flatMap(fn (array $setting) => [
+                $setting['label'],
+                ...array_values($setting['options'] ?? []),
+            ]),
+        ]))
+        ->unique()
+        ->sort()
+        ->values();
+
+    $path = lang_path("{$locale}.json");
+    $translations = File::exists($path) ? (array) json_decode(File::get($path), true) : [];
+    $missing = $keys->reject(fn (string $key) => filled($translations[$key] ?? null));
+
+    if ($this->option('write')) {
+        $texts = $translations + $missing->mapWithKeys(fn (string $key) => [$key => ''])->all();
+        ksort($texts);
+        File::put($path, json_encode($texts, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n");
+    }
+
+    $missing->each(fn (string $key) => $this->line($key));
+    $this->info("{$missing->count()} von {$keys->count()} Texten fehlen in {$locale}.");
+
+    return $missing->isEmpty() ? 0 : 1;
+})->purpose('List the texts that are not translated into a language yet');
 
 Artisan::command('attachments:transfer
     {from : Provider, von dem kopiert wird (s3, local, sftp, ftp, sharepoint)}

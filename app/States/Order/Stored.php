@@ -8,7 +8,7 @@ class Stored extends OrderState
 
     public function display(): string
     {
-        return 'Entwurf';
+        return __('Entwurf');
     }
 
     public function color(): string

@@ -66,6 +66,18 @@ Nützliche Befehle:
 | `php artisan maintenance:remind` | Erinnerung für fällige Wartungen sofort senden |
 | `php artisan attachments:transfer {from} {to?} {--delete-source}` | Dateien zu einem anderen Speicher-Provider umziehen |
 
+## Sprachen
+
+Die App ist auf Deutsch. Alle Texte laufen über `__()`, der deutsche Text ist dabei selbst der Schlüssel. Fehlt eine Übersetzung, erscheint also der deutsche Text. Die Sprache kommt aus dem Benutzerkonto, sonst aus dem Browser, sonst aus `APP_LOCALE`. Mails gehen in der Sprache des Empfängers oder der Empfängerin raus.
+
+Für eine weitere Sprache, zum Beispiel Französisch:
+
+1. `php artisan lang:check fr --write` legt `lang/fr.json` mit allen Texten an. Die Werte sind leer und müssen übersetzt werden.
+2. `lang/de/*.php` nach `lang/fr/` kopieren und übersetzen. Das sind die Meldungen von Laravel.
+3. Die Sprache in `config/app.php` unter `available_locales` eintragen. Ab zwei Sprachen erscheint die Auswahl im Benutzermenü.
+
+`php artisan lang:check fr` zeigt danach jederzeit, welche Texte noch fehlen.
+
 ## Entwicklung
 
 ```bash

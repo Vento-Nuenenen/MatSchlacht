@@ -86,7 +86,7 @@ class GoogleDriveAdapter extends HttpFilesystemAdapter
             $uploadUrl = $this->expectSuccess($sessionUrl)->header('Location');
 
             if ($uploadUrl === '') {
-                throw new RuntimeException('Google Drive hat keine Upload-Adresse geliefert.');
+                throw new RuntimeException(__('Google Drive hat keine Upload-Adresse geliefert.'));
             }
 
             $this->expectSuccess(Http::withBody($contents, 'application/octet-stream')->timeout(120)->put($uploadUrl));
@@ -98,7 +98,7 @@ class GoogleDriveAdapter extends HttpFilesystemAdapter
     public function read(string $path): string
     {
         try {
-            $file = $this->findOrNull($path, files: true) ?? throw new RuntimeException('Datei nicht gefunden.');
+            $file = $this->findOrNull($path, files: true) ?? throw new RuntimeException(__('Datei nicht gefunden.'));
 
             return $this->expectSuccess($this->drive()->get(self::API_URL.'/files/'.$file['id'], ['alt' => 'media']))->body();
         } catch (Throwable $exception) {
@@ -185,7 +185,7 @@ class GoogleDriveAdapter extends HttpFilesystemAdapter
     public function move(string $source, string $destination, Config $config): void
     {
         try {
-            $file = $this->findOrNull($source, files: true) ?? throw new RuntimeException('Datei nicht gefunden.');
+            $file = $this->findOrNull($source, files: true) ?? throw new RuntimeException(__('Datei nicht gefunden.'));
             $this->delete($destination);
             $sourceFolderId = $this->folderId(dirname($source), create: false);
             $targetFolderId = $this->folderId(dirname($destination), create: true);
@@ -202,7 +202,7 @@ class GoogleDriveAdapter extends HttpFilesystemAdapter
     public function copy(string $source, string $destination, Config $config): void
     {
         try {
-            $file = $this->findOrNull($source, files: true) ?? throw new RuntimeException('Datei nicht gefunden.');
+            $file = $this->findOrNull($source, files: true) ?? throw new RuntimeException(__('Datei nicht gefunden.'));
             $this->delete($destination);
 
             $this->expectSuccess($this->drive()->post(self::API_URL.'/files/'.$file['id'].'/copy', [
@@ -323,7 +323,7 @@ class GoogleDriveAdapter extends HttpFilesystemAdapter
         ]))->json('id');
 
         if (! is_string($id)) {
-            throw new RuntimeException("Ordner «{$name}» konnte nicht angelegt werden.");
+            throw new RuntimeException(__('Ordner «:name» konnte nicht angelegt werden.', ['name' => $name]));
         }
 
         return $id;
@@ -380,7 +380,7 @@ class GoogleDriveAdapter extends HttpFilesystemAdapter
     protected function expectSuccess(Response $response, array $acceptedStatuses = []): Response
     {
         if (! $response->successful() && ! in_array($response->status(), $acceptedStatuses, true)) {
-            throw new RuntimeException('Google Drive: '.($response->json('error.message') ?? "Status {$response->status()}"));
+            throw new RuntimeException(__('Google Drive: ').($response->json('error.message') ?? __('Status :status', ['status' => $response->status()])));
         }
 
         return $response;
@@ -392,7 +392,7 @@ class GoogleDriveAdapter extends HttpFilesystemAdapter
     protected function accessToken(): string
     {
         if ($this->refreshToken === '') {
-            throw new RuntimeException('Google Drive ist noch nicht verbunden. Bitte unter Einstellungen «Mit Google verbinden».');
+            throw new RuntimeException(__('Google Drive ist noch nicht verbunden. Bitte unter Einstellungen «Mit Google verbinden».'));
         }
 
         return $this->rememberAccessToken('file-storage.google-drive.token.'.md5($this->clientId.$this->refreshToken), fn (): Response => Http::asForm()

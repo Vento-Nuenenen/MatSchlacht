@@ -16,22 +16,22 @@ enum StorageLevel: string
     public function label(): string
     {
         return match ($this) {
-            self::Location => 'Lagerort',
-            self::Room => 'Lagerraum',
-            self::Shelf => 'Lagerregal',
-            self::Tier => 'Regalebene',
-            self::Bin => 'Lagerplatz',
+            self::Location => __('Lagerort'),
+            self::Room => __('Lagerraum'),
+            self::Shelf => __('Lagerregal'),
+            self::Tier => __('Regalebene'),
+            self::Bin => __('Lagerplatz'),
         };
     }
 
     public function pluralLabel(): string
     {
         return match ($this) {
-            self::Location => 'Lagerorte',
-            self::Room => 'Lagerräume',
-            self::Shelf => 'Lagerregale',
-            self::Tier => 'Regalebenen',
-            self::Bin => 'Lagerplätze',
+            self::Location => __('Lagerorte'),
+            self::Room => __('Lagerräume'),
+            self::Shelf => __('Lagerregale'),
+            self::Tier => __('Regalebenen'),
+            self::Bin => __('Lagerplätze'),
         };
     }
 

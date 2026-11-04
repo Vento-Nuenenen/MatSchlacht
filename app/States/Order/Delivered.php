@@ -8,7 +8,7 @@ class Delivered extends OrderState
 
     public function display(): string
     {
-        return 'Ausgegeben';
+        return __('Ausgegeben');
     }
 
     public function color(): string

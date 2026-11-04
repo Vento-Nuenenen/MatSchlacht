@@ -23,7 +23,7 @@ class MaxServerFileSize implements ValidationRule
         $maxSize = $this->getServerMaxSize();
 
         if ($value->getSize() > $maxSize) {
-            $fail('Die Datei :attribute ist zu groß. Das Server-Limit liegt bei '.($maxSize / 1024 / 1024).'MB.');
+            $fail(__('Die Datei :attribute ist zu groß. Das Server-Limit liegt bei ').($maxSize / 1024 / 1024).'MB.');
         }
     }
 

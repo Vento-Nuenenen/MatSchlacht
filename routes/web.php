@@ -98,6 +98,7 @@ Route::middleware('auth')->group(function () {
     });
     Route::get('attachments/{attachment}', [AttachmentController::class, 'show'])->name('attachments.show');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/locale', [ProfileController::class, 'updateLocale'])->name('profile.locale.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::get('/settings/components', [ComponentSettingController::class, 'index'])->name('settings.components.index');
     Route::put('/settings/components', [ComponentSettingController::class, 'update'])->name('settings.components.update');

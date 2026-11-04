@@ -26,7 +26,7 @@ class FileStorageConnectionController extends Controller
 
         if (! $this->connector->hasAppCredentials($provider)) {
             return redirect()->route('settings.components.index')
-                ->with('error', "Bitte zuerst die App-Zugangsdaten für {$provider->label()} eintragen und speichern.");
+                ->with('error', __('Bitte zuerst die App-Zugangsdaten für :label eintragen und speichern.', ['label' => $provider->label()]));
         }
 
         $state = Str::random(40);
@@ -47,17 +47,17 @@ class FileStorageConnectionController extends Controller
         $settings = redirect()->route('settings.components.index');
 
         if (! is_string($expectedState) || ! hash_equals($expectedState, (string) $request->query('state'))) {
-            return $settings->with('error', "Die Verbindung zu {$provider->label()} wurde abgebrochen (ungültiger Status). Bitte erneut versuchen.");
+            return $settings->with('error', __('Die Verbindung zu :label wurde abgebrochen (ungültiger Status). Bitte erneut versuchen.', ['label' => $provider->label()]));
         }
 
         if ($request->filled('error') || ! $request->filled('code')) {
-            return $settings->with('error', "Die Verbindung zu {$provider->label()} wurde nicht erlaubt: ".($request->query('error_description') ?? $request->query('error') ?? 'kein Code erhalten'));
+            return $settings->with('error', __('Die Verbindung zu :label wurde nicht erlaubt: ', ['label' => $provider->label()]).($request->query('error_description') ?? $request->query('error') ?? 'kein Code erhalten'));
         }
 
         try {
             $this->connector->connect($provider, (string) $request->query('code'), $this->redirectUri($provider));
         } catch (Throwable $exception) {
-            return $settings->with('error', "Verbindung zu {$provider->label()} fehlgeschlagen: {$exception->getMessage()}");
+            return $settings->with('error', __('Verbindung zu :label fehlgeschlagen: :getmessage', ['label' => $provider->label(), 'getmessage' => $exception->getMessage()]));
         }
 
         return $settings->with('success', "{$provider->label()} ist verbunden.");

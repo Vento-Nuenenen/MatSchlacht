@@ -32,7 +32,7 @@ class OrderObserver
 
         foreach ($recipients as $user) {
             if (! empty($user->email)) {
-                Mail::to($user->email)->queue(new OrderCreated($order));
+                Mail::to($user)->queue(new OrderCreated($order));
             }
         }
     }

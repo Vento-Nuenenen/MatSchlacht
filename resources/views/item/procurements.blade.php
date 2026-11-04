@@ -1,7 +1,7 @@
 {{-- Procurements of an item on the item edit page; expects $item --}}
 <div class="card mb-4 shadow-sm">
     <div class="card-header bg-white py-3">
-        <h5 class="mb-0 text-primary"><i class="fa fa-cart-shopping me-2"></i>Beschaffungen</h5>
+        <h5 class="mb-0 text-primary"><i class="fa fa-cart-shopping me-2"></i>{{ __('Beschaffungen') }}</h5>
     </div>
     <div class="card-body">
         @if($item->procurements->isNotEmpty())
@@ -9,15 +9,15 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="text-nowrap">Datum</th>
-                            <th class="text-center">Menge</th>
-                            <th>Lieferant</th>
-                            <th class="text-end text-nowrap">Stückpreis</th>
-                            <th class="text-end">Total</th>
-                            <th class="text-nowrap">Beleg-Nr.</th>
-                            <th class="text-nowrap">Garantie bis</th>
-                            <th>Notiz / Belege</th>
-                            <th class="text-end">Aktion</th>
+                            <th class="text-nowrap">{{ __('Datum') }}</th>
+                            <th class="text-center">{{ __('Menge') }}</th>
+                            <th>{{ __('Lieferant') }}</th>
+                            <th class="text-end text-nowrap">{{ __('Stückpreis') }}</th>
+                            <th class="text-end">{{ __('Total') }}</th>
+                            <th class="text-nowrap">{{ __('Beleg-Nr.') }}</th>
+                            <th class="text-nowrap">{{ __('Garantie bis') }}</th>
+                            <th>{{ __('Notiz / Belege') }}</th>
+                            <th class="text-end">{{ __('Aktion') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -27,7 +27,7 @@
                                 <td class="text-center">
                                     {{ $procurement->quantity }}
                                     @if($procurement->added_to_stock)
-                                        <i class="fa fa-plus-circle text-success ms-1" title="Zum Bestand addiert"></i>
+                                        <i class="fa fa-plus-circle text-success ms-1" title="{{ __('Zum Bestand addiert') }}"></i>
                                     @endif
                                 </td>
                                 <td>{{ $procurement->supplier }}</td>
@@ -44,7 +44,7 @@
                                     @include('components.attachment-list', ['attachments' => $procurement->attachments])
                                 </td>
                                 <td class="text-end text-nowrap">
-                                    <a href="{{ route('items.procurements.edit', $procurement) }}" class="btn btn-warning btn-sm" title="Bearbeiten"><i class="fa fa-pen"></i></a>
+                                    <a href="{{ route('items.procurements.edit', $procurement) }}" class="btn btn-warning btn-sm" title="{{ __('Bearbeiten') }}"><i class="fa fa-pen"></i></a>
                                     @include('components.delete', ['route' => 'items.procurements.destroy', 'id' => $procurement->id])
                                 </td>
                             </tr>
@@ -53,15 +53,15 @@
                 </table>
             </div>
         @else
-            <p class="text-muted mb-3">Noch keine Beschaffungen erfasst.</p>
+            <p class="text-muted mb-3">{{ __('Noch keine Beschaffungen erfasst.') }}</p>
         @endif
 
         <div class="p-3 p-md-4 bg-light rounded-3 border">
-            <h6 class="text-uppercase text-muted small fw-bold mb-3">Beschaffung erfassen</h6>
+            <h6 class="text-uppercase text-muted small fw-bold mb-3">{{ __('Beschaffung erfassen') }}</h6>
             <form action="{{ route('items.procurements.store', $item) }}" method="POST" enctype="multipart/form-data">
                 @include('item.procurement-form', ['procurement' => null])
                 <div class="d-flex justify-content-end mt-2">
-                    <button type="submit" class="btn btn-success shadow-sm"><i class="fa fa-plus me-1"></i> Erfassen</button>
+                    <button type="submit" class="btn btn-success shadow-sm"><i class="fa fa-plus me-1"></i> {{ __('Erfassen') }}</button>
                 </div>
             </form>
         </div>

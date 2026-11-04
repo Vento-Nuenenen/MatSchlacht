@@ -64,7 +64,7 @@ class ItemController extends Controller
 
         $this->attachments->store($item, $request->file('files', []), 'items');
 
-        return redirect()->route('items.index')->with('success', 'Neues Material wurde erfolgreich erstellt.');
+        return redirect()->route('items.index')->with('success', __('Neues Material wurde erfolgreich erstellt.'));
     }
 
     /**
@@ -117,7 +117,7 @@ class ItemController extends Controller
         $this->attachments->remove($item, $removeAttachments);
         $this->attachments->store($item, $request->file('files', []), 'items');
 
-        return redirect()->route('items.index')->with('success', 'Material wurde erfolgreich aktualisiert.');
+        return redirect()->route('items.index')->with('success', __('Material wurde erfolgreich aktualisiert.'));
     }
 
     /**
@@ -126,7 +126,7 @@ class ItemController extends Controller
     public function destroy(Item $item): RedirectResponse
     {
         if ($item->orderedItems()->exists()) {
-            return back()->with('error', "«{$item->name}» wird in Bestellungen verwendet und kann nicht gelöscht werden.");
+            return back()->with('error', __('«:name» wird in Bestellungen verwendet und kann nicht gelöscht werden.', ['name' => $item->name]));
         }
 
         $item->load('procurements', 'maintenances');
@@ -137,6 +137,6 @@ class ItemController extends Controller
 
         $item->delete();
 
-        return redirect()->route('items.index')->with('success', 'Material wurde erfolgreich gelöscht.');
+        return redirect()->route('items.index')->with('success', __('Material wurde erfolgreich gelöscht.'));
     }
 }

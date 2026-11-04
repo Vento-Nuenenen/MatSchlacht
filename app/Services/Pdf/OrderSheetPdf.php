@@ -29,9 +29,9 @@ class OrderSheetPdf extends OrderPdfDocument
 
     protected function render(Order $order): void
     {
-        $this->begin('Auftragsliste', 'Auftragsliste', $order);
+        $this->begin(__('Auftragsliste'), __('Auftragsliste'), $order);
 
-        $this->pdf->renderSectionTitle('Materialkollektionen');
+        $this->pdf->renderSectionTitle(__('Materialkollektionen'));
         TCPDF::SetFont('helvetica', '', 10);
 
         if ($order->itemCollections->isNotEmpty()) {
@@ -42,27 +42,27 @@ class OrderSheetPdf extends OrderPdfDocument
             })->implode(', ');
             TCPDF::MultiCell(0, 7, $collections, 0, 'L');
         } else {
-            TCPDF::Cell(0, 7, 'Es wurden keine Materialkollektionen angefordert.', 0, 1, 'L');
+            TCPDF::Cell(0, 7, __('Es wurden keine Materialkollektionen angefordert.'), 0, 1, 'L');
         }
         TCPDF::Ln(5);
 
-        $this->pdf->renderSectionTitle('Ausgegebene Materialien');
+        $this->pdf->renderSectionTitle(__('Ausgegebene Materialien'));
 
         $isStorageEnabled = $this->isStorageEnabled();
 
         $columns = $isStorageEnabled
             ? [
-                ['width' => 12, 'label' => 'Pos.', 'align' => 'C'],
-                ['width' => 63, 'label' => 'Bezeichnung', 'align' => 'L'],
-                ['width' => 65, 'label' => 'Lagerplatz', 'align' => 'L'],
-                ['width' => 20, 'label' => 'Bestellt', 'align' => 'C'],
-                ['width' => 20, 'label' => 'Ausgeg.', 'align' => 'C'],
+                ['width' => 12, 'label' => __('Pos.'), 'align' => 'C'],
+                ['width' => 63, 'label' => __('Bezeichnung'), 'align' => 'L'],
+                ['width' => 65, 'label' => __('Lagerplatz'), 'align' => 'L'],
+                ['width' => 20, 'label' => __('Bestellt'), 'align' => 'C'],
+                ['width' => 20, 'label' => __('Ausgeg.'), 'align' => 'C'],
             ]
             : [
-                ['width' => 15, 'label' => 'Pos.', 'align' => 'C'],
-                ['width' => 105, 'label' => 'Bezeichnung', 'align' => 'L'],
-                ['width' => 30, 'label' => 'Bestellt', 'align' => 'C'],
-                ['width' => 30, 'label' => 'Ausgegeben', 'align' => 'C'],
+                ['width' => 15, 'label' => __('Pos.'), 'align' => 'C'],
+                ['width' => 105, 'label' => __('Bezeichnung'), 'align' => 'L'],
+                ['width' => 30, 'label' => __('Bestellt'), 'align' => 'C'],
+                ['width' => 30, 'label' => __('Ausgegeben'), 'align' => 'C'],
             ];
 
         $this->pdf->renderTableHeader($columns);

@@ -65,7 +65,12 @@ function createBadge(id, name, items) {
     removeButton.className = 'btn-close btn-close-white';
     removeButton.style.fontSize = '0.5rem';
     removeButton.dataset.collectionRemove = '';
-    removeButton.setAttribute('aria-label', `${name} entfernen`);
+    removeButton.setAttribute(
+        'aria-label',
+        document
+            .getElementById('collections-wrapper')
+            .dataset.removeLabel.replace(':name', name),
+    );
 
     badge.append(hiddenInput, removeButton);
 
@@ -77,7 +82,7 @@ function addSelectedCollection(button) {
     const option = select.options[select.selectedIndex];
 
     if (!option.value) {
-        window.alert('Bitte wählen Sie eine Kollektion aus.');
+        window.alert(button.dataset.emptyMessage);
 
         return;
     }

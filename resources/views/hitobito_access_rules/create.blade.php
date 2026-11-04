@@ -2,10 +2,10 @@
 
 @section('content')
     <div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
-        <h2 class="mb-3">Hitobito-Regel erstellen</h2>
+        <h2 class="mb-3">{{ __('Hitobito-Regel erstellen') }}</h2>
         <form method="POST" action="{{ route('hitobito-access-rules.store') }}">
             @include('hitobito_access_rules.form', [
-                'buttonText' => 'Erstellen',
+                'buttonText' => __('Erstellen'),
                 'hitobitoAccessRule' => null,
             ])
         </form>

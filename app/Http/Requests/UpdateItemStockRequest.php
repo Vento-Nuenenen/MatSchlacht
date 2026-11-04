@@ -33,7 +33,7 @@ class UpdateItemStockRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'quantity' => 'Menge',
+            'quantity' => __('Menge'),
         ];
     }
 }

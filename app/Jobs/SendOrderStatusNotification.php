@@ -57,7 +57,9 @@ class SendOrderStatusNotification implements ShouldQueue
         $recipients = $recipients->unique()->filter();
 
         if ($recipients->isNotEmpty()) {
-            Mail::to($recipients)->send(new OrderStatusChanged($this->order, $this->statusName));
+            Mail::to($recipients)
+                ->locale($this->order->user?->preferredLocale() ?? config('app.locale'))
+                ->send(new OrderStatusChanged($this->order, $this->statusName));
         }
     }
 }

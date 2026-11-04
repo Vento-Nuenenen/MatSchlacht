@@ -135,7 +135,7 @@ class FileStorageManager
             $disk->put($path, 'MatSchlacht');
 
             if ($disk->get($path) !== 'MatSchlacht') {
-                return 'Die Testdatei konnte nicht gelesen werden.';
+                return __('Die Testdatei konnte nicht gelesen werden.');
             }
 
             $disk->delete($path);

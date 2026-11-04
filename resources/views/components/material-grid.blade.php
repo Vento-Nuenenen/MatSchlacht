@@ -1,8 +1,8 @@
 <div class="mb-3">
-    <label for="itemSearch" class="form-label fw-bold">Materialien filtern</label>
+    <label for="itemSearch" class="form-label fw-bold">{{ __('Materialien filtern') }}</label>
     <div class="input-group">
         <span class="input-group-text bg-white"><i class="fa fa-search text-muted"></i></span>
-        <input type="text" id="itemSearch" class="form-control" placeholder="Material suchen…" oninput="filterItems()" autofocus />
+        <input type="text" id="itemSearch" class="form-control" placeholder="{{ __('Material suchen…') }}" oninput="filterItems()" autofocus />
     </div>
 </div>
 
@@ -15,19 +15,19 @@
     @endphp
 
     @foreach($grouped as $groupKey => $groupItems)
-        @php [$pos, $groupName] = array_pad(explode('|', $groupKey, 2), 2, 'Sonstiges') @endphp
+        @php [$pos, $groupName] = array_pad(explode('|', $groupKey, 2), 2, __('Sonstiges')) @endphp
         <div class="card mb-3 item-group shadow-sm">
             <div class="card-header fw-bold bg-light">{{ $groupName }}</div>
             <div class="card-body p-0 table-responsive">
                 <table class="table table-sm table-hover align-middle mb-0 table-no-stack material-table">
                     <thead class="table-light">
                     <tr>
-                        <th scope="col" style="min-width: 140px;">Name</th>
-                        <th scope="col" class="text-center d-none d-sm-table-cell" style="width: 15%; min-width: 75px;">Verfügbar</th>
-                        <th scope="col" class="text-center d-none d-sm-table-cell" style="width: 15%; min-width: 75px;">Packungsgrösse</th>
-                        <th scope="col" class="text-center" style="width: 15%; min-width: 85px;">Bestellen</th>
-                        @if(isset($order) && $order->state->isHandedOut())
-                            <th scope="col" class="text-center" style="width: 15%; min-width: 85px;">Zurückgegeben</th>
+                        <th scope="col" style="min-width: 140px;">{{ __('Name') }}</th>
+                        <th scope="col" class="text-center d-none d-sm-table-cell" style="width: 15%; min-width: 75px;">{{ __('Verfügbar') }}</th>
+                        <th scope="col" class="text-center d-none d-sm-table-cell" style="width: 15%; min-width: 75px;">{{ __('Packungsgrösse') }}</th>
+                        <th scope="col" class="text-center" style="width: 15%; min-width: 85px;">{{ __('Bestellen') }}</th>
+                        @if(isset($order) && $order->state?->isHandedOut())
+                            <th scope="col" class="text-center" style="width: 15%; min-width: 85px;">{{ __('Zurückgegeben') }}</th>
                         @endif
                     </tr>
                     </thead>
@@ -43,7 +43,7 @@
                             $displayReturnedQty = ($item->lot > 1) ? $returnedQty / $item->lot : $returnedQty;
                             $imageAttachments = $item->attachments->filter(fn($a) => \Illuminate\Support\Str::endsWith(strtolower($a->path), ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']));
                             $imageUrls = $imageAttachments->map(fn ($img) => $img->url())->filter();
-                            $isOrderReadonly = isset($order) && $order->state->isHandedOut();
+                            $isOrderReadonly = isset($order) && $order->state?->isHandedOut();
                         @endphp
                         <tr class="item-row {{ $actualQty > 0 ? 'table-primary' : '' }}">
                             <td class="item-name py-2">
@@ -52,15 +52,15 @@
                                     <i class="fa fa-image text-primary cursor-pointer ms-2 p-1 item-carousel-trigger"
                                        data-images="{{ json_encode($imageUrls) }}"
                                        data-item-name="{{ $item->name }}"
-                                       title="Bilder anzeigen"></i>
+                                       title="{{ __('Bilder anzeigen') }}"></i>
                                 @endif
                                 @if($item->attachments->count() > $imageAttachments->count())
-                                    <i class="fa fa-file-alt text-muted ms-1 p-1" title="Hat weitere Anhänge"></i>
+                                    <i class="fa fa-file-alt text-muted ms-1 p-1" title="{{ __('Hat weitere Anhänge') }}"></i>
                                 @endif
 
-                                @include('components.content-info', ['title' => "Inhaltsliste von {$item->name}", 'lines' => $item->contentLines()])
+                                @include('components.content-info', ['title' => __('Inhaltsliste von :name', ['name' => $item->name]), 'lines' => $item->contentLines()])
                                 <div class="small text-body-secondary d-sm-none">
-                                    {{ $item->usableStock() }} verfügbar{{ $item->lot > 1 ? ' · Packung à '.$item->lot : '' }}
+                                    {{ __(':usablestock verfügbar:lot', ['usablestock' => $item->usableStock(), 'lot' => $item->lot > 1 ? ' · '.__('Packung à :lot', ['lot' => $item->lot]) : '']) }}
                                 </div>
                             </td>
                             <td class="text-center d-none d-sm-table-cell">{{ $item->usableStock() }}</td>
@@ -68,7 +68,7 @@
                             <td class="text-center text-nowrap">
                                 <div class="{{ $isOrderReadonly ? '' : 'qty-stepper' }}">
                                 @unless($isOrderReadonly)
-                                    <button type="button" class="btn" data-qty-step="-1" aria-label="{{ $item->name }}: weniger"><i class="fa fa-minus"></i></button>
+                                    <button type="button" class="btn" data-qty-step="-1" aria-label="{{ __(':name: weniger', ['name' => $item->name]) }}"><i class="fa fa-minus"></i></button>
                                 @endunless
                                 <input
                                     type="number"
@@ -76,7 +76,7 @@
                                     max="{{ $maxDisplayQty }}"
                                     class="form-control form-control-sm item-qty-input d-inline-block"
                                     name="items[{{ $item->id }}]"
-                                    aria-label="{{ $item->name }}: Menge"
+                                    aria-label="{{ __(':name: Menge', ['name' => $item->name]) }}"
                                     value="{{ $displayQty }}"
                                     @readonly($isOrderReadonly)
                                     onchange="updateItemHighlighting(this)"
@@ -84,11 +84,11 @@
                                     data-min-qty="0"
                                     data-max-qty="{{ $maxDisplayQty }}">
                                 @unless($isOrderReadonly)
-                                    <button type="button" class="btn" data-qty-step="1" aria-label="{{ $item->name }}: mehr"><i class="fa fa-plus"></i></button>
+                                    <button type="button" class="btn" data-qty-step="1" aria-label="{{ __(':name: mehr', ['name' => $item->name]) }}"><i class="fa fa-plus"></i></button>
                                 @endunless
                                 </div>
                             </td>
-                            @if(isset($order) && $order->state->isHandedOut())
+                            @if(isset($order) && $order->state?->isHandedOut())
                                 <td class="text-center">
                                     @if($actualQty > 0)
                                         <input
@@ -97,7 +97,7 @@
                                             max="{{ $displayQty }}"
                                             class="form-control form-control-sm item-qty-input d-inline-block"
                                             name="returned[{{ $item->id }}]"
-                                            aria-label="{{ $item->name }}: zurückgegebene Menge"
+                                            aria-label="{{ __(':name: zurückgegebene Menge', ['name' => $item->name]) }}"
                                             value="{{ $displayReturnedQty }}"
                                             {{ $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class) ? 'readonly' : '' }}
                                             oninput="enforceQuantityLimits(this)"
@@ -157,8 +157,8 @@
     <div class="modal-dialog modal-lg modal-dialog-centered modal-fullscreen-sm-down">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="imageCarouselModalLabel">Bilder</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="imageCarouselModalLabel">{{ __('Bilder') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Close') }}"></button>
             </div>
             <div class="modal-body p-0">
                 <div id="itemImageCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -167,11 +167,11 @@
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#itemImageCarousel" data-bs-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Zurück</span>
+                        <span class="visually-hidden">{{ __('Zurück') }}</span>
                     </button>
                     <button class="carousel-control-next" type="button" data-bs-target="#itemImageCarousel" data-bs-slide="next">
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Weiter</span>
+                        <span class="visually-hidden">{{ __('Weiter') }}</span>
                     </button>
                 </div>
             </div>

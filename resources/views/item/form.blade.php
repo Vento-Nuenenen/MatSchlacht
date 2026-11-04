@@ -2,17 +2,17 @@
 
 <div id="form-fields">
     <div class="card mb-4 shadow-sm">
-        <div class="card-header fw-bold bg-light">Basisdaten</div>
+        <div class="card-header fw-bold bg-light">{{ __('Basisdaten') }}</div>
         <div class="card-body">
             <div class="row g-3 mb-3">
                 <div class="col-12 col-md-8">
-                    <label for="name" class="form-label fw-semibold">Material</label>
+                    <label for="name" class="form-label fw-semibold">{{ __('Material') }}</label>
                     <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $item->name ?? '') }}" required autofocus>
                 </div>
                 <div class="col-12 col-md-4">
-                    <label for="item_group_id" class="form-label fw-semibold">Materialgruppe</label>
+                    <label for="item_group_id" class="form-label fw-semibold">{{ __('Materialgruppe') }}</label>
                     <select class="form-select" id="item_group_id" name="item_group_id" required>
-                        <option value="">Bitte wählen</option>
+                        <option value="">{{ __('Bitte wählen') }}</option>
                         @foreach($itemGroups as $group)
                             <option value="{{ $group->id }}" {{ old('item_group_id', $item->item_group_id ?? '') == $group->id ? 'selected' : '' }}>
                                 {{ $group->name }}
@@ -24,7 +24,7 @@
 
             <div class="row g-3">
                 <div class="col-12 col-sm-4">
-                    <label for="stock" class="form-label fw-semibold">Bestand</label>
+                    <label for="stock" class="form-label fw-semibold">{{ __('Bestand') }}</label>
                     @php
                         $isStockFromStorage = isset($item) && $item->exists
                             && app(\App\Services\ComponentManager::class)->isEnabled('storage')
@@ -32,15 +32,15 @@
                     @endphp
                     <input type="number" class="form-control" id="stock" name="stock" value="{{ old('stock', $item->stock ?? 0) }}" min="0" max="999999" required @readonly($isStockFromStorage)>
                     @if($isStockFromStorage)
-                        <div class="form-text">Summe der Lagerplätze</div>
+                        <div class="form-text">{{ __('Summe der Lagerplätze') }}</div>
                     @endif
                 </div>
                 <div class="col-12 col-sm-4">
-                    <label for="lot" class="form-label fw-semibold">Packungsgrösse</label>
+                    <label for="lot" class="form-label fw-semibold">{{ __('Packungsgrösse') }}</label>
                     <input type="number" class="form-control" id="lot" name="lot" value="{{ old('lot', $item->lot ?? 1) }}" min="1" max="999999" required>
                 </div>
                 <div class="col-12 col-sm-4">
-                    <label for="repair" class="form-label fw-semibold">Reparatur</label>
+                    <label for="repair" class="form-label fw-semibold">{{ __('Reparatur') }}</label>
                     <input type="number" class="form-control" id="repair" name="repair" value="{{ old('repair', $item->repair ?? 0) }}" min="0" max="999999" required>
                 </div>
             </div>
@@ -48,9 +48,9 @@
             @component_enabled('maintenance')
                 <div class="row g-3 mt-0">
                     <div class="col-12 col-sm-4">
-                        <label for="maintenance_interval_months" class="form-label fw-semibold">Wartungsintervall (Monate)</label>
+                        <label for="maintenance_interval_months" class="form-label fw-semibold">{{ __('Wartungsintervall (Monate)') }}</label>
                         <input type="number" class="form-control" id="maintenance_interval_months" name="maintenance_interval_months"
-                               value="{{ old('maintenance_interval_months', $item->maintenance_interval_months ?? '') }}" min="1" max="240" placeholder="kein Intervall">
+                               value="{{ old('maintenance_interval_months', $item->maintenance_interval_months ?? '') }}" min="1" max="240" placeholder="{{ __('kein Intervall') }}">
                     </div>
                 </div>
             @endcomponent_enabled
@@ -59,17 +59,17 @@
 
     @component_enabled('attachments')
     <div class="card mb-4 shadow-sm">
-        <div class="card-header fw-bold bg-light">Dateianhänge</div>
+        <div class="card-header fw-bold bg-light">{{ __('Dateianhänge') }}</div>
         <div class="card-body">
             <div class="mb-3">
-                <label for="files" class="form-label fw-semibold">Dateien hinzufügen</label>
+                <label for="files" class="form-label fw-semibold">{{ __('Dateien hinzufügen') }}</label>
                 <input type="file" class="form-control" id="files" name="files[]" multiple>
-                <div class="form-text text-muted">Maximale Dateigröße: {{ ini_get('upload_max_filesize') }}. Erlaubte Formate: Bilder (JPG, PNG, GIF, WEBP, SVG) und PDF.</div>
+                <div class="form-text text-muted">{{ __('Maximale Dateigröße: :ini_get. Erlaubte Formate: Bilder (JPG, PNG, GIF, WEBP, SVG) und PDF.', ['ini_get' => ini_get('upload_max_filesize')]) }}</div>
             </div>
 
             @if(isset($item) && $item->attachments->count() > 0)
                 <div class="mt-4">
-                    <label class="form-label fw-semibold">Vorhandene Dateien (zum Löschen markieren)</label>
+                    <label class="form-label fw-semibold">{{ __('Vorhandene Dateien (zum Löschen markieren)') }}</label>
                     <div class="row g-2">
                         @foreach($item->attachments as $attachment)
                             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
@@ -92,7 +92,7 @@
                                     <div class="card-body p-2 text-center bg-light">
                                         <div class="form-check d-inline-block">
                                             <input class="form-check-input" type="checkbox" name="remove_attachments[]" value="{{ $attachment->id }}" id="del-att-{{ $attachment->id }}">
-                                            <label class="form-check-label small text-danger fw-bold" for="del-att-{{ $attachment->id }}">Löschen</label>
+                                            <label class="form-check-label small text-danger fw-bold" for="del-att-{{ $attachment->id }}">{{ __('Löschen') }}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -107,7 +107,7 @@
 </div>
 
 <div class="d-flex flex-column flex-sm-row justify-content-between gap-2 mt-4">
-    <a href="{{ route('items.index') }}" class="btn btn-secondary order-2 order-sm-1">Abbrechen</a>
+    <a href="{{ route('items.index') }}" class="btn btn-secondary order-2 order-sm-1">{{ __('Abbrechen') }}</a>
     <button type="submit" class="btn btn-primary order-1 order-sm-2">{{ $buttonText }}</button>
 </div>
 

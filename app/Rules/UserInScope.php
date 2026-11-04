@@ -23,7 +23,7 @@ class UserInScope implements ValidationRule
         }
 
         if (! auth()->user()->canActForUser($targetUser)) {
-            $fail('Die ausgewählte Person ist nicht in Ihrem Bereich.');
+            $fail(__('Die ausgewählte Person ist nicht in Ihrem Bereich.'));
         }
     }
 }

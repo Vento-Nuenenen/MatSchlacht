@@ -24,7 +24,7 @@ class HitobitoController extends Controller
     public function redirectToHitobito(): RedirectResponse
     {
         if (! $this->connector->isConfigured()) {
-            return redirect()->route('login')->with('error', 'Der Hitobito-Login ist noch nicht eingerichtet.');
+            return redirect()->route('login')->with('error', __('Der Hitobito-Login ist noch nicht eingerichtet.'));
         }
 
         return $this->connector->provider()->redirect();
@@ -43,8 +43,8 @@ class HitobitoController extends Controller
             $hitobitoUser = $this->connector->provider()->user();
         } catch (Exception $exception) {
             return $isTest
-                ? redirect()->route('hitobito-test.index')->with('error', "Die Testanmeldung ist fehlgeschlagen: {$exception->getMessage()}")
-                : redirect()->route('login')->with('error', 'Die Anmeldung mit Hitobito ist fehlgeschlagen.');
+                ? redirect()->route('hitobito-test.index')->with('error', __('Die Testanmeldung ist fehlgeschlagen: :getmessage', ['getmessage' => $exception->getMessage()]))
+                : redirect()->route('login')->with('error', __('Die Anmeldung mit Hitobito ist fehlgeschlagen.'));
         }
 
         /** @var array<string, mixed> $profile */
@@ -60,11 +60,11 @@ class HitobitoController extends Controller
                 'role_classes' => array_column(is_array($profile['roles'] ?? null) ? $profile['roles'] : [], 'role_class'),
             ]);
 
-            return redirect()->route('login')->with('error', 'Dein Hitobito-Konto ist für diese App nicht freigeschaltet.');
+            return redirect()->route('login')->with('error', __('Dein Hitobito-Konto ist für diese App nicht freigeschaltet.'));
         }
 
         if (blank($hitobitoUser->getEmail())) {
-            return redirect()->route('login')->with('error', 'Dein Hitobito-Konto hat keine E-Mail-Adresse.');
+            return redirect()->route('login')->with('error', __('Dein Hitobito-Konto hat keine E-Mail-Adresse.'));
         }
 
         $user = $this->syncUser($hitobitoUser, $profile);

@@ -15,7 +15,7 @@
                 @if($removable ?? false)
                     <span class="form-check mb-0 ms-1">
                         <input class="form-check-input" type="checkbox" name="remove_attachments[]" value="{{ $attachment->id }}" id="remove-attachment-{{ $attachment->id }}">
-                        <label class="form-check-label text-danger" for="remove-attachment-{{ $attachment->id }}">löschen</label>
+                        <label class="form-check-label text-danger" for="remove-attachment-{{ $attachment->id }}">{{ __('löschen') }}</label>
                     </span>
                 @endif
             </span>

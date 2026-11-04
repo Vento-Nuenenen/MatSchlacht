@@ -45,15 +45,15 @@ class UpdateItemRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => 'Name',
-            'stock' => 'Bestand',
-            'lot' => 'Gebinde',
-            'repair' => 'Reparatur',
-            'maintenance_interval_months' => 'Wartungsintervall',
-            'item_group_id' => 'Materialgruppe',
-            'files' => 'Dateien',
-            'files.*' => 'Datei',
-            'remove_attachments' => 'Anhänge entfernen',
+            'name' => __('Name'),
+            'stock' => __('Bestand'),
+            'lot' => __('Gebinde'),
+            'repair' => __('Reparatur'),
+            'maintenance_interval_months' => __('Wartungsintervall'),
+            'item_group_id' => __('Materialgruppe'),
+            'files' => __('Dateien'),
+            'files.*' => __('Datei'),
+            'remove_attachments' => __('Anhänge entfernen'),
         ];
     }
 }

@@ -19,16 +19,16 @@ class ReturnSheetPdf extends OrderPdfDocument
 
     protected function render(Order $order): void
     {
-        $this->begin('Retourenliste', 'Retourenliste', $order);
+        $this->begin(__('Retourenliste'), __('Retourenliste'), $order);
 
-        $this->pdf->renderSectionTitle('Retoure');
+        $this->pdf->renderSectionTitle(__('Retoure'));
 
         $columns = [
-            ['width' => 12, 'label' => 'Pos.', 'align' => 'C'],
-            ['width' => 88, 'label' => 'Bezeichnung', 'align' => 'L'],
-            ['width' => 25, 'label' => 'Geliefert', 'align' => 'C'],
-            ['width' => 25, 'label' => 'Retourniert', 'align' => 'C'],
-            ['width' => 30, 'label' => 'Defekt', 'align' => 'C'],
+            ['width' => 12, 'label' => __('Pos.'), 'align' => 'C'],
+            ['width' => 88, 'label' => __('Bezeichnung'), 'align' => 'L'],
+            ['width' => 25, 'label' => __('Geliefert'), 'align' => 'C'],
+            ['width' => 25, 'label' => __('Retourniert'), 'align' => 'C'],
+            ['width' => 30, 'label' => __('Defekt'), 'align' => 'C'],
         ];
 
         $this->pdf->renderTableHeader($columns);

@@ -29,7 +29,7 @@ class OrderCreated extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Neue Bestellung: '.$this->order->event,
+            subject: __('Neue Bestellung: ').$this->order->event,
         );
     }
 

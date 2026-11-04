@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
 
-    <title>Materialbestellung wurde bestätigt</title>
+    <title>{{ __('Materialbestellung wurde bestätigt') }}</title>
 
     <style>
         body { font-family: Arial, sans-serif; color: #1C1C1C; }
@@ -17,29 +17,28 @@
 </head>
 <body>
     <div class="header">
-        <h3>Materialbestellung wurde bestätigt</h3>
+        <h3>{{ __('Materialbestellung wurde bestätigt') }}</h3>
         <p>
-            Deine Materialbestellung für <strong>{{ $order->event }}</strong> wurde vom Materialteam geprüft und bestätigt.
-            Bitte Melde melde dich um einen Termin für die Bereitstellung zu klären.
+            {{ __('Deine Materialbestellung für') }} <strong>{{ $order->event }}</strong> {{ __('wurde vom Materialteam geprüft und bestätigt. Bitte Melde melde dich um einen Termin für die Bereitstellung zu klären.') }}
         </p>
-        <p>Status: <span class="status-badge">Bestätigt</span></p>
+        <p>{{ __('Status:') }} <span class="status-badge">{{ __('Bestätigt') }}</span></p>
     </div>
 
     <div class="details">
         <p>
-            <strong>Einheit:</strong> {{ $role?->name }}<br>
-            <strong>Zeitraum:</strong> {{ $order->event_start }} bis {{ $order->event_end }}<br>
-            <strong>Verantwortlich:</strong> {{ $user?->firstname }} {{ $user?->lastname }}
+            <strong>{{ __('Einheit:') }}</strong> {{ $role?->name }}<br>
+            <strong>{{ __('Zeitraum:') }}</strong> {{ __(':event_start bis :event_end', ['event_start' => $order->event_start, 'event_end' => $order->event_end]) }}<br>
+            <strong>{{ __('Verantwortlich:') }}</strong> {{ $user?->firstname }} {{ $user?->lastname }}
         </p>
     </div>
 
     @if($items->count())
-        <h4>Bestätigte Artikel</h4>
+        <h4>{{ __('Bestätigte Artikel') }}</h4>
         <table>
             <thead>
                 <tr>
-                    <th>Artikel</th>
-                    <th>Menge</th>
+                    <th>{{ __('Artikel') }}</th>
+                    <th>{{ __('Menge') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -54,7 +53,7 @@
     @endif
 
     <p class="footer">
-        Dies ist eine automatisch generierte Nachricht von <a href="https://github.com/Vento-Nuenenen/MatSchlacht">MatSchlacht</a>.
+        {{ __('Dies ist eine automatisch generierte Nachricht von') }} <a href="https://github.com/Vento-Nuenenen/MatSchlacht">MatSchlacht</a>.
     </p>
 </body>
 </html>

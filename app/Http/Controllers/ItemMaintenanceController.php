@@ -26,7 +26,7 @@ class ItemMaintenanceController extends Controller
 
         $this->attachments->store($maintenance, $request->file('files', []), 'maintenances');
 
-        return back()->with('success', 'Wartung wurde erfasst.');
+        return back()->with('success', __('Wartung wurde erfasst.'));
     }
 
     /**
@@ -56,7 +56,7 @@ class ItemMaintenanceController extends Controller
         $this->attachments->remove($itemMaintenance, $removeAttachments);
         $this->attachments->store($itemMaintenance, $request->file('files', []), 'maintenances');
 
-        return redirect()->route('items.edit', $itemMaintenance->item_id)->with('success', 'Wartungseintrag wurde aktualisiert.');
+        return redirect()->route('items.edit', $itemMaintenance->item_id)->with('success', __('Wartungseintrag wurde aktualisiert.'));
     }
 
     /**
@@ -69,6 +69,6 @@ class ItemMaintenanceController extends Controller
         $this->attachments->removeAll($itemMaintenance);
         $itemMaintenance->delete();
 
-        return back()->with('success', 'Wartungseintrag wurde gelöscht.');
+        return back()->with('success', __('Wartungseintrag wurde gelöscht.'));
     }
 }

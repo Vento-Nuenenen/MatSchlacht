@@ -73,12 +73,12 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="contentModalLabel">Inhaltsliste</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schliessen"></button>
+                    <h5 class="modal-title" id="contentModalLabel">{{ __('Inhaltsliste') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Schliessen') }}"></button>
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Schliessen</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Schliessen') }}</button>
                 </div>
             </div>
         </div>

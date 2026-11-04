@@ -59,7 +59,7 @@ class OAuthConnector
                 'redirect_uri' => $redirectUri,
                 'state' => $state,
             ]),
-            default => throw new InvalidArgumentException("{$provider->label()} wird nicht über OAuth verbunden."),
+            default => throw new InvalidArgumentException(__(':label wird nicht über OAuth verbunden.', ['label' => $provider->label()])),
         };
     }
 
@@ -83,13 +83,13 @@ class OAuthConnector
                 'client_secret' => $clientSecret,
                 'redirect_uri' => $redirectUri,
             ]),
-            default => throw new InvalidArgumentException("{$provider->label()} wird nicht über OAuth verbunden."),
+            default => throw new InvalidArgumentException(__(':label wird nicht über OAuth verbunden.', ['label' => $provider->label()])),
         };
 
         $refreshToken = $response->json('refresh_token');
 
         if (! $response->successful() || ! is_string($refreshToken) || $refreshToken === '') {
-            throw new RuntimeException((string) ($response->json('error_description') ?? $response->json('error') ?? "Status {$response->status()}"));
+            throw new RuntimeException((string) ($response->json('error_description') ?? $response->json('error') ?? __('Status :status', ['status' => $response->status()])));
         }
 
         $this->components->updateSetting('file_storage', $this->refreshTokenSetting($provider), $refreshToken);
@@ -119,7 +119,7 @@ class OAuthConnector
         return match ($provider) {
             FileStorageProvider::Dropbox => 'dropbox_refresh_token',
             FileStorageProvider::GoogleDrive => 'google_refresh_token',
-            default => throw new InvalidArgumentException("{$provider->label()} wird nicht über OAuth verbunden."),
+            default => throw new InvalidArgumentException(__(':label wird nicht über OAuth verbunden.', ['label' => $provider->label()])),
         };
     }
 }

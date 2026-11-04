@@ -38,8 +38,8 @@ class PrintLabelsRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'skip' => 'Bereits verwendete Etiketten',
-            'items' => 'Material',
+            'skip' => __('Bereits verwendete Etiketten'),
+            'items' => __('Material'),
         ];
     }
 }

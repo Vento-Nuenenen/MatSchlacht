@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,12 +24,13 @@ use Spatie\Permission\Traits\HasRoles;
     'scoutname',
     'email',
     'password',
+    'locale',
 ])]
 #[Hidden([
     'password',
     'remember_token',
 ])]
-class User extends Authenticatable
+class User extends Authenticatable implements HasLocalePreference
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, HasRoles, Notifiable;
@@ -52,6 +54,14 @@ class User extends Authenticatable
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    /**
+     * The language of the user, also used for the mails to the user.
+     */
+    public function preferredLocale(): ?string
+    {
+        return array_key_exists((string) $this->locale, config('app.available_locales')) ? $this->locale : null;
     }
 
     public function fullName(bool $withScoutName = true): string

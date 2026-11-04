@@ -8,7 +8,7 @@ class Archived extends OrderState
 
     public function display(): string
     {
-        return 'Archiviert';
+        return __('Archiviert');
     }
 
     public function color(): string

@@ -23,7 +23,7 @@ class RoleInScope implements ValidationRule
         }
 
         if (! auth()->user()->canActForRole($role)) {
-            $fail('Sie haben keine Berechtigung für diese Einheit zu bestellen.');
+            $fail(__('Sie haben keine Berechtigung für diese Einheit zu bestellen.'));
         }
     }
 }

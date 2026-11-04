@@ -4,7 +4,7 @@
     <div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
         <div class="row justify-content-center">
             <div class="col-12">
-                <h2 class="mb-3">Bestellungen verwalten</h2>
+                <h2 class="mb-3">{{ __('Bestellungen verwalten') }}</h2>
 
                 <div class="d-flex flex-column gap-4">
                     @foreach($ordersByState as $stateClass => $filteredOrders)
@@ -25,13 +25,13 @@
                                     <table class="table table-hover table-striped align-middle mb-0">
                                         <thead class="table-light">
                                             <tr>
-                                                <th class="sortable-header" style="min-width: 140px;">Anlass</th>
-                                                <th class="sortable-header">Einheit</th>
-                                                <th class="sortable-header">Besteller</th>
-                                                <th class="sortable-header">Kollektionen</th>
-                                                <th class="sortable-header text-nowrap">Von</th>
-                                                <th class="sortable-header text-nowrap">Bis</th>
-                                                <th class="text-nowrap" style="min-width: 100px;">Optionen</th>
+                                                <th class="sortable-header" style="min-width: 140px;">{{ __('Anlass') }}</th>
+                                                <th class="sortable-header">{{ __('Einheit') }}</th>
+                                                <th class="sortable-header">{{ __('Besteller') }}</th>
+                                                <th class="sortable-header">{{ __('Kollektionen') }}</th>
+                                                <th class="sortable-header text-nowrap">{{ __('Von') }}</th>
+                                                <th class="sortable-header text-nowrap">{{ __('Bis') }}</th>
+                                                <th class="text-nowrap" style="min-width: 100px;">{{ __('Optionen') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -39,7 +39,7 @@
                                                 <tr>
                                                     <td>
                                                         <span class="fw-semibold">{{ $order->event }}</span>
-@include('components.content-info', ['title' => "Bestellinhalte ({$order->event})", 'lines' => $order->contentLines()])
+@include('components.content-info', ['title' => __('Bestellinhalte (:event)', ['event' => $order->event]), 'lines' => $order->contentLines()])
                                                     </td>
                                                     <td>{{ $order->role->name }}</td>
                                                     <td>{{ $order->user->fullName() }}</td>
@@ -58,7 +58,7 @@
                                                     <td class="text-nowrap" data-sort-value="{{ \Carbon\Carbon::parse($order->event_end)->format('Ymd') }}">{{ \Carbon\Carbon::parse($order->event_end)->format('d.m.Y') }}</td>
                                                     <td class="text-nowrap">
                                                         <a href="{{ route('orders.manage.edit', $order->id) }}" class="btn btn-warning btn-sm shadow-sm">
-                                                            <i class="fa fa-cog me-1"></i> Verwalten
+                                                            <i class="fa fa-cog me-1"></i> {{ __('Verwalten') }}
                                                         </a>
                                                     </td>
                                                 </tr>
@@ -69,7 +69,7 @@
                                 {{ $filteredOrders->links() }}
                             @else
                                 <div class="card-body py-2">
-                                    <p class="text-muted small mb-0">Keine Bestellungen in diesem Status.</p>
+                                    <p class="text-muted small mb-0">{{ __('Keine Bestellungen in diesem Status.') }}</p>
                                 </div>
                             @endif
                         </section>

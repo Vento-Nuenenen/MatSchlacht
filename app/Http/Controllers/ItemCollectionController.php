@@ -57,7 +57,7 @@ class ItemCollectionController extends Controller
             }
         }
 
-        return redirect()->route('item-collections.index')->with('success', 'Kollektion erfolgreich erstellt.');
+        return redirect()->route('item-collections.index')->with('success', __('Kollektion erfolgreich erstellt.'));
     }
 
     /**
@@ -94,7 +94,7 @@ class ItemCollectionController extends Controller
             }
         }
 
-        return redirect()->route('item-collections.index')->with('success', 'Kollektion erfolgreich aktualisiert.');
+        return redirect()->route('item-collections.index')->with('success', __('Kollektion erfolgreich aktualisiert.'));
     }
 
     /**
@@ -104,6 +104,6 @@ class ItemCollectionController extends Controller
     {
         $itemCollection->delete();
 
-        return redirect()->route('item-collections.index')->with('success', 'Kollektion erfolgreich gelöscht.');
+        return redirect()->route('item-collections.index')->with('success', __('Kollektion erfolgreich gelöscht.'));
     }
 }

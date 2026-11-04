@@ -44,7 +44,7 @@ class HitobitoAccessRuleController extends Controller
         HitobitoAccessRule::create($request->validated());
 
         return redirect()->route('hitobito-access-rules.index')
-            ->with('success', 'Regel wurde erstellt.');
+            ->with('success', __('Regel wurde erstellt.'));
     }
 
     /**
@@ -65,7 +65,7 @@ class HitobitoAccessRuleController extends Controller
         $hitobitoAccessRule->update($request->validated());
 
         return redirect()->route('hitobito-access-rules.index')
-            ->with('success', 'Regel wurde aktualisiert.');
+            ->with('success', __('Regel wurde aktualisiert.'));
     }
 
     /**
@@ -76,6 +76,6 @@ class HitobitoAccessRuleController extends Controller
         $hitobitoAccessRule->delete();
 
         return redirect()->route('hitobito-access-rules.index')
-            ->with('success', 'Regel wurde gelöscht.');
+            ->with('success', __('Regel wurde gelöscht.'));
     }
 }

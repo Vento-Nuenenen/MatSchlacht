@@ -6,16 +6,16 @@
             <div class="col-12">
                 <div class="card shadow-sm">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-                        <span class="h5 mb-0">Material</span>
+                        <span class="h5 mb-0">{{ __('Material') }}</span>
                         <div class="d-flex flex-wrap gap-1">
                             @component_enabled('storage')
                                 <button type="submit" form="item-label-form" class="btn btn-outline-dark btn-sm">
-                                    <i class="fa fa-print me-1"></i> Etiketten für Auswahl
+                                    <i class="fa fa-print me-1"></i> {{ __('Etiketten für Auswahl') }}
                                 </button>
                             @endcomponent_enabled
                             @can('create items')
                                 <a href="{{ route('items.create') }}" class="btn btn-info btn-sm">
-                                    <i class="fa fa-plus me-1"></i> Neues Material
+                                    <i class="fa fa-plus me-1"></i> {{ __('Neues Material') }}
                                 </a>
                             @endcan
                         </div>
@@ -25,9 +25,9 @@
                             <div class="row g-2">
                                 <div class="col-12 col-md-6 col-lg-4">
                                     <div class="input-group">
-                                        <span class="input-group-text bg-white"><i class="fa fa-filter me-1 text-muted"></i> Gruppe:</span>
-                                        <select name="item_group_id" class="form-select" onchange="this.form.submit()" aria-label="Nach Materialgruppe filtern">
-                                            <option value="">Alle Materialgruppen</option>
+                                        <span class="input-group-text bg-white"><i class="fa fa-filter me-1 text-muted"></i> {{ __('Gruppe:') }}</span>
+                                        <select name="item_group_id" class="form-select" onchange="this.form.submit()" aria-label="{{ __('Nach Materialgruppe filtern') }}">
+                                            <option value="">{{ __('Alle Materialgruppen') }}</option>
                                             @foreach($itemGroups as $group)
                                                 <option value="{{ $group->id }}" {{ isset($currentGroupId) && $currentGroupId == $group->id ? 'selected' : '' }}>
                                                     {{ $group->name }}
@@ -49,16 +49,16 @@
                                     <tr>
                                         @component_enabled('storage')
                                             <th style="width: 40px;">
-                                                <input class="form-check-input" type="checkbox" aria-label="Alle auswählen"
+                                                <input class="form-check-input" type="checkbox" aria-label="{{ __('Alle auswählen') }}"
                                                        onclick="document.querySelectorAll('.item-label-checkbox').forEach(cb => cb.checked = this.checked)">
                                             </th>
                                         @endcomponent_enabled
-                                        <th class="sortable-header" style="min-width: 140px;">Bezeichnung</th>
-                                        <th class="sortable-header">Materialgruppe</th>
-                                        <th class="sortable-header text-center" style="min-width: 80px;">Bestand</th>
-                                        <th class="sortable-header text-center" style="min-width: 80px;">Packungsgrösse</th>
-                                        <th class="sortable-header text-center" style="min-width: 80px;">Reparatur</th>
-                                        <th class="text-nowrap" style="min-width: 120px;">Optionen</th>
+                                        <th class="sortable-header" style="min-width: 140px;">{{ __('Bezeichnung') }}</th>
+                                        <th class="sortable-header">{{ __('Materialgruppe') }}</th>
+                                        <th class="sortable-header text-center" style="min-width: 80px;">{{ __('Bestand') }}</th>
+                                        <th class="sortable-header text-center" style="min-width: 80px;">{{ __('Packungsgrösse') }}</th>
+                                        <th class="sortable-header text-center" style="min-width: 80px;">{{ __('Reparatur') }}</th>
+                                        <th class="text-nowrap" style="min-width: 120px;">{{ __('Optionen') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -67,13 +67,13 @@
                                         @component_enabled('storage')
                                             <td>
                                                 <input class="form-check-input item-label-checkbox" type="checkbox" name="items[]" value="{{ $item->id }}"
-                                                       form="item-label-form" aria-label="{{ $item->name }} auswählen">
+                                                       form="item-label-form" aria-label="{{ __(':name auswählen', ['name' => $item->name]) }}">
                                             </td>
                                         @endcomponent_enabled
                                         <td>
                                             <a href="{{ route('items.show', $item) }}" class="fw-semibold text-decoration-none">{{ $item->name }}</a>
                                             @if(app(\App\Services\ComponentManager::class)->isEnabled('attachments') && $item->attachments->count() > 0)
-                                                <i class="fa fa-paperclip text-muted ms-1" title="Hat Anhänge ({{ $item->attachments->count() }})"></i>
+                                                <i class="fa fa-paperclip text-muted ms-1" title="{{ __('Hat Anhänge (:count)', ['count' => $item->attachments->count()]) }}"></i>
                                             @endif
                                         </td>
                                         <td>{{ $item->itemGroup->name }}</td>
@@ -83,7 +83,7 @@
                                         <td class="text-nowrap">
                                             <div class="d-flex gap-1 flex-wrap align-items-center">
                                                 @can('edit items')
-                                                    <a href="{{ route('items.edit', $item->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                                                    <a href="{{ route('items.edit', $item->id) }}" class="btn btn-warning btn-sm">{{ __('Bearbeiten') }}</a>
                                                 @endcan
                                                 @can('delete items')
                                                     @include('components.delete', [
@@ -96,7 +96,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center py-4 text-muted">Keine Materialien vorhanden.</td>
+                                        <td colspan="7" class="text-center py-4 text-muted">{{ __('Keine Materialien vorhanden.') }}</td>
                                     </tr>
                                 @endforelse
                                 </tbody>

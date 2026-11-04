@@ -6,10 +6,10 @@
             <div class="col-12">
                 <div class="card shadow-sm">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-                        <span class="h5 mb-0">Materialgruppen</span>
+                        <span class="h5 mb-0">{{ __('Materialgruppen') }}</span>
                         @can('create itemgroups')
                             <a href="{{ route('item-groups.create') }}" class="btn btn-info btn-sm">
-                                <i class="fa fa-plus me-1"></i> Neue Materialgruppe
+                                <i class="fa fa-plus me-1"></i> {{ __('Neue Materialgruppe') }}
                             </a>
                         @endcan
                     </div>
@@ -19,9 +19,9 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th style="width: 45px;"></th>
-                                        <th class="sortable-header text-center" style="width: 70px;">Pos.</th>
-                                        <th class="sortable-header" style="min-width: 140px;">Bezeichnung</th>
-                                        <th class="text-nowrap" style="min-width: 120px;">Optionen</th>
+                                        <th class="sortable-header text-center" style="width: 70px;">{{ __('Pos.') }}</th>
+                                        <th class="sortable-header" style="min-width: 140px;">{{ __('Bezeichnung') }}</th>
+                                        <th class="text-nowrap" style="min-width: 120px;">{{ __('Optionen') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody id="item-groups-body">
@@ -39,7 +39,7 @@
                                         <td class="text-nowrap">
                                             <div class="d-flex gap-1 flex-wrap align-items-center">
                                                 @can('edit itemgroups')
-                                                    <a href="{{ route('item-groups.edit', $itemGroup->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                                                    <a href="{{ route('item-groups.edit', $itemGroup->id) }}" class="btn btn-warning btn-sm">{{ __('Bearbeiten') }}</a>
                                                 @endcan
                                                 @can('delete itemgroups')
                                                     @include('components.delete', [
@@ -52,7 +52,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="text-center py-4 text-muted">Keine Materialgruppen vorhanden.</td>
+                                        <td colspan="4" class="text-center py-4 text-muted">{{ __('Keine Materialgruppen vorhanden.') }}</td>
                                     </tr>
                                 @endforelse
                                 </tbody>

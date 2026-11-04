@@ -27,12 +27,13 @@ class ComponentSettingController extends Controller
         Gate::authorize('manage settings');
 
         $components = collect($this->components->definitions())->map(fn (array $definition, string $component) => [
-            'label' => $definition['label'],
-            'description' => $definition['description'],
+            'label' => __($definition['label']),
+            'description' => __($definition['description']),
             'enabled' => $this->components->isEnabled($component),
             'toggleable' => $this->components->isToggleable($component),
             'settings' => collect($definition['settings'])->map(fn (array $setting, string $key) => [
                 ...$setting,
+                'label' => __($setting['label']),
                 // Secrets are never sent to the browser, the form only shows whether one is set.
                 'value' => $setting['type'] === 'secret' ? null : $this->components->setting($component, $key),
                 'isSet' => $setting['type'] === 'secret' && filled($this->components->setting($component, $key)),
@@ -63,7 +64,7 @@ class ComponentSettingController extends Controller
         $this->fileStorage->forgetDisks();
 
         return redirect()->route('settings.components.index')
-            ->with('success', 'Einstellungen wurden gespeichert.');
+            ->with('success', __('Einstellungen wurden gespeichert.'));
     }
 
     /**
@@ -79,8 +80,8 @@ class ComponentSettingController extends Controller
         return redirect()->route('settings.components.index')->with(
             $error === null ? 'success' : 'error',
             $error === null
-                ? "Verbindung zu «{$provider->label()}» funktioniert: Testdatei geschrieben, gelesen und gelöscht."
-                : "Verbindung zu «{$provider->label()}» fehlgeschlagen: {$error}"
+                ? __('Verbindung zu «:label» funktioniert: Testdatei geschrieben, gelesen und gelöscht.', ['label' => $provider->label()])
+                : __('Verbindung zu «:label» fehlgeschlagen: :error', ['label' => $provider->label(), 'error' => $error])
         );
     }
 }

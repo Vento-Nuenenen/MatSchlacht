@@ -31,7 +31,7 @@ class CanAssignRole implements ValidationRule
 
         // Non-Materialwart can only assign roles they have themselves
         if (! $user->hasRole($role->name)) {
-            $fail('Sie haben keine Berechtigung, die Rolle "'.$value.'" zuzuweisen.');
+            $fail(__('Sie haben keine Berechtigung, die Rolle "').$value.'" zuzuweisen.');
         }
     }
 }

@@ -61,7 +61,7 @@ class UserController extends Controller
             Password::broker()->sendResetLink(['email' => $user->email]);
         }
 
-        return redirect()->route('users.index')->with('success', 'Neuer Benutzer wurde erfolgreich erstellt.');
+        return redirect()->route('users.index')->with('success', __('Neuer Benutzer wurde erfolgreich erstellt.'));
     }
 
     /**
@@ -72,12 +72,12 @@ class UserController extends Controller
         $this->authorize('sendResetLink', $user);
 
         if ($user->isExternalUser()) {
-            return redirect()->back()->with('error', 'Passwort-Reset für Benutzer mit externem Login nicht möglich.');
+            return redirect()->back()->with('error', __('Passwort-Reset für Benutzer mit externem Login nicht möglich.'));
         }
 
         Password::broker()->sendResetLink(['email' => $user->email]);
 
-        return redirect()->back()->with('success', 'Passwort-Reset-Link wurde erfolgreich gesendet.');
+        return redirect()->back()->with('success', __('Passwort-Reset-Link wurde erfolgreich gesendet.'));
     }
 
     /**
@@ -113,7 +113,7 @@ class UserController extends Controller
         // Sync roles assignment (empty clears all)
         $user->syncRoles($request->input('roles', []));
 
-        return redirect()->route('users.index')->with('success', 'Benutzer wurde erfolgreich aktualisiert.');
+        return redirect()->route('users.index')->with('success', __('Benutzer wurde erfolgreich aktualisiert.'));
     }
 
     /**
@@ -122,11 +122,11 @@ class UserController extends Controller
     public function destroy(User $user): RedirectResponse
     {
         if ($user->orders()->exists()) {
-            return back()->with('error', "{$user->fullName()} hat Bestellungen und kann nicht gelöscht werden.");
+            return back()->with('error', __(':fullname hat Bestellungen und kann nicht gelöscht werden.', ['fullname' => $user->fullName()]));
         }
 
         $user->delete();
 
-        return redirect()->route('users.index')->with('success', 'Benutzer wurde erfolgreich gelöscht.');
+        return redirect()->route('users.index')->with('success', __('Benutzer wurde erfolgreich gelöscht.'));
     }
 }

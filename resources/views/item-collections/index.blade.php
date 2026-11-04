@@ -12,10 +12,10 @@
 
                 <div class="card shadow-sm">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-                        <span class="h5 mb-0">Kollektionen</span>
+                        <span class="h5 mb-0">{{ __('Kollektionen') }}</span>
                         @can('edit orders')
                             <a href="{{ route('item-collections.create') }}" class="btn btn-info btn-sm">
-                                <i class="fa fa-plus me-1"></i> Neue Kollektion
+                                <i class="fa fa-plus me-1"></i> {{ __('Neue Kollektion') }}
                             </a>
                         @endcan
                     </div>
@@ -24,10 +24,10 @@
                             <table class="table table-hover table-bordered table-striped align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th class="sortable-header" style="min-width: 140px;">Name</th>
-                                        <th class="sortable-header">Beschreibung</th>
-                                        <th class="sortable-header text-center" style="min-width: 100px;">Anzahl Artikel</th>
-                                        <th class="text-nowrap" style="min-width: 120px;">Optionen</th>
+                                        <th class="sortable-header" style="min-width: 140px;">{{ __('Name') }}</th>
+                                        <th class="sortable-header">{{ __('Beschreibung') }}</th>
+                                        <th class="sortable-header text-center" style="min-width: 100px;">{{ __('Anzahl Artikel') }}</th>
+                                        <th class="text-nowrap" style="min-width: 120px;">{{ __('Optionen') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -39,11 +39,11 @@
                                             <td class="text-nowrap">
                                                 <div class="d-flex gap-1 flex-wrap align-items-center">
                                                     @can('edit orders')
-                                                        <a href="{{ route('item-collections.edit', $collection->id) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                                                        <a href="{{ route('item-collections.edit', $collection->id) }}" class="btn btn-warning btn-sm">{{ __('Bearbeiten') }}</a>
                                                         <form action="{{ route('item-collections.destroy', $collection->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Möchten Sie diese Kollektion wirklich löschen?')">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger btn-sm">Löschen</button>
+                                                            <button type="submit" class="btn btn-danger btn-sm">{{ __('Löschen') }}</button>
                                                         </form>
                                                     @endcan
                                                 </div>
@@ -51,7 +51,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="4" class="text-center py-4 text-muted">Keine Kollektionen vorhanden.</td>
+                                            <td colspan="4" class="text-center py-4 text-muted">{{ __('Keine Kollektionen vorhanden.') }}</td>
                                         </tr>
                                     @endforelse
                                 </tbody>

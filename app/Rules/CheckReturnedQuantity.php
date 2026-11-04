@@ -62,7 +62,7 @@ class CheckReturnedQuantity implements DataAwareRule, ValidationRule
         $deliveredQty = $orderedItem->quantity;
 
         if ($returnedQty > $deliveredQty) {
-            $fail("Es können maximal {$deliveredQty} Stück von '{$orderedItem->item->name}' zurückgegeben werden.");
+            $fail(__('Es können maximal :deliveredqty Stück von \':name\' zurückgegeben werden.', ['deliveredqty' => $deliveredQty, 'name' => $orderedItem->item->name]));
         }
     }
 }

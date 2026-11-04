@@ -100,7 +100,7 @@ class CheckItemStock implements DataAwareRule, ValidationRule
             }
 
             $fail($reportsCollections
-                ? "Durch die Auswahl der Kollektionen wird der Bestand von '{$item->name}' überschritten ({$available} verfügbar, angefordert: {$requested['units']})."
+                ? __('Durch die Auswahl der Kollektionen wird der Bestand von \':name\' überschritten (:available verfügbar, angefordert: :units).', ['name' => $item->name, 'available' => $available, 'units' => $requested['units']])
                 : StockAvailability::shortageMessage($item, $available, $requested['units']));
         }
     }
@@ -137,7 +137,7 @@ class CheckItemStock implements DataAwareRule, ValidationRule
         $units = $item->unitsFor((int) $value);
 
         if ($units > $item->usableStock()) {
-            $fail("Vom Artikel '{$item->name}' sind nur noch {$item->usableStock()} Stück verfügbar (angefordert: {$units}).");
+            $fail(__('Vom Artikel \':name\' sind nur noch :usablestock Stück verfügbar (angefordert: :units).', ['name' => $item->name, 'usablestock' => $item->usableStock(), 'units' => $units]));
         }
     }
 

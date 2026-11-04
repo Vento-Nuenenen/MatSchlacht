@@ -72,7 +72,7 @@ class OrderController extends Controller
     {
         $this->orderService->createOrder($request->validated());
 
-        return redirect()->route('orders.index')->with('success', 'Neue Bestellung wurde erfolgreich erstellt.');
+        return redirect()->route('orders.index')->with('success', __('Neue Bestellung wurde erfolgreich erstellt.'));
     }
 
     /**
@@ -108,7 +108,7 @@ class OrderController extends Controller
     {
         $this->orderService->updateOrder($order, $request->validated());
 
-        return redirect()->route('orders.index')->with('success', 'Bestellung wurde erfolgreich aktualisiert.');
+        return redirect()->route('orders.index')->with('success', __('Bestellung wurde erfolgreich aktualisiert.'));
     }
 
     /**
@@ -118,7 +118,7 @@ class OrderController extends Controller
     {
         $order->delete();
 
-        return redirect()->route('orders.index')->with('success', 'Bestellung wurde erfolgreich gelöscht.');
+        return redirect()->route('orders.index')->with('success', __('Bestellung wurde erfolgreich gelöscht.'));
     }
 
     /**

@@ -8,7 +8,7 @@ class Returned extends OrderState
 
     public function display(): string
     {
-        return 'Zurückgegeben';
+        return __('Zurückgegeben');
     }
 
     public function color(): string

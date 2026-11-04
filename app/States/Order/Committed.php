@@ -8,7 +8,7 @@ class Committed extends OrderState
 
     public function display(): string
     {
-        return 'Bestellt';
+        return __('Bestellt');
     }
 
     public function color(): string

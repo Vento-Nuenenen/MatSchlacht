@@ -271,7 +271,7 @@ class SftpAdapter implements FilesystemAdapter
         $connection = new SFTP($this->host, $this->port, $this->timeout);
 
         if (! $connection->login($this->username, $this->credential())) {
-            throw new RuntimeException("SFTP-Anmeldung als «{$this->username}» bei {$this->host} fehlgeschlagen.");
+            throw new RuntimeException(__('SFTP-Anmeldung als «:username» bei :host fehlgeschlagen.', ['username' => $this->username, 'host' => $this->host]));
         }
 
         return $this->connection = $connection;
@@ -286,7 +286,7 @@ class SftpAdapter implements FilesystemAdapter
         $key = PublicKeyLoader::load((string) $this->privateKey, blank($this->password) ? null : $this->password);
 
         if (! $key instanceof PrivateKey) {
-            throw new RuntimeException('Der hinterlegte SFTP-Schlüssel ist kein privater Schlüssel.');
+            throw new RuntimeException(__('Der hinterlegte SFTP-Schlüssel ist kein privater Schlüssel.'));
         }
 
         return $key;

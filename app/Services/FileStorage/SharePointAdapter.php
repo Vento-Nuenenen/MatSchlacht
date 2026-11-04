@@ -95,7 +95,7 @@ class SharePointAdapter extends HttpFilesystemAdapter
         }
 
         if (! $response->successful()) {
-            throw UnableToReadFile::fromLocation($path, "Microsoft Graph antwortete mit Status {$response->status()}.");
+            throw UnableToReadFile::fromLocation($path, __('Microsoft Graph antwortete mit Status :status.', ['status' => $response->status()]));
         }
 
         return $response->body();
@@ -110,7 +110,7 @@ class SharePointAdapter extends HttpFilesystemAdapter
         }
 
         if (! $response->successful() && $response->status() !== 404) {
-            throw UnableToDeleteFile::atLocation($path, "Microsoft Graph antwortete mit Status {$response->status()}.");
+            throw UnableToDeleteFile::atLocation($path, __('Microsoft Graph antwortete mit Status :status.', ['status' => $response->status()]));
         }
     }
 
@@ -123,7 +123,7 @@ class SharePointAdapter extends HttpFilesystemAdapter
         }
 
         if (! $response->successful() && $response->status() !== 404) {
-            throw UnableToDeleteDirectory::atLocation($path, "Microsoft Graph antwortete mit Status {$response->status()}.");
+            throw UnableToDeleteDirectory::atLocation($path, __('Microsoft Graph antwortete mit Status :status.', ['status' => $response->status()]));
         }
     }
 
@@ -237,7 +237,7 @@ class SharePointAdapter extends HttpFilesystemAdapter
             ->json('uploadUrl');
 
         if (! is_string($uploadUrl)) {
-            throw new RuntimeException('Microsoft Graph hat keine Upload-URL geliefert.');
+            throw new RuntimeException(__('Microsoft Graph hat keine Upload-URL geliefert.'));
         }
 
         $size = strlen($contents);
@@ -267,7 +267,7 @@ class SharePointAdapter extends HttpFilesystemAdapter
         }
 
         if (! $response->successful()) {
-            throw UnableToCheckExistence::forLocation($path, new RuntimeException("Microsoft Graph antwortete mit Status {$response->status()}."));
+            throw UnableToCheckExistence::forLocation($path, new RuntimeException(__('Microsoft Graph antwortete mit Status :status.', ['status' => $response->status()])));
         }
 
         return $response->json($facet) !== null;

@@ -106,7 +106,7 @@ class OrderService
     public function transition(Order $order, mixed $targetState): void
     {
         if (! is_string($targetState) || ! $order->state->canTransitionTo($targetState)) {
-            throw ValidationException::withMessages(['state' => 'Ungültiger Statusübergang.']);
+            throw ValidationException::withMessages(['state' => __('Ungültiger Statusübergang.')]);
         }
 
         DB::transaction(function () use ($order, $targetState): void {

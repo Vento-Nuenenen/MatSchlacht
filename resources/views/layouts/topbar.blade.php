@@ -5,11 +5,11 @@
     </a>
 
     <div class="app-topbar-title d-none d-md-block">
-        {{ $activeItem['label'] ?? (request()->routeIs('profile.*') ? 'Profil' : config('app.name')) }}
+        {{ $activeItem['label'] ?? (request()->routeIs('profile.*') ? __('Profil') : config('app.name')) }}
     </div>
 
     <div class="dropdown ms-auto">
-        <button class="app-user-button" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Benutzermenü">
+        <button class="app-user-button" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ __('Benutzermenü') }}">
             <span class="app-avatar">{{ auth()->user()->initials() }}</span>
             <span class="d-none d-lg-inline fw-semibold">{{ auth()->user()->preferredName() }}</span>
             <i class="fa fa-chevron-down small d-none d-lg-inline"></i>
@@ -21,19 +21,20 @@
             </div>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item {{ request()->routeIs('profile.*') ? 'active' : '' }}" href="{{ route('profile.edit') }}"
-               @if(request()->routeIs('profile.*')) aria-current="page" @endif><i class="fa fa-user fa-fw me-2"></i>Profil</a>
+               @if(request()->routeIs('profile.*')) aria-current="page" @endif><i class="fa fa-user fa-fw me-2"></i>{{ __('Profil') }}</a>
             @can('manage settings')
-                <a class="dropdown-item" href="{{ route('settings.components.index') }}"><i class="fa fa-sliders fa-fw me-2"></i>Einstellungen</a>
+                <a class="dropdown-item" href="{{ route('settings.components.index') }}"><i class="fa fa-sliders fa-fw me-2"></i>{{ __('Einstellungen') }}</a>
             @endcan
             <div class="dropdown-divider"></div>
             <div class="px-3 py-1">
-                <div class="small text-body-secondary mb-1">Farbmodus</div>
+                <div class="small text-body-secondary mb-1">{{ __('Farbmodus') }}</div>
                 @include('layouts.theme-switch')
             </div>
+            @include('layouts.language-switch')
             <div class="dropdown-divider"></div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="dropdown-item text-danger"><i class="fa fa-arrow-right-from-bracket fa-fw me-2"></i>Abmelden</button>
+                <button type="submit" class="dropdown-item text-danger"><i class="fa fa-arrow-right-from-bracket fa-fw me-2"></i>{{ __('Abmelden') }}</button>
             </form>
         </div>
     </div>

@@ -249,7 +249,7 @@ class DropboxAdapter extends HttpFilesystemAdapter
         $response = Http::withToken($this->accessToken())->timeout(60)->post(self::API_URL.'/'.$endpoint, $arguments);
 
         if (! $response->successful() && ! ($allowConflict && $response->status() === 409)) {
-            throw new RuntimeException("Dropbox ({$endpoint}): ".($response->json('error_summary') ?? "Status {$response->status()}"));
+            throw new RuntimeException(__('Dropbox (:endpoint): ', ['endpoint' => $endpoint]).($response->json('error_summary') ?? __('Status :status', ['status' => $response->status()])));
         }
 
         return $response;
@@ -272,7 +272,7 @@ class DropboxAdapter extends HttpFilesystemAdapter
         $response = $request->post(self::CONTENT_URL.'/'.$endpoint);
 
         if (! $response->successful()) {
-            throw new RuntimeException("Dropbox ({$endpoint}): ".($response->json('error_summary') ?? "Status {$response->status()}"));
+            throw new RuntimeException(__('Dropbox (:endpoint): ', ['endpoint' => $endpoint]).($response->json('error_summary') ?? __('Status :status', ['status' => $response->status()])));
         }
 
         return $response;
@@ -291,7 +291,7 @@ class DropboxAdapter extends HttpFilesystemAdapter
     protected function accessToken(): string
     {
         if ($this->refreshToken === '') {
-            throw new RuntimeException('Dropbox ist noch nicht verbunden. Bitte unter Einstellungen «Mit Dropbox verbinden».');
+            throw new RuntimeException(__('Dropbox ist noch nicht verbunden. Bitte unter Einstellungen «Mit Dropbox verbinden».'));
         }
 
         return $this->rememberAccessToken('file-storage.dropbox.token.'.md5($this->appKey.$this->refreshToken), fn (): Response => Http::asForm()

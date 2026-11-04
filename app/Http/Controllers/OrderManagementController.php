@@ -84,10 +84,10 @@ class OrderManagementController extends Controller
         $this->orderService->updateManagedOrder($order, $request->validated());
 
         if (auth()->user()->isPrivileged()) {
-            return redirect()->route('orders.manage')->with('success', 'Bestellung wurde erfolgreich aktualisiert.');
+            return redirect()->route('orders.manage')->with('success', __('Bestellung wurde erfolgreich aktualisiert.'));
         }
 
-        return redirect()->route('orders.manage.edit', $order)->with('success', 'Bestellung wurde erfolgreich aktualisiert.');
+        return redirect()->route('orders.manage.edit', $order)->with('success', __('Bestellung wurde erfolgreich aktualisiert.'));
     }
 
     public function transition(Request $request, Order $order): RedirectResponse
@@ -100,7 +100,7 @@ class OrderManagementController extends Controller
             return back()->with('error', implode(' ', Arr::flatten($exception->errors())));
         }
 
-        return back()->with('success', 'Bestellstatus wurde aktualisiert.');
+        return back()->with('success', __('Bestellstatus wurde aktualisiert.'));
     }
 
     public function exportOrderPdf(Order $order, OrderSheetPdf $document): Response|RedirectResponse
@@ -108,7 +108,7 @@ class OrderManagementController extends Controller
         $this->authorize('export', $order);
 
         if (! $order->state->equals(Accepted::class)) {
-            return back()->with('error', 'PDF Export ist nur für bestätigte Bestellungen möglich.');
+            return back()->with('error', __('PDF Export ist nur für bestätigte Bestellungen möglich.'));
         }
 
         return $document->download($order);
@@ -119,7 +119,7 @@ class OrderManagementController extends Controller
         $this->authorize('exportReturn', $order);
 
         if (! $order->state->equals(Delivered::class)) {
-            return back()->with('error', 'Retourenliste ist nur für ausgegebene Bestellungen möglich.');
+            return back()->with('error', __('Retourenliste ist nur für ausgegebene Bestellungen möglich.'));
         }
 
         return $document->download($order);

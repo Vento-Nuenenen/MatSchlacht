@@ -30,7 +30,7 @@ class ItemProcurementController extends Controller
             $this->attachments->store($procurement, $request->file('files', []), 'procurements');
         });
 
-        return back()->with('success', 'Beschaffung wurde erfasst.');
+        return back()->with('success', __('Beschaffung wurde erfasst.'));
     }
 
     /**
@@ -71,7 +71,7 @@ class ItemProcurementController extends Controller
             $this->attachments->store($itemProcurement, $request->file('files', []), 'procurements');
         });
 
-        return redirect()->route('items.edit', $itemProcurement->item_id)->with('success', 'Beschaffung wurde aktualisiert.');
+        return redirect()->route('items.edit', $itemProcurement->item_id)->with('success', __('Beschaffung wurde aktualisiert.'));
     }
 
     /**
@@ -92,6 +92,6 @@ class ItemProcurementController extends Controller
             $itemProcurement->delete();
         });
 
-        return back()->with('success', 'Beschaffung wurde gelöscht.');
+        return back()->with('success', __('Beschaffung wurde gelöscht.'));
     }
 }

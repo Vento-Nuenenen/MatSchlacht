@@ -46,7 +46,7 @@ class RolePermissionController extends Controller
             $role->syncPermissions($data['permissions']);
         }
 
-        return redirect()->route('roles.index')->with('success', 'Rolle erfolgreich erstellt!');
+        return redirect()->route('roles.index')->with('success', __('Rolle erfolgreich erstellt!'));
     }
 
     public function edit(Role $role): View|RedirectResponse
@@ -54,7 +54,7 @@ class RolePermissionController extends Controller
         $role = Role::with('permissions')->findOrFail($role->id);
 
         if ($role->name === 'Materialwart') {
-            return redirect()->route('roles.index')->with('error', 'Die Rolle Materialwart kann nicht bearbeitet werden.');
+            return redirect()->route('roles.index')->with('error', __('Die Rolle Materialwart kann nicht bearbeitet werden.'));
         }
 
         $permissions = Permission::all();
@@ -71,7 +71,7 @@ class RolePermissionController extends Controller
         $role = Role::findOrFail($role->id);
 
         if ($role->name === 'Materialwart') {
-            return redirect()->route('roles.index')->with('error', 'Die Rolle Materialwart kann nicht bearbeitet werden.');
+            return redirect()->route('roles.index')->with('error', __('Die Rolle Materialwart kann nicht bearbeitet werden.'));
         }
 
         $role->name = $data['name'];
@@ -82,21 +82,21 @@ class RolePermissionController extends Controller
 
         $role->syncPermissions($data['permissions'] ?? []);
 
-        return redirect()->route('roles.index')->with('success', 'Rolle erfolgreich aktualisiert!');
+        return redirect()->route('roles.index')->with('success', __('Rolle erfolgreich aktualisiert!'));
     }
 
     public function destroy(Role $role): RedirectResponse
     {
         if ($role->name === 'Materialwart') {
-            return redirect()->route('roles.index')->with('error', 'Die Rolle Materialwart kann nicht gelöscht werden.');
+            return redirect()->route('roles.index')->with('error', __('Die Rolle Materialwart kann nicht gelöscht werden.'));
         }
 
         if (Order::where('role_id', $role->id)->exists()) {
-            return redirect()->route('roles.index')->with('error', "«{$role->name}» hat Bestellungen und kann nicht gelöscht werden.");
+            return redirect()->route('roles.index')->with('error', __('«:name» hat Bestellungen und kann nicht gelöscht werden.', ['name' => $role->name]));
         }
 
         $role->delete();
 
-        return redirect()->route('roles.index')->with('success', 'Rolle erfolgreich gelöscht!');
+        return redirect()->route('roles.index')->with('success', __('Rolle erfolgreich gelöscht!'));
     }
 }

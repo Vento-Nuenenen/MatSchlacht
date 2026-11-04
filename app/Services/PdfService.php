@@ -30,7 +30,7 @@ class PdfService
         TCPDF::SetFont('helvetica', 'B', 18);
         TCPDF::Cell(130, 10, $title, 0, 0, 'L');
         TCPDF::SetFont('helvetica', '', 10);
-        TCPDF::Cell(50, 10, 'Datum: '.date('d.m.Y'), 0, 1, 'R');
+        TCPDF::Cell(50, 10, __('Datum: ').date('d.m.Y'), 0, 1, 'R');
 
         TCPDF::SetFont('helvetica', 'B', 22);
         TCPDF::Cell(0, 15, $event, 0, 1, 'L');
@@ -44,14 +44,14 @@ class PdfService
     {
         TCPDF::SetFillColor(240, 240, 240);
         TCPDF::SetFont('helvetica', 'B', 12);
-        TCPDF::Cell(0, 8, ' Bestellinformationen', 0, 1, 'L', true);
+        TCPDF::Cell(0, 8, ' '.__('Bestellinformationen'), 0, 1, 'L', true);
         TCPDF::Ln(2);
 
-        $this->renderInfoRow('Einheit:', $order->role->name);
-        $this->renderInfoRow('Bestellt von:', $order->user->fullName());
+        $this->renderInfoRow(__('Einheit:'), $order->role->name);
+        $this->renderInfoRow(__('Bestellt von:'), $order->user->fullName());
 
         $period = Carbon::parse($order->event_start)->format('d.m.Y').' bis '.Carbon::parse($order->event_end)->format('d.m.Y');
-        $this->renderInfoRow('Zeitraum:', $period);
+        $this->renderInfoRow(__('Zeitraum:'), $period);
         TCPDF::Ln(5);
     }
 
@@ -126,9 +126,9 @@ class PdfService
 
         TCPDF::SetY($y + 2);
         TCPDF::SetFont('helvetica', '', 10);
-        TCPDF::Cell(80, 5, 'Unterschrift Materialwart', 0, 0, 'C');
+        TCPDF::Cell(80, 5, __('Unterschrift Materialwart'), 0, 0, 'C');
         TCPDF::Cell(20, 5, '', 0, 0, 'C');
-        TCPDF::Cell(80, 5, 'Unterschrift Besteller ('.$userName.')', 0, 1, 'C');
+        TCPDF::Cell(80, 5, __('Unterschrift Besteller (:name)', ['name' => $userName]), 0, 1, 'C');
     }
 
     /**

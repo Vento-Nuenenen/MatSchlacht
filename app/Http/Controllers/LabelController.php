@@ -44,7 +44,7 @@ class LabelController extends Controller
         /** @var array<int, int> $itemIds */
         $itemIds = $request->validated('items', []);
 
-        abort_if($itemIds === [], 422, 'Bitte mindestens ein Material auswählen.');
+        abort_if($itemIds === [], 422, __('Bitte mindestens ein Material auswählen.'));
 
         $items = Item::with(['itemGroup', 'stocks.storageUnit.'.StorageUnit::ANCESTORS])
             ->whereIn('id', $itemIds)

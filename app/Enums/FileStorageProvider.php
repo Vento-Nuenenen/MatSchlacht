@@ -18,6 +18,14 @@ enum FileStorageProvider: string
 
     public function label(): string
     {
+        return __($this->sourceLabel());
+    }
+
+    /**
+     * The label in the source language: the config needs it before translations are available.
+     */
+    public function sourceLabel(): string
+    {
         return match ($this) {
             self::S3 => 'Amazon S3 / S3-kompatibel',
             self::Local => 'Lokaler Server-Speicher',
@@ -51,6 +59,6 @@ enum FileStorageProvider: string
      */
     public static function options(): array
     {
-        return collect(self::cases())->mapWithKeys(fn (self $provider) => [$provider->value => $provider->label()])->all();
+        return collect(self::cases())->mapWithKeys(fn (self $provider) => [$provider->value => $provider->sourceLabel()])->all();
     }
 }

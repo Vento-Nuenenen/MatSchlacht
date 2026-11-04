@@ -4,9 +4,9 @@
     <div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
         <div class="row justify-content-center">
             <div class="col-12">
-                <nav aria-label="breadcrumb">
+                <nav aria-label="{{ __('Pfad') }}">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('storage-units.index') }}">Lager</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('storage-units.index') }}">{{ __('Lager') }}</a></li>
                         @foreach($storageUnit->ancestors() as $ancestor)
                             <li class="breadcrumb-item"><a href="{{ route('storage-units.show', $ancestor) }}">{{ $ancestor->name }}</a></li>
                         @endforeach
@@ -26,10 +26,10 @@
                         </span>
                         <div class="d-flex flex-wrap gap-1">
                             <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#labelModal">
-                                <i class="fa fa-print me-1"></i> Etiketten
+                                <i class="fa fa-print me-1"></i> {{ __('Etiketten') }}
                             </button>
                             @can('update', $storageUnit)
-                                <a href="{{ route('storage-units.edit', $storageUnit) }}" class="btn btn-warning btn-sm">Bearbeiten</a>
+                                <a href="{{ route('storage-units.edit', $storageUnit) }}" class="btn btn-warning btn-sm">{{ __('Bearbeiten') }}</a>
                             @endcan
                             @can('delete', $storageUnit)
                                 @include('components.delete', ['route' => 'storage-units.destroy', 'id' => $storageUnit->id])
@@ -49,7 +49,7 @@
                             <span class="h6 mb-0">{{ $childLevel->pluralLabel() }}</span>
                             @can('create', \App\Models\StorageUnit::class)
                                 <a href="{{ route('storage-units.create', ['parent' => $storageUnit->id]) }}" class="btn btn-info btn-sm">
-                                    <i class="fa fa-plus me-1"></i> {{ $childLevel->label() }} hinzufügen
+                                    <i class="fa fa-plus me-1"></i> {{ __(':label hinzufügen', ['label' => $childLevel->label()]) }}
                                 </a>
                             @endcan
                         </div>
@@ -58,9 +58,9 @@
                                 <table class="table table-hover table-bordered table-striped align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th class="sortable-header">Bezeichnung</th>
+                                            <th class="sortable-header">{{ __('Bezeichnung') }}</th>
                                             <th class="sortable-header text-center" style="width: 160px;">
-                                                {{ $childLevel->childLevel()?->pluralLabel() ?? 'Material' }}
+                                                {{ $childLevel->childLevel()?->pluralLabel() ?? __('Material') }}
                                             </th>
                                         </tr>
                                     </thead>
@@ -79,7 +79,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="2" class="text-center py-4 text-muted">Keine {{ $childLevel->pluralLabel() }} vorhanden.</td>
+                                                <td colspan="2" class="text-center py-4 text-muted">{{ __('Keine :plurallabel vorhanden.', ['plurallabel' => $childLevel->pluralLabel()]) }}</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
@@ -89,17 +89,17 @@
                     </div>
                 @else
                     <div class="card shadow-sm">
-                        <div class="card-header h6 mb-0 py-3">Eingelagertes Material</div>
+                        <div class="card-header h6 mb-0 py-3">{{ __('Eingelagertes Material') }}</div>
                         <div class="card-body p-0 p-sm-3">
                             <div class="table-responsive">
                                 <table class="table table-hover table-bordered table-striped align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th class="sortable-header">Material</th>
-                                            <th class="sortable-header">Materialgruppe</th>
-                                            <th class="text-center" style="width: 220px;">Menge</th>
+                                            <th class="sortable-header">{{ __('Material') }}</th>
+                                            <th class="sortable-header">{{ __('Materialgruppe') }}</th>
+                                            <th class="text-center" style="width: 220px;">{{ __('Menge') }}</th>
                                             @can('update', $storageUnit)
-                                                <th class="text-nowrap" style="width: 100px;">Optionen</th>
+                                                <th class="text-nowrap" style="width: 100px;">{{ __('Optionen') }}</th>
                                             @endcan
                                         </tr>
                                     </thead>
@@ -114,8 +114,8 @@
                                                             @csrf
                                                             @method('PUT')
                                                             <input type="number" name="quantity" value="{{ $stock->quantity }}" min="0" max="999999"
-                                                                   class="form-control form-control-sm" style="max-width: 100px;" aria-label="Menge">
-                                                            <button type="submit" class="btn btn-sm btn-outline-primary" title="Speichern"><i class="fa fa-check"></i></button>
+                                                                   class="form-control form-control-sm" style="max-width: 100px;" aria-label="{{ __('Menge') }}">
+                                                            <button type="submit" class="btn btn-sm btn-outline-primary" title="{{ __('Speichern') }}"><i class="fa fa-check"></i></button>
                                                         </form>
                                                     @else
                                                         <span class="fw-bold">{{ $stock->quantity }}</span>
@@ -127,7 +127,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="4" class="text-center py-4 text-muted">Auf diesem Lagerplatz liegt kein Material.</td>
+                                                <td colspan="4" class="text-center py-4 text-muted">{{ __('Auf diesem Lagerplatz liegt kein Material.') }}</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
@@ -136,24 +136,24 @@
 
                             @can('update', $storageUnit)
                                 <div class="mt-3 p-3 bg-light rounded-3 border">
-                                    <h6 class="text-uppercase text-muted small fw-bold mb-3">Material einlagern</h6>
+                                    <h6 class="text-uppercase text-muted small fw-bold mb-3">{{ __('Material einlagern') }}</h6>
                                     <form method="POST" action="{{ route('item-stocks.store') }}">
                                         @csrf
                                         <input type="hidden" name="storage_unit_id" value="{{ $storageUnit->id }}">
                                         <div class="row g-2">
                                             <div class="col-12 col-md-7">
-                                                <select name="item_id" class="form-select" required aria-label="Material">
-                                                    <option value="">Material wählen</option>
+                                                <select name="item_id" class="form-select" required aria-label="{{ __('Material') }}">
+                                                    <option value="">{{ __('Material wählen') }}</option>
                                                     @foreach($items as $item)
                                                         <option value="{{ $item->id }}" @selected(old('item_id') == $item->id)>{{ $item->name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                             <div class="col-6 col-md-3">
-                                                <input type="number" name="quantity" class="form-control" placeholder="Menge" min="0" max="999999" value="{{ old('quantity') }}" required aria-label="Menge">
+                                                <input type="number" name="quantity" class="form-control" placeholder="{{ __('Menge') }}" min="0" max="999999" value="{{ old('quantity') }}" required aria-label="{{ __('Menge') }}">
                                             </div>
                                             <div class="col-6 col-md-2">
-                                                <button type="submit" class="btn btn-success w-100"><i class="fa fa-plus me-1"></i> Einlagern</button>
+                                                <button type="submit" class="btn btn-success w-100"><i class="fa fa-plus me-1"></i> {{ __('Einlagern') }}</button>
                                             </div>
                                         </div>
                                     </form>

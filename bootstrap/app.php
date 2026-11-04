@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\EnsureComponentEnabled;
+use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -19,6 +20,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // Set by JavaScript and without any sensitive content.
         $middleware->encryptCookies(except: [Controller::PER_PAGE_COOKIE, Controller::SCREEN_COOKIE]);
+
+        $middleware->web(append: [SetLocale::class]);
 
         $middleware->alias([
             'role' => RoleMiddleware::class,

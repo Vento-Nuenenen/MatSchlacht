@@ -39,8 +39,8 @@ class StoreHitobitoAccessRuleRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'hitobito_person_id.required_without_all' => 'Gib mindestens eine Personen-ID, Gruppen-ID, Rolle oder Berechtigung an.',
-            'role_name.required_if_declined' => 'Eine Regel ohne Zugang muss eine App-Rolle vergeben.',
+            'hitobito_person_id.required_without_all' => __('Gib mindestens eine Personen-ID, Gruppen-ID, Rolle oder Berechtigung an.'),
+            'role_name.required_if_declined' => __('Eine Regel ohne Zugang muss eine App-Rolle vergeben.'),
         ];
     }
 
@@ -50,13 +50,13 @@ class StoreHitobitoAccessRuleRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'hitobito_person_id' => 'Personen-ID',
-            'hitobito_group_id' => 'Gruppen-ID',
-            'hitobito_role_class' => 'Hitobito-Rolle',
-            'hitobito_permission' => 'Hitobito-Berechtigung',
-            'role_name' => 'App-Rolle',
-            'grants_access' => 'Zugang erlauben',
-            'description' => 'Beschreibung',
+            'hitobito_person_id' => __('Personen-ID'),
+            'hitobito_group_id' => __('Gruppen-ID'),
+            'hitobito_role_class' => __('Hitobito-Rolle'),
+            'hitobito_permission' => __('Hitobito-Berechtigung'),
+            'role_name' => __('App-Rolle'),
+            'grants_access' => __('Zugang erlauben'),
+            'description' => __('Beschreibung'),
         ];
     }
 }

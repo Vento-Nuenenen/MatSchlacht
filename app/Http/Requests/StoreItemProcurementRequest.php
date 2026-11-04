@@ -54,7 +54,7 @@ class StoreItemProcurementRequest extends FormRequest
                 $isStockFromBins = app(ComponentManager::class)->isEnabled('storage') && $this->item()->stocks()->exists();
 
                 if ($isStockFromBins && $newStockContribution !== $this->previousStockContribution()) {
-                    $validator->errors()->add('add_to_stock', 'Dieses Material liegt auf Lagerplätzen. Bitte die Menge dort einlagern.');
+                    $validator->errors()->add('add_to_stock', __('Dieses Material liegt auf Lagerplätzen. Bitte die Menge dort einlagern.'));
                 }
             },
         ];
@@ -82,16 +82,16 @@ class StoreItemProcurementRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'procured_on' => 'Beschaffungsdatum',
-            'quantity' => 'Menge',
-            'supplier' => 'Lieferant',
-            'unit_price' => 'Stückpreis',
-            'invoice_number' => 'Beleg-Nr.',
-            'warranty_until' => 'Garantie bis',
-            'notes' => 'Notiz',
-            'add_to_stock' => 'Zum Bestand addieren',
-            'files' => 'Dateien',
-            'files.*' => 'Datei',
+            'procured_on' => __('Beschaffungsdatum'),
+            'quantity' => __('Menge'),
+            'supplier' => __('Lieferant'),
+            'unit_price' => __('Stückpreis'),
+            'invoice_number' => __('Beleg-Nr.'),
+            'warranty_until' => __('Garantie bis'),
+            'notes' => __('Notiz'),
+            'add_to_stock' => __('Zum Bestand addieren'),
+            'files' => __('Dateien'),
+            'files.*' => __('Datei'),
         ];
     }
 

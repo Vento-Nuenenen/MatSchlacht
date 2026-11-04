@@ -63,7 +63,7 @@ class UpdateComponentSettingsRequest extends FormRequest
                 $isAzureLoginEnabled = $this->boolean('components.azure_login.enabled');
 
                 if (! $isPasswordLoginEnabled && ! $isAzureLoginEnabled) {
-                    $validator->errors()->add('components.password_login.enabled', 'Mindestens eine Login-Methode (Passwort oder Azure) muss aktiv bleiben.');
+                    $validator->errors()->add('components.password_login.enabled', __('Mindestens eine Login-Methode (Passwort oder Azure) muss aktiv bleiben.'));
                 }
             },
             function (Validator $validator): void {
@@ -81,8 +81,8 @@ class UpdateComponentSettingsRequest extends FormRequest
 
                 foreach ($requiredSettings as $key) {
                     if (blank($this->input("components.file_storage.settings.{$key}"))) {
-                        $label = config("components.file_storage.settings.{$key}.label");
-                        $validator->errors()->add("components.file_storage.settings.{$key}", "«{$label}» ist für {$provider->label()} erforderlich.");
+                        $label = __((string) config("components.file_storage.settings.{$key}.label"));
+                        $validator->errors()->add("components.file_storage.settings.{$key}", __('«:label» ist für :label2 erforderlich.', ['label' => $label, 'label2' => $provider->label()]));
                     }
                 }
             },
@@ -97,10 +97,10 @@ class UpdateComponentSettingsRequest extends FormRequest
         $attributes = [];
 
         foreach (app(ComponentManager::class)->definitions() as $component => $definition) {
-            $attributes["components.{$component}.enabled"] = $definition['label'];
+            $attributes["components.{$component}.enabled"] = __($definition['label']);
 
             foreach ($definition['settings'] as $key => $setting) {
-                $attributes["components.{$component}.settings.{$key}"] = $setting['label'];
+                $attributes["components.{$component}.settings.{$key}"] = __($setting['label']);
             }
         }
 
@@ -117,7 +117,7 @@ class UpdateComponentSettingsRequest extends FormRequest
         return function (string $attribute, mixed $value, Closure $fail): void {
             foreach (array_filter(array_map('trim', explode(',', (string) $value))) as $email) {
                 if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-                    $fail("«{$email}» ist keine gültige E-Mail-Adresse.");
+                    $fail(__('«:email» ist keine gültige E-Mail-Adresse.', ['email' => $email]));
                 }
             }
         };

@@ -191,7 +191,7 @@ class WebDavAdapter extends HttpFilesystemAdapter
         }
 
         if ($response->status() !== 207) {
-            throw UnableToCheckExistence::forLocation($path, new RuntimeException("WebDAV antwortete mit Status {$response->status()}."));
+            throw UnableToCheckExistence::forLocation($path, new RuntimeException(__('WebDAV antwortete mit Status :status.', ['status' => $response->status()])));
         }
 
         $attributes = $this->parseMultiStatus($response->body())[0] ?? null;
@@ -334,7 +334,7 @@ class WebDavAdapter extends HttpFilesystemAdapter
     protected function expectSuccess(Response $response, array $acceptedStatuses = []): Response
     {
         if (! $response->successful() && ! in_array($response->status(), $acceptedStatuses, true)) {
-            throw new RuntimeException("WebDAV antwortete mit Status {$response->status()}.");
+            throw new RuntimeException(__('WebDAV antwortete mit Status :status.', ['status' => $response->status()]));
         }
 
         return $response;

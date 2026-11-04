@@ -58,14 +58,14 @@ class StoreItemMaintenanceRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'performed_on' => 'Datum',
-            'type' => 'Art',
-            'quantity' => 'Betroffene Menge',
-            'performed_by' => 'Durchgeführt von',
-            'cost' => 'Kosten',
-            'description' => 'Beschreibung',
-            'files' => 'Dateien',
-            'files.*' => 'Datei',
+            'performed_on' => __('Datum'),
+            'type' => __('Art'),
+            'quantity' => __('Betroffene Menge'),
+            'performed_by' => __('Durchgeführt von'),
+            'cost' => __('Kosten'),
+            'description' => __('Beschreibung'),
+            'files' => __('Dateien'),
+            'files.*' => __('Datei'),
         ];
     }
 }

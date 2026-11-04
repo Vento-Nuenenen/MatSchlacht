@@ -9,7 +9,7 @@
                 @endunless
             </a>
             @if($unit->level->holdsStock())
-                <span class="badge bg-light text-dark border ms-1">{{ $unit->stocks_count }} Material</span>
+                <span class="badge bg-light text-dark border ms-1">{{ __(':stocks_count Material', ['stocks_count' => $unit->stocks_count]) }}</span>
             @endif
             @if($unit->relationLoaded('children') && $unit->children->isNotEmpty())
                 @include('storage-units.tree', ['units' => $unit->children, 'depth' => $depth + 1])

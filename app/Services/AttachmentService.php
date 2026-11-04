@@ -79,8 +79,8 @@ class AttachmentService
         try {
             $exists = $disk->exists($attachment->path);
         } catch (Throwable $exception) {
-            Log::error("File storage error for {$attachment->path}: ".$exception->getMessage());
-            abort(503, 'Der Dateispeicher ist nicht erreichbar.');
+            Log::error(__('File storage error for :path: ', ['path' => $attachment->path]).$exception->getMessage());
+            abort(503, __('Der Dateispeicher ist nicht erreichbar.'));
         }
 
         abort_unless($exists, 404);

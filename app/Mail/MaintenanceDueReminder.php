@@ -25,7 +25,7 @@ class MaintenanceDueReminder extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Fällige Wartungen: '.$this->items->count().' Material',
+            subject: __('Fällige Wartungen: ').$this->items->count().' '.__('Material'),
         );
     }
 
