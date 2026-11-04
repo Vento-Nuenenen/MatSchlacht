@@ -1,58 +1,83 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# MatSchlacht
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Tests](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/tests.yml)
+[![Code-Qualität](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/lint.yml/badge.svg?branch=master)](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/lint.yml)
+[![PHPStan Level 7](https://img.shields.io/badge/PHPStan-Level%207-2a5ea7)](phpstan.neon)
+[![Coverage](https://github.com/Vento-Nuenenen/MatSchlacht/raw/badges/coverage.svg)](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/tests.yml)
 
-## About Laravel
+Die Materialverwaltung der Pfadi Nünenen: Material erfassen, für Lager und Anlässe bestellen, bereitstellen und wieder zurücknehmen. Die App läuft auf Smartphone, Tablet und Desktop, im hellen und im dunklen Modus.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Funktionen
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Bestellungen:** vom Entwurf über Bestätigung und Ausgabe bis zur Rückgabe, mit Auftrags-, Retouren- und Packliste als PDF
+- **Material:** Materialgruppen, Kollektionen, Inhaltslisten und Datei-Anhänge
+- **Lagerhaltung:** Lagerort › Lagerraum › Lagerregal › Regalebene › Lagerplatz mit Bestand pro Platz und druckbaren Etiketten mit QR-Code
+- **Beschaffung und Wartung:** Beschaffungen mit Belegen, Wartungsprotokoll, Intervalle und Erinnerungsmails
+- **Anmeldung:** Passwort, Microsoft Azure und Hitobito (z. B. MiData), mit Rollen und Berechtigungen pro Einheit
+- **Dateispeicher:** Amazon S3 und S3-kompatible Dienste, lokaler Server, SFTP, FTP, SharePoint/OneDrive, Nextcloud, Dropbox und Google Drive
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Die meisten Funktionen sind Komponenten, die sich unter **Einstellungen** ein- und ausschalten und konfigurieren lassen. Dort werden auch die Hauptfarbe und der Dateispeicher gewählt. Lagerhaltung, Beschaffung und Wartung sind standardmässig aus.
 
-## Learning Laravel
+## Voraussetzungen
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- PHP 8.4 oder neuer (getestet mit 8.4 und 8.5)
+- Composer
+- Node.js 24
+- PostgreSQL (Standard in `.env.example`)
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Installation
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+In der `.env` die Datenbank eintragen, danach:
 
-## Contributing
+```bash
+php artisan migrate --seed
+npm run build
+composer dev
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+`composer dev` startet Webserver, Queue-Worker, Log-Ausgabe und Vite. Der Seeder legt für die lokale Entwicklung das Konto `admin@example.com` mit dem Passwort `password` an. In Produktion nicht verwenden.
 
-## Code of Conduct
+## Betrieb
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Auf dem Server braucht die App neben dem Webserver:
 
-## Security Vulnerabilities
+- einen **Queue-Worker** (`php artisan queue:work`), weil Mails über die Queue verschickt werden
+- den **Scheduler** als Cronjob, für die wöchentliche Wartungs-Erinnerung:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+  ```cron
+  * * * * * cd /pfad/zur/app && php artisan schedule:run >> /dev/null 2>&1
+  ```
 
-## License
+Die gebauten Assets liegen in `public/build` und sind eingecheckt. Nach Änderungen an Styles oder JavaScript also `npm run build` ausführen und das Ergebnis committen.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Nützliche Befehle:
+
+| Befehl | Zweck |
+| --- | --- |
+| `php artisan mail:test {email?}` | Testmail verschicken |
+| `php artisan maintenance:remind` | Erinnerung für fällige Wartungen sofort senden |
+| `php artisan attachments:transfer {from} {to?} {--delete-source}` | Dateien zu einem anderen Speicher-Provider umziehen |
+
+## Entwicklung
+
+```bash
+composer test          # Pint, PHPStan und Tests
+php artisan test       # nur Tests
+composer lint          # PHP-Code formatieren
+composer types:check   # PHPStan
+npm run format         # Frontend formatieren (Prettier)
+npm run lint           # JavaScript prüfen (ESLint)
+```
+
+## Badges
+
+- **Tests:** PHPStan und Pest auf PHP 8.4 und 8.5 (`.github/workflows/tests.yml`)
+- **Code-Qualität:** Pint, Prettier und ESLint im Prüfmodus (`.github/workflows/lint.yml`)
+- **Coverage:** Zeilenabdeckung von `app/`. Der Workflow misst sie bei jedem Push auf `master` und legt das Badge auf dem Branch `badges` ab.
