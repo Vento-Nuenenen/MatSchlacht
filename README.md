@@ -5,7 +5,12 @@
 [![PHPStan Level 7](https://img.shields.io/badge/PHPStan-Level%207-2a5ea7)](phpstan.neon)
 [![Coverage](../badges/coverage.svg)](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/tests.yml)
 
-Die Materialverwaltung der Pfadi Nünenen: Material erfassen, für Lager und Anlässe bestellen, bereitstellen und wieder zurücknehmen. Die App läuft auf Smartphone, Tablet und Desktop, im hellen und im dunklen Modus.
+> [!WARNING]
+> **Under Construction:** MatSchlacht ist in aktiver Entwicklung. Funktionen und Datenbankschema können sich noch ändern. Der Einsatz in Produktion erfolgt auf eigenes Risiko.
+
+MatSchlacht ist eine Web-App zur Materialverwaltung, entstanden für die Pfadi Nünenen. Sie richtet sich an Pfadi-Abteilungen und ähnliche Vereine mit eigenem Materiallager: Material erfassen, für Lager und Anlässe bestellen, bereitstellen und wieder zurücknehmen. Die App läuft auf Smartphone, Tablet und Desktop, im hellen und im dunklen Modus.
+
+![Übersicht von MatSchlacht](docs/images/dashboard.png)
 
 ## Funktionen
 
@@ -19,14 +24,11 @@ Die Materialverwaltung der Pfadi Nünenen: Material erfassen, für Lager und Anl
 
 Die meisten Funktionen sind Komponenten, die sich unter **Einstellungen** ein- und ausschalten und konfigurieren lassen. Dort werden auch die Hauptfarbe und der Dateispeicher gewählt. Lagerhaltung, Beschaffung und Wartung sind standardmässig aus.
 
-## Voraussetzungen
+Die [Funktionsübersicht](docs/funktionen.md) zeigt alles im Detail und mit Screenshots.
 
-- PHP 8.4 oder neuer (getestet mit 8.4 und 8.5)
-- Composer
-- Node.js 24
-- PostgreSQL (Standard in `.env.example`)
+## Schnellstart
 
-## Installation
+Du brauchst PHP 8.4 oder neuer, Composer, Node.js 24 und PostgreSQL.
 
 ```bash
 composer install
@@ -43,69 +45,21 @@ npm run build
 composer dev
 ```
 
-`composer dev` startet Webserver, Queue-Worker, Log-Ausgabe und Vite. Der Seeder legt für die lokale Entwicklung das Konto `admin@example.com` mit dem Passwort `password` an. In Produktion nicht verwenden.
+> [!CAUTION]
+> Der Seeder legt für die lokale Entwicklung das Konto `admin@example.com` mit dem Passwort `password` an. Auf einem öffentlich erreichbaren Server darf dieses Konto nicht existieren.
 
-## Betrieb
+## Dokumentation
 
-Auf dem Server braucht die App neben dem Webserver:
+- [Funktionen](docs/funktionen.md)
+- [Installation](docs/installation.md)
+- [Betrieb](docs/betrieb.md)
+- [Entwicklung](docs/entwicklung.md)
+- [Verwendete Pakete](docs/pakete.md)
 
-- einen **Queue-Worker** (`php artisan queue:work`), weil Mails über die Queue verschickt werden
-- den **Scheduler** als Cronjob, für die wöchentliche Wartungs-Erinnerung:
+## Mitwirken
 
-  ```cron
-  * * * * * cd /pfad/zur/app && php artisan schedule:run >> /dev/null 2>&1
-  ```
+Fehler und Ideen sind als [GitHub Issue](https://github.com/Vento-Nuenenen/MatSchlacht/issues) willkommen. Vor einem Pull Request bitte `composer test` ausführen und für geändertes Verhalten Tests ergänzen.
 
-Die gebauten Assets liegen in `public/build` und sind eingecheckt. Nach Änderungen an Styles oder JavaScript also `npm run build` ausführen und das Ergebnis committen.
+## Lizenz
 
-Nützliche Befehle:
-
-| Befehl | Zweck |
-| --- | --- |
-| `php artisan mail:test {email?}` | Testmail verschicken |
-| `php artisan maintenance:remind` | Erinnerung für fällige Wartungen sofort senden |
-| `php artisan attachments:transfer {from} {to?} {--delete-source}` | Dateien zu einem anderen Speicher-Provider umziehen |
-
-## Sprachen
-
-Die App ist auf Deutsch. Alle Texte laufen über `__()`, der deutsche Text ist dabei selbst der Schlüssel. Fehlt eine Übersetzung, erscheint also der deutsche Text. Die Sprache kommt aus dem Benutzerkonto, sonst aus dem Browser, sonst aus `APP_LOCALE`. Mails gehen in der Sprache des Empfängers oder der Empfängerin raus.
-
-Für eine weitere Sprache, zum Beispiel Französisch:
-
-1. `php artisan lang:check fr --write` legt `lang/fr.json` mit allen Texten an. Die Werte sind leer und müssen übersetzt werden.
-2. `lang/de/*.php` nach `lang/fr/` kopieren und übersetzen. Das sind die Meldungen von Laravel.
-3. Die Sprache in `config/app.php` unter `available_locales` eintragen. Ab zwei Sprachen erscheint die Auswahl im Benutzermenü.
-
-`php artisan lang:check fr` zeigt danach jederzeit, welche Texte noch fehlen.
-
-## Entwicklung
-
-```bash
-composer test          # Pint, PHPStan und Tests
-php artisan test       # nur Tests
-composer lint          # PHP-Code formatieren
-composer types:check   # PHPStan
-npm run format         # Frontend formatieren (Prettier)
-npm run lint           # JavaScript prüfen (ESLint)
-```
-
-### Browser-Tests
-
-Die End-to-End-Tests in `tests/Browser` prüfen die wichtigsten Abläufe in einem echten Browser, auch in Smartphone- und Tablet-Grösse. Sie ergänzen die Feature-Tests und laufen weder mit `php artisan test` noch in den GitHub-Workflows, sondern nur von Hand:
-
-```bash
-npx playwright install chromium   # einmalig
-npm run build                     # die Tests nutzen die gebauten Assets
-composer test:browser             # in Chromium
-composer test:browser -- --browser firefox
-```
-
-Schlägt ein Test fehl, liegt ein Screenshot in `tests/Browser/Screenshots`. Echte Datei-Uploads lassen sich mit dem Test-Server des Plugins nicht prüfen, sie sind in den Feature-Tests abgedeckt.
-
-## Badges
-
-- **Tests:** PHPStan und Pest auf PHP 8.4 und 8.5 (`.github/workflows/tests.yml`)
-- **Code-Qualität:** Pint, Prettier und ESLint im Prüfmodus (`.github/workflows/lint.yml`)
-- **Coverage:** Zeilenabdeckung von `app/`, gemessen im Workflow `tests.yml`
-
-Weil das Repo privat ist, erzeugen die Workflows die Badges selbst: Bei jedem Push auf `master` legen sie die SVGs auf dem Branch `badges` ab.
+MatSchlacht steht unter der [MIT-Lizenz](LICENSE). Für die verwendeten Pakete gelten die in der [Paketliste](docs/pakete.md) genannten Lizenzen.

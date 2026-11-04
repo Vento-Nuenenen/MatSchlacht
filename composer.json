@@ -3,6 +3,7 @@
     "name": "vento/matschlacht",
     "type": "project",
     "description": "Die Materialverwaltung",
+    "license": "MIT",
     "keywords": [
         "laravel",
         "framework"
