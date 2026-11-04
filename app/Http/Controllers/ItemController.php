@@ -37,7 +37,7 @@ class ItemController extends Controller
             $query->where('item_group_id', $request->item_group_id);
         }
 
-        $items = $query->orderBy('item_group_id')->orderBy('id')->get();
+        $items = $query->orderBy('item_group_id')->orderBy('id')->paginate($this->perPage())->withQueryString();
         $itemGroups = ItemGroup::all();
 
         return view('item.index', [

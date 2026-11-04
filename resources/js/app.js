@@ -1,6 +1,7 @@
 import './bootstrap';
 import { initCollectionPicker } from './ui/collections';
 import { initContentModal } from './ui/content-modal';
+import { initPerPage } from './ui/per-page';
 import { initQuantitySteppers } from './ui/quantity-stepper';
 import { initSortableTables, stackTables } from './ui/tables';
 import { initTheme } from './ui/theme';
@@ -8,6 +9,7 @@ import { initTheme } from './ui/theme';
 initTheme();
 initSortableTables();
 initQuantitySteppers();
+initPerPage();
 
 const onReady = (callback) =>
     document.readyState === 'loading'

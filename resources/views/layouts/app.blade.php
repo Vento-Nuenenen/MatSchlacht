@@ -26,6 +26,10 @@
             try { mode = localStorage.getItem('matschlacht-theme') || 'auto'; } catch (e) {}
             const dark = mode === 'dark' || (mode === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
             document.documentElement.setAttribute('data-bs-theme', dark ? 'dark' : 'light');
+
+            // Tells the server the screen size for the default length of the lists
+            const screen = window.innerWidth < 768 ? 'phone' : window.innerWidth < 1200 ? 'tablet' : 'desktop';
+            document.cookie = `matschlacht_screen=${screen}; path=/; max-age=31536000; SameSite=Lax`;
         })();
     </script>
 

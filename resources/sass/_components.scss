@@ -468,3 +468,48 @@ details[open] > summary::after {
         }
     }
 }
+
+// Pagination
+
+#main-content[aria-busy='true'] {
+    opacity: 0.6;
+    transition: opacity 0.15s ease 0.1s;
+}
+
+.app-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+
+    .card-body:not(.p-0) > & {
+        padding: 1rem 0 0;
+    }
+
+    .app-pagination-info {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem 1rem;
+    }
+
+    .page-link {
+        min-width: 2.5rem;
+        background-color: transparent;
+        text-align: center;
+    }
+
+    .page-item.active .page-link {
+        color: var(--app-primary-contrast);
+        background-color: var(--app-primary);
+    }
+
+    @media (pointer: coarse) {
+        .page-link {
+            padding-top: 0.6rem;
+            padding-bottom: 0.6rem;
+        }
+    }
+}

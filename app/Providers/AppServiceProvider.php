@@ -29,6 +29,7 @@ use App\Services\FileStorage\WebDavAdapter;
 use App\Services\ThemeService;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
@@ -136,6 +137,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Blade::if('component_enabled', fn (string $component) => app(ComponentManager::class)->isEnabled($component));
+
+        Paginator::defaultView('components.pagination');
 
         Order::observe(OrderObserver::class);
         ItemStock::observe(ItemStockObserver::class);

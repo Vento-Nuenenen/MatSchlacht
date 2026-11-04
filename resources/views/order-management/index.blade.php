@@ -8,14 +8,9 @@
 
                 <h2 class="mb-3">Bestellungen verwalten</h2>
 
-                @php
-                    $groupedOrders = $orders->groupBy(fn($o) => get_class($o->state));
-                @endphp
-
                 <div class="d-flex flex-column gap-4">
-                    @foreach($stateClasses as $stateClass)
+                    @foreach($ordersByState as $stateClass => $filteredOrders)
                         @php
-                            $filteredOrders = $groupedOrders->get($stateClass, collect());
                             // Get an instance of the state to call display() and color()
                             $stateInstance = new $stateClass(null);
                         @endphp
@@ -24,7 +19,7 @@
                             <div class="bg-{{ $stateInstance->color() }}" style="height: 4px;"></div>
                             <div class="card-header d-flex align-items-center gap-2">
                                 <h3 class="h6 mb-0" id="state-{{ $stateInstance::getMorphClass() }}">{{ $stateInstance->display() }}</h3>
-                                <span class="badge bg-secondary rounded-pill ms-auto">{{ $filteredOrders->count() }}</span>
+                                <span class="badge bg-secondary rounded-pill ms-auto">{{ $filteredOrders->total() }}</span>
                             </div>
 
                             @if($filteredOrders->isNotEmpty())
@@ -73,6 +68,7 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                {{ $filteredOrders->links() }}
                             @else
                                 <div class="card-body py-2">
                                     <p class="text-muted small mb-0">Keine Bestellungen in diesem Status.</p>

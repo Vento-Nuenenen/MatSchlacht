@@ -87,7 +87,7 @@ return [
 
     'appearance' => [
         'label' => 'Erscheinungsbild',
-        'description' => 'Farbe der App. Alle Abstufungen für den hellen und den dunklen Modus werden daraus berechnet.',
+        'description' => 'Farbe der App, aus der alle Abstufungen für den hellen und den dunklen Modus berechnet werden, und die Standardlänge der Listen je Bildschirmgrösse. In den Listen kann sie pro Gerät angepasst werden.',
         'enabled' => true,
         'toggleable' => false,
         'settings' => [
@@ -95,6 +95,24 @@ return [
                 'type' => 'color',
                 'label' => 'Hauptfarbe',
                 'default' => env('APP_PRIMARY_COLOR', '#b1138b'),
+            ],
+            'per_page_phone' => [
+                'type' => 'integer',
+                'label' => 'Einträge pro Seite auf dem Smartphone',
+                'default' => 10,
+                'rules' => ['required', 'integer', 'min:5', 'max:200'],
+            ],
+            'per_page_tablet' => [
+                'type' => 'integer',
+                'label' => 'Einträge pro Seite auf dem Tablet',
+                'default' => 25,
+                'rules' => ['required', 'integer', 'min:5', 'max:200'],
+            ],
+            'per_page_desktop' => [
+                'type' => 'integer',
+                'label' => 'Einträge pro Seite auf dem Desktop',
+                'default' => 50,
+                'rules' => ['required', 'integer', 'min:5', 'max:200'],
             ],
         ],
     ],

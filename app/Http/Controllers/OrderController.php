@@ -31,7 +31,8 @@ class OrderController extends Controller
         $orders = Order::visibleTo(auth()->user())
             ->with('role', 'user', 'orderedItems.item.contents')
             ->orderBy('event_start')
-            ->get();
+            ->orderBy('id')
+            ->paginate($this->perPage());
 
         return view('order.index', ['orders' => $orders]);
     }

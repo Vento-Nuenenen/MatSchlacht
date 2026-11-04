@@ -23,7 +23,13 @@ class UserController extends Controller
      */
     public function index(): Factory|View
     {
-        return view('user.index', ['users' => auth()->user()->scopedUsersQuery()->get()]);
+        $users = auth()->user()->scopedUsersQuery()
+            ->orderBy('lastname')
+            ->orderBy('firstname')
+            ->orderBy('id')
+            ->paginate($this->perPage());
+
+        return view('user.index', ['users' => $users]);
     }
 
     /**

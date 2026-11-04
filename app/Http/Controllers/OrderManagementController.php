@@ -11,11 +11,12 @@ use App\Services\Pdf\OrderSheetPdf;
 use App\Services\Pdf\PackingListPdf;
 use App\Services\Pdf\ReturnSheetPdf;
 use App\States\Order\Accepted;
-use App\States\Order\Archived;
 use App\States\Order\Committed;
 use App\States\Order\Delivered;
+use App\States\Order\OrderState;
 use App\States\Order\Returned;
 use App\States\Order\Stored;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -34,18 +35,29 @@ class OrderManagementController extends Controller
     {
         $this->authorize('manage', Order::class);
 
-        return view('order-management.index', [
-            'orders' => Order::with('itemCollections', 'role', 'user', 'orderedItems.item.contents')
-                ->whereNotState('state', Archived::class)
-                ->get(),
-            'stateClasses' => [
-                Stored::class,
-                Committed::class,
-                Accepted::class,
-                Delivered::class,
-                Returned::class,
-            ],
-        ]);
+        $ordersByState = [];
+
+        foreach ([Stored::class, Committed::class, Accepted::class, Delivered::class, Returned::class] as $state) {
+            $ordersByState[$state] = $this->ordersInState($state);
+        }
+
+        return view('order-management.index', ['ordersByState' => $ordersByState]);
+    }
+
+    /**
+     * Every state has its own page, so that the sections can be browsed independently.
+     *
+     * @param  class-string<OrderState>  $state
+     * @return LengthAwarePaginator<int, Order>
+     */
+    protected function ordersInState(string $state): LengthAwarePaginator
+    {
+        return Order::with('itemCollections', 'role', 'user', 'orderedItems.item.contents')
+            ->whereState('state', $state)
+            ->orderBy('event_start')
+            ->orderBy('id')
+            ->paginate($this->perPage(), pageName: $state::getMorphClass().'_page')
+            ->withQueryString();
     }
 
     /**

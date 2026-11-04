@@ -22,7 +22,7 @@ class ItemCollectionController extends Controller
     public function index(): View
     {
         return view('item-collections.index', [
-            'collections' => ItemCollection::withCount('items')->get(),
+            'collections' => ItemCollection::withCount('items')->orderBy('name')->orderBy('id')->paginate($this->perPage()),
         ]);
     }
 

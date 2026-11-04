@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Services\MaintenanceService;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\View\View;
 
 class MaintenanceOverviewController extends Controller
@@ -17,9 +19,10 @@ class MaintenanceOverviewController extends Controller
 
         $isDueOnly = $request->boolean('due');
         $items = $isDueOnly ? $maintenance->dueItems() : $maintenance->scheduledItems();
+        $page = Paginator::resolveCurrentPage();
 
         return view('maintenance.index', [
-            'items' => $items,
+            'items' => (new LengthAwarePaginator($items->forPage($page, $this->perPage()), $items->count(), $this->perPage(), $page, ['path' => $request->url()]))->withQueryString(),
             'isDueOnly' => $isDueOnly,
             'maintenance' => $maintenance,
         ]);
