@@ -1,9 +1,9 @@
 # MatSchlacht
 
-[![Tests](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/tests.yml)
-[![Code-Qualität](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/lint.yml/badge.svg?branch=master)](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/lint.yml)
+[![Tests](../../actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/tests.yml)
+[![Code-Qualität](../../actions/workflows/lint.yml/badge.svg?branch=master)](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/lint.yml)
 [![PHPStan Level 7](https://img.shields.io/badge/PHPStan-Level%207-2a5ea7)](phpstan.neon)
-[![Coverage](https://github.com/Vento-Nuenenen/MatSchlacht/raw/badges/coverage.svg)](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/tests.yml)
+[![Coverage](../badges/coverage.svg)](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/tests.yml)
 
 Die Materialverwaltung der Pfadi Nünenen: Material erfassen, für Lager und Anlässe bestellen, bereitstellen und wieder zurücknehmen. Die App läuft auf Smartphone, Tablet und Desktop, im hellen und im dunklen Modus.
 
