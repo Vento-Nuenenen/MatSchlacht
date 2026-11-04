@@ -68,3 +68,32 @@ jobs:
       #   with:
       #     commit_message: fix code style
       #     commit_options: '--no-verify'
+
+  badge:
+    needs: quality
+    if: ${{ !cancelled() && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v7 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+            php-version: '8.5'
+
+      - name: Create quality badge
+        env:
+          RESULT: ${{ needs.quality.result }}
+        run: |
+          mkdir -p badges
+          php .github/scripts/badge.php status quality "$RESULT" badges/quality.svg
+
+      - name: Publish badge
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash .github/scripts/publish-badges.sh badges

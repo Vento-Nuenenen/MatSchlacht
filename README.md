@@ -1,7 +1,7 @@
 # MatSchlacht
 
-[![Tests](../../actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/tests.yml)
-[![Code-Qualität](../../actions/workflows/lint.yml/badge.svg?branch=master)](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/lint.yml)
+[![Tests](../badges/tests.svg)](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/tests.yml)
+[![Code-Qualität](../badges/quality.svg)](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/lint.yml)
 [![PHPStan Level 7](https://img.shields.io/badge/PHPStan-Level%207-2a5ea7)](phpstan.neon)
 [![Coverage](../badges/coverage.svg)](https://github.com/Vento-Nuenenen/MatSchlacht/actions/workflows/tests.yml)
 
@@ -80,4 +80,6 @@ npm run lint           # JavaScript prüfen (ESLint)
 
 - **Tests:** PHPStan und Pest auf PHP 8.4 und 8.5 (`.github/workflows/tests.yml`)
 - **Code-Qualität:** Pint, Prettier und ESLint im Prüfmodus (`.github/workflows/lint.yml`)
-- **Coverage:** Zeilenabdeckung von `app/`. Der Workflow misst sie bei jedem Push auf `master` und legt das Badge auf dem Branch `badges` ab.
+- **Coverage:** Zeilenabdeckung von `app/`, gemessen im Workflow `tests.yml`
+
+Weil das Repo privat ist, erzeugen die Workflows die Badges selbst: Bei jedem Push auf `master` legen sie die SVGs auf dem Branch `badges` ab.
