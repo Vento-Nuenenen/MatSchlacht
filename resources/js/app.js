@@ -1,6 +1,7 @@
 import './bootstrap';
 import { initCollectionPicker } from './ui/collections';
 import { initContentModal } from './ui/content-modal';
+import { initMessages } from './ui/messages';
 import { initPerPage } from './ui/per-page';
 import { initQuantitySteppers } from './ui/quantity-stepper';
 import { initSortableTables, stackTables } from './ui/tables';
@@ -20,4 +21,5 @@ onReady(() => {
     stackTables();
     initContentModal();
     initCollectionPicker();
+    initMessages();
 });

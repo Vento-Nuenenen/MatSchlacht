@@ -7,16 +7,10 @@
             <div class="col-12 col-md-6">
                 <label for="scoutname" class="form-label fw-semibold">Pfadiname</label>
                 <input type="text" class="form-control" id="scoutname" name="scoutname" value="{{ old('scoutname', $user->scoutname ?? '') }}" autofocus>
-                @error('scoutname')
-                    <div class="text-danger small mt-1">{{ $message }}</div>
-                @enderror
             </div>
             <div class="col-12 col-md-6">
                 <label for="email" class="form-label fw-semibold">E-Mail</label>
                 <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $user->email ?? '') }}" required>
-                @error('email')
-                    <div class="text-danger small mt-1">{{ $message }}</div>
-                @enderror
             </div>
         </div>
 
@@ -24,25 +18,16 @@
             <div class="col-12 col-md-6">
                 <label for="firstname" class="form-label fw-semibold">Vorname</label>
                 <input type="text" class="form-control" id="firstname" name="firstname" value="{{ old('firstname', $user->firstname ?? '') }}" required>
-                @error('firstname')
-                    <div class="text-danger small mt-1">{{ $message }}</div>
-                @enderror
             </div>
             <div class="col-12 col-md-6">
                 <label for="lastname" class="form-label fw-semibold">Nachname</label>
                 <input type="text" class="form-control" id="lastname" name="lastname" value="{{ old('lastname', $user->lastname ?? '') }}" required>
-                @error('lastname')
-                    <div class="text-danger small mt-1">{{ $message }}</div>
-                @enderror
             </div>
         </div>
 
         <div class="form-check">
             <input type="checkbox" class="form-check-input" id="aktiv" name="aktiv" {{ old('aktiv', $user->aktiv ?? false) ? 'checked' : '' }}>
             <label class="form-check-label fw-semibold" for="aktiv">Aktiv</label>
-            @error('aktiv')
-                <div class="text-danger small mt-1">{{ $message }}</div>
-            @enderror
         </div>
     </div>
 </div>
@@ -72,12 +57,6 @@
                 <div class="col-12 text-muted">Keine Rollen vorhanden.</div>
             @endforelse
         </div>
-        @error('roles')
-            <div class="text-danger mt-2 small">{{ $message }}</div>
-        @enderror
-        @error('roles.*')
-            <div class="text-danger mt-1 small">{{ $message }}</div>
-        @enderror
     </div>
 </div>
 

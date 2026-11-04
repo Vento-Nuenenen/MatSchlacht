@@ -1,5 +1,7 @@
 {{-- Selected collections and the selection of further ones; expects $collections and optionally $order, handled by resources/js/ui/collections.js --}}
 @php($selectedCollections = isset($order) ? $order->itemCollections : collect())
+<div data-error-for="collections"></div>
+
 <div id="addedCollections" class="mb-3 {{ $selectedCollections->isEmpty() ? 'd-none' : '' }}">
     <div class="mb-2"><strong>Verknüpfte Kollektionen:</strong></div>
     <div class="d-flex flex-wrap gap-2 mb-3" id="collections-wrapper">

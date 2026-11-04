@@ -25,30 +25,18 @@
             <p class="text-body-secondary mb-4">Melde dich an, um weiterzufahren.</p>
 
             <div class="auth-card-body">
-                    @include('components.status-alerts')
-
                     @component_enabled('password_login')
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
 
                         <div class="mb-3">
                             <label for="email" class="form-label fw-semibold">{{ __('E-Mail') }}</label>
-                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-                            @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                            <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                         </div>
 
                         <div class="mb-3">
                             <label for="password" class="form-label fw-semibold">{{ __('Passwort') }}</label>
-                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-                            @error('password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                            <input id="password" type="password" class="form-control" name="password" required autocomplete="current-password">
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center mb-3">

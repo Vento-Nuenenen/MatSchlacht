@@ -8,9 +8,6 @@
                 <label for="azure_group_id" class="form-label fw-semibold">Azure Group Object ID</label>
                 <input type="text" class="form-control" id="azure_group_id" name="azure_group_id" value="{{ old('azure_group_id', $azureGroupRoleMapping->azure_group_id ?? '') }}" required autofocus>
 
-                @error('azure_group_id')
-                    <div class="text-danger small mt-1">{{ $message }}</div>
-                @enderror
             </div>
 
             <div class="col-12 col-md-5">
@@ -23,9 +20,6 @@
                         </option>
                     @endforeach
                 </select>
-                @error('role_name')
-                    <div class="text-danger small mt-1">{{ $message }}</div>
-                @enderror
             </div>
         </div>
     </div>

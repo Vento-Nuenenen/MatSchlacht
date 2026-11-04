@@ -8,9 +8,6 @@
                 <div class="col-12 col-md-8">
                     <label for="name" class="form-label fw-semibold">Material</label>
                     <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $item->name ?? '') }}" required autofocus>
-                    @error('name')
-                        <div class="text-danger small mt-1">{{ $message }}</div>
-                    @enderror
                 </div>
                 <div class="col-12 col-md-4">
                     <label for="item_group_id" class="form-label fw-semibold">Materialgruppe</label>
@@ -37,23 +34,14 @@
                     @if($isStockFromStorage)
                         <div class="form-text">Summe der Lagerplätze</div>
                     @endif
-                    @error('stock')
-                        <div class="text-danger small mt-1">{{ $message }}</div>
-                    @enderror
                 </div>
                 <div class="col-12 col-sm-4">
                     <label for="lot" class="form-label fw-semibold">Packungsgrösse</label>
                     <input type="number" class="form-control" id="lot" name="lot" value="{{ old('lot', $item->lot ?? 1) }}" min="1" max="999999" required>
-                    @error('lot')
-                        <div class="text-danger small mt-1">{{ $message }}</div>
-                    @enderror
                 </div>
                 <div class="col-12 col-sm-4">
                     <label for="repair" class="form-label fw-semibold">Reparatur</label>
                     <input type="number" class="form-control" id="repair" name="repair" value="{{ old('repair', $item->repair ?? 0) }}" min="0" max="999999" required>
-                    @error('repair')
-                        <div class="text-danger small mt-1">{{ $message }}</div>
-                    @enderror
                 </div>
             </div>
 
@@ -63,9 +51,6 @@
                         <label for="maintenance_interval_months" class="form-label fw-semibold">Wartungsintervall (Monate)</label>
                         <input type="number" class="form-control" id="maintenance_interval_months" name="maintenance_interval_months"
                                value="{{ old('maintenance_interval_months', $item->maintenance_interval_months ?? '') }}" min="1" max="240" placeholder="kein Intervall">
-                        @error('maintenance_interval_months')
-                            <div class="text-danger small mt-1">{{ $message }}</div>
-                        @enderror
                     </div>
                 </div>
             @endcomponent_enabled
@@ -80,12 +65,6 @@
                 <label for="files" class="form-label fw-semibold">Dateien hinzufügen</label>
                 <input type="file" class="form-control" id="files" name="files[]" multiple>
                 <div class="form-text text-muted">Maximale Dateigröße: {{ ini_get('upload_max_filesize') }}. Erlaubte Formate: Bilder (JPG, PNG, GIF, WEBP, SVG) und PDF.</div>
-                @error('files')
-                    <div class="text-danger small mt-1">{{ $message }}</div>
-                @enderror
-                @error('files.*')
-                    <div class="text-danger small mt-1">{{ $message }}</div>
-                @enderror
             </div>
 
             @if(isset($item) && $item->attachments->count() > 0)

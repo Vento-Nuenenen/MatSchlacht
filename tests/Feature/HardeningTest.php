@@ -112,7 +112,7 @@ test('every page of the app shows messages', function (string $routeName) {
     $this->actingAs($this->materialwart)
         ->withSession(['error' => 'Etwas ist schiefgegangen'])
         ->get(route($routeName))
-        ->assertSeeInOrder(['<main id="main-content"', 'Etwas ist schiefgegangen'], false);
+        ->assertSeeInOrder(['id="app-toasts"', 'Etwas ist schiefgegangen'], false);
 })->with(['item-collections.index', 'items.create', 'item-groups.create', 'users.create', 'roles.create']);
 
 test('deleting an item removes the files of the item and its records', function () {

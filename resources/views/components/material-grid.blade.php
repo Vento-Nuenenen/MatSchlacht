@@ -6,6 +6,8 @@
     </div>
 </div>
 
+<div data-error-for="items"></div>
+
 <div id="itemsContainer">
     @php
         $grouped = $items->groupBy(fn($i) => optional($i->itemGroup)->position . '|' . optional($i->itemGroup)->name);

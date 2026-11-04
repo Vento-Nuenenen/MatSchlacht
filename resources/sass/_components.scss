@@ -469,6 +469,46 @@ details[open] > summary::after {
     }
 }
 
+// Toasts
+
+.app-toasts {
+    position: fixed;
+    top: calc(var(--app-topbar-height) + var(--app-safe-top) + 0.75rem);
+    right: 1rem;
+    z-index: 1090;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: min(24rem, calc(100vw - 2rem));
+    pointer-events: none;
+}
+
+.app-toast {
+    --bs-toast-max-width: 100%;
+    width: 100%;
+    padding: 0.8rem 0.9rem;
+    border: 0;
+    border-left: 4px solid var(--bs-success);
+    border-radius: var(--bs-border-radius-lg);
+    color: var(--bs-body-color);
+    background-color: var(--app-surface-raised);
+    box-shadow: 0 12px 32px rgba(var(--app-shadow-color), 0.2);
+    pointer-events: auto;
+
+    .app-toast-icon {
+        margin-top: 0.2rem;
+        color: var(--bs-success);
+    }
+
+    &.app-toast-danger {
+        border-left-color: var(--bs-danger);
+
+        .app-toast-icon {
+            color: var(--bs-danger);
+        }
+    }
+}
+
 // Pagination
 
 #main-content[aria-busy='true'] {

@@ -51,49 +51,37 @@
                                                         </div>
                                                     @elseif($setting['type'] === 'select')
                                                         <label for="{{ $fieldId }}" class="form-label fw-semibold">{{ $setting['label'] }}</label>
-                                                        <select class="form-select @error($oldKey) is-invalid @enderror" id="{{ $fieldId }}" name="{{ $fieldName }}"
+                                                        <select class="form-select" id="{{ $fieldId }}" name="{{ $fieldName }}"
                                                                 data-group-select="{{ $key }}">
                                                             @foreach($setting['options'] as $optionValue => $optionLabel)
                                                                 <option value="{{ $optionValue }}" @selected(old($oldKey, $setting['value']) === $optionValue)>{{ $optionLabel }}</option>
                                                             @endforeach
                                                         </select>
-                                                        @error($oldKey)
-                                                            <div class="invalid-feedback">{{ $message }}</div>
-                                                        @enderror
                                                     @elseif($setting['type'] === 'color')
                                                         <label for="{{ $fieldId }}" class="form-label fw-semibold">{{ $setting['label'] }}</label>
                                                         <div class="d-flex align-items-center gap-2">
-                                                            <input type="color" class="form-control form-control-color @error($oldKey) is-invalid @enderror"
+                                                            <input type="color" class="form-control form-control-color"
                                                                    id="{{ $fieldId }}" name="{{ $fieldName }}" value="{{ old($oldKey, $setting['value']) }}"
                                                                    oninput="this.nextElementSibling.textContent = this.value">
                                                             <code>{{ old($oldKey, $setting['value']) }}</code>
                                                         </div>
-                                                        @error($oldKey)
-                                                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                                                        @enderror
                                                     @elseif($setting['type'] === 'secret')
                                                         <label for="{{ $fieldId }}" class="form-label fw-semibold">{{ $setting['label'] }}</label>
                                                         @if($setting['multiline'] ?? false)
-                                                            <textarea class="form-control font-monospace small @error($oldKey) is-invalid @enderror" id="{{ $fieldId }}"
+                                                            <textarea class="form-control font-monospace small" id="{{ $fieldId }}"
                                                                       name="{{ $fieldName }}" rows="4" autocomplete="off"
                                                                       placeholder="{{ $setting['isSet'] ? 'Gespeichert – leer lassen, um ihn zu behalten' : '-----BEGIN OPENSSH PRIVATE KEY-----' }}"></textarea>
                                                         @else
-                                                            <input type="password" class="form-control @error($oldKey) is-invalid @enderror" id="{{ $fieldId }}"
+                                                            <input type="password" class="form-control" id="{{ $fieldId }}"
                                                                    name="{{ $fieldName }}" autocomplete="new-password"
                                                                    placeholder="{{ $setting['isSet'] ? '•••••••• gespeichert – leer lassen, um es zu behalten' : 'nicht gesetzt' }}">
                                                         @endif
-                                                        @error($oldKey)
-                                                            <div class="invalid-feedback">{{ $message }}</div>
-                                                        @enderror
                                                     @else
                                                         <label for="{{ $fieldId }}" class="form-label fw-semibold">{{ $setting['label'] }}</label>
                                                         <input type="{{ $setting['type'] === 'integer' ? 'number' : 'text' }}"
-                                                               class="form-control @error($oldKey) is-invalid @enderror"
+                                                               class="form-control"
                                                                id="{{ $fieldId }}" name="{{ $fieldName }}"
                                                                value="{{ old($oldKey, $setting['value']) }}">
-                                                        @error($oldKey)
-                                                            <div class="invalid-feedback">{{ $message }}</div>
-                                                        @enderror
                                                     @endif
                                                 </div>
                                             @endforeach

@@ -10,20 +10,13 @@
                 </div>
 
                 <div class="card-body p-3 p-md-4">
-                    @include('components.status-alerts')
-
                     <form method="POST" action="{{ route('password.email') }}">
                         @csrf
 
                         <div class="mb-3">
                             <label for="email" class="form-label fw-semibold">{{ __('Email Address') }}</label>
-                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                            <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
 
-                            @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
                         </div>
 
                         <div class="mt-4">

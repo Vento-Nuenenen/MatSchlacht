@@ -52,10 +52,6 @@
                 @include('layouts.topbar')
 
                 <main id="main-content" class="app-content">
-                    <div class="container-fluid px-3 px-sm-4 px-xxl-5 app-container">
-                        @include('components.status-alerts')
-                    </div>
-
                     @yield('content')
                 </main>
             </div>
@@ -67,6 +63,8 @@
             @yield('content')
         </main>
     @endauth
+
+    @include('components.toasts')
 
     @yield('assets-js')
 

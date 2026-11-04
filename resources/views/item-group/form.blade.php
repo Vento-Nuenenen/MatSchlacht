@@ -7,9 +7,6 @@
             <label for="name" class="form-label fw-semibold">Bezeichnung</label>
             <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $itemGroup->name ?? '') }}" required autofocus>
 
-            @error('name')
-                <div class="text-danger small mt-1">{{ $message }}</div>
-            @enderror
         </div>
 
         <input type="hidden" name="position" value="{{ $itemGroup->position ?? 0 }}" />

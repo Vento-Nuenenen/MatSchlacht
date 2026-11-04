@@ -16,12 +16,9 @@
             ] as $field => [$label, $help])
                 <div class="col-12 col-md-6">
                     <label for="{{ $field }}" class="form-label fw-semibold">{{ $label }}</label>
-                    <input type="text" class="form-control @error($field) is-invalid @enderror" id="{{ $field }}" name="{{ $field }}"
+                    <input type="text" class="form-control" id="{{ $field }}" name="{{ $field }}"
                            value="{{ old($field, $hitobitoAccessRule->$field ?? '') }}" aria-describedby="{{ $field }}-help">
                     <div id="{{ $field }}-help" class="form-text">{{ $help }}</div>
-                    @error($field)
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
                 </div>
             @endforeach
         </div>
@@ -43,23 +40,17 @@
         <div class="row g-3">
             <div class="col-12 col-md-6">
                 <label for="role_name" class="form-label fw-semibold">App-Rolle</label>
-                <select class="form-select @error('role_name') is-invalid @enderror" id="role_name" name="role_name">
+                <select class="form-select" id="role_name" name="role_name">
                     <option value="">Keine Rolle vergeben</option>
                     @foreach($roles as $role)
                         <option value="{{ $role->name }}" @selected(old('role_name', $hitobitoAccessRule->role_name ?? '') === $role->name)>{{ $role->name }}</option>
                     @endforeach
                 </select>
-                @error('role_name')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
             </div>
             <div class="col-12 col-md-6">
                 <label for="description" class="form-label fw-semibold">Beschreibung <span class="text-muted fw-normal">(optional)</span></label>
-                <input type="text" class="form-control @error('description') is-invalid @enderror" id="description" name="description"
+                <input type="text" class="form-control" id="description" name="description"
                        value="{{ old('description', $hitobitoAccessRule->description ?? '') }}" maxlength="255">
-                @error('description')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
             </div>
         </div>
     </div>
