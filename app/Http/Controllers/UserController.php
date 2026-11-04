@@ -115,6 +115,10 @@ class UserController extends Controller
      */
     public function destroy(User $user): RedirectResponse
     {
+        if ($user->orders()->exists()) {
+            return back()->with('error', "{$user->fullName()} hat Bestellungen und kann nicht gelöscht werden.");
+        }
+
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'Benutzer wurde erfolgreich gelöscht.');

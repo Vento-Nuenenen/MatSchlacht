@@ -4,12 +4,10 @@ namespace App\Services\FileStorage;
 
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use League\Flysystem\Config;
 use League\Flysystem\DirectoryAttributes;
 use League\Flysystem\FileAttributes;
-use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\PathPrefixer;
 use League\Flysystem\UnableToCheckExistence;
 use League\Flysystem\UnableToCopyFile;
@@ -19,7 +17,6 @@ use League\Flysystem\UnableToDeleteFile;
 use League\Flysystem\UnableToMoveFile;
 use League\Flysystem\UnableToReadFile;
 use League\Flysystem\UnableToRetrieveMetadata;
-use League\Flysystem\UnableToSetVisibility;
 use League\Flysystem\UnableToWriteFile;
 use RuntimeException;
 use Throwable;
@@ -30,7 +27,7 @@ use Throwable;
  * Uses the client credentials of the Azure app that is already used for the login and the mails.
  * The app needs the application permission Sites.ReadWrite.All (or Files.ReadWrite.All).
  */
-class SharePointAdapter implements FilesystemAdapter
+class SharePointAdapter extends HttpFilesystemAdapter
 {
     public const GRAPH_URL = 'https://graph.microsoft.com/v1.0';
 
@@ -54,6 +51,11 @@ class SharePointAdapter implements FilesystemAdapter
         string $folder = '',
     ) {
         $this->prefixer = new PathPrefixer(trim($folder, '/'));
+    }
+
+    protected function serviceName(): string
+    {
+        return 'SharePoint';
     }
 
     public function fileExists(string $path): bool
@@ -84,11 +86,6 @@ class SharePointAdapter implements FilesystemAdapter
         }
     }
 
-    public function writeStream(string $path, $contents, Config $config): void
-    {
-        $this->write($path, (string) stream_get_contents($contents), $config);
-    }
-
     public function read(string $path): string
     {
         try {
@@ -102,20 +99,6 @@ class SharePointAdapter implements FilesystemAdapter
         }
 
         return $response->body();
-    }
-
-    public function readStream(string $path)
-    {
-        $stream = fopen('php://temp', 'w+b');
-
-        if ($stream === false) {
-            throw UnableToReadFile::fromLocation($path, 'Could not open a temporary stream.');
-        }
-
-        fwrite($stream, $this->read($path));
-        rewind($stream);
-
-        return $stream;
     }
 
     public function delete(string $path): void
@@ -160,16 +143,6 @@ class SharePointAdapter implements FilesystemAdapter
         } catch (Throwable $exception) {
             throw UnableToCreateDirectory::atLocation($path, $exception->getMessage(), $exception);
         }
-    }
-
-    public function setVisibility(string $path, string $visibility): void
-    {
-        throw UnableToSetVisibility::atLocation($path, 'Visibility is not supported for SharePoint storage.');
-    }
-
-    public function visibility(string $path): FileAttributes
-    {
-        throw UnableToRetrieveMetadata::visibility($path, 'Visibility is not supported for SharePoint storage.');
     }
 
     public function mimeType(string $path): FileAttributes
@@ -349,29 +322,12 @@ class SharePointAdapter implements FilesystemAdapter
      */
     protected function accessToken(): string
     {
-        $cacheKey = 'file-storage.sharepoint.token.'.md5($this->tenantId.$this->clientId);
-        $token = Cache::get($cacheKey);
-
-        if (is_string($token)) {
-            return $token;
-        }
-
-        /** @var Response $response */
-        $response = Http::asForm()->post("https://login.microsoftonline.com/{$this->tenantId}/oauth2/v2.0/token", [
-            'grant_type' => 'client_credentials',
-            'client_id' => $this->clientId,
-            'client_secret' => $this->clientSecret,
-            'scope' => 'https://graph.microsoft.com/.default',
-        ]);
-
-        $token = $response->json('access_token');
-
-        if (! $response->successful() || ! is_string($token)) {
-            throw new RuntimeException('Anmeldung bei Microsoft Graph fehlgeschlagen: '.($response->json('error_description') ?? $response->status()));
-        }
-
-        Cache::put($cacheKey, $token, max(60, (int) $response->json('expires_in', 3600) - 120));
-
-        return $token;
+        return $this->rememberAccessToken('file-storage.sharepoint.token.'.md5($this->tenantId.$this->clientId), fn (): Response => Http::asForm()
+            ->post("https://login.microsoftonline.com/{$this->tenantId}/oauth2/v2.0/token", [
+                'grant_type' => 'client_credentials',
+                'client_id' => $this->clientId,
+                'client_secret' => $this->clientSecret,
+                'scope' => 'https://graph.microsoft.com/.default',
+            ]));
     }
 }

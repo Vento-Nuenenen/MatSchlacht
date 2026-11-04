@@ -11,9 +11,33 @@ use Spatie\ModelStates\StateConfig;
  */
 abstract class OrderState extends State
 {
+    /**
+     * The states in which an order blocks its material for its period.
+     *
+     * @var array<int, class-string<OrderState>>
+     */
+    public const array RESERVING_STATES = [Committed::class, Accepted::class, Delivered::class];
+
+    /**
+     * The states in which the material has been handed out, the positions are fixed then.
+     *
+     * @var array<int, class-string<OrderState>>
+     */
+    public const array HANDED_OUT_STATES = [Delivered::class, Returned::class, Archived::class];
+
     abstract public function display(): string;
 
     abstract public function color(): string;
+
+    public function reservesStock(): bool
+    {
+        return in_array(static::class, self::RESERVING_STATES, true);
+    }
+
+    public function isHandedOut(): bool
+    {
+        return in_array(static::class, self::HANDED_OUT_STATES, true);
+    }
 
     public static function config(): StateConfig
     {

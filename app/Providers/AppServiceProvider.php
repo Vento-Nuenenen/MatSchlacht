@@ -49,9 +49,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(ComponentManager::class);
-        $this->app->singleton(FileStorageManager::class);
-        $this->app->singleton(ThemeService::class);
+        // Scoped, so that a long running queue worker sees changed settings with its next job.
+        $this->app->scoped(ComponentManager::class);
+        $this->app->scoped(FileStorageManager::class);
+        $this->app->scoped(ThemeService::class);
     }
 
     /**

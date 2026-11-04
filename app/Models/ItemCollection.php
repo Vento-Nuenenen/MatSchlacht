@@ -32,4 +32,22 @@ class ItemCollection extends Model
             ->withPivot('quantity')
             ->withTimestamps();
     }
+
+    /**
+     * The items as the order forms need them: the quantities are given in lots.
+     *
+     * @return array<int, array{id: int, quantity: float|int}>
+     */
+    public function formItems(): array
+    {
+        return $this->items
+            ->map(function (Item $item): array {
+                /** @var object{quantity: int} $pivot */
+                $pivot = $item->getRelation('pivot');
+
+                return ['id' => $item->id, 'quantity' => $pivot->quantity / max(1, $item->lot)];
+            })
+            ->values()
+            ->all();
+    }
 }

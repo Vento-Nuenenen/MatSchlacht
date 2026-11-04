@@ -17,7 +17,6 @@ use App\Http\Controllers\ItemMaintenanceController;
 use App\Http\Controllers\ItemProcurementController;
 use App\Http\Controllers\ItemStockController;
 use App\Http\Controllers\LabelController;
-use App\Http\Controllers\MailTestController;
 use App\Http\Controllers\MaintenanceOverviewController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderManagementController;
@@ -105,5 +104,4 @@ Route::middleware('auth')->group(function () {
     Route::post('/settings/file-storage/test', [ComponentSettingController::class, 'testFileStorage'])->name('settings.file-storage.test');
     Route::get('/settings/file-storage/{provider}/connect', [FileStorageConnectionController::class, 'connect'])->name('settings.file-storage.connect');
     Route::get('/settings/file-storage/{provider}/callback', [FileStorageConnectionController::class, 'callback'])->name('settings.file-storage.callback');
-    Route::get('/test-mail', [MailTestController::class, 'sendTestMail'])->name('test-mail');
 });

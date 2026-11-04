@@ -16,27 +16,15 @@ beforeEach(function () {
     $this->seed(RolesAndPermissionsSeeder::class);
 });
 
-test('non-privileged user cannot trigger test emails', function () {
-    Mail::fake();
-
-    $user = User::factory()->create();
-    $user->assignRole('Abteilungsleitung');
-
-    $response = $this->actingAs($user)->get(route('test-mail', ['email' => 'victim@example.com']));
-
-    $response->assertForbidden();
-    Mail::assertNothingSent();
-});
-
-test('privileged user can trigger test emails', function () {
+test('test emails cannot be triggered over the web', function () {
     Mail::fake();
 
     $admin = User::factory()->create();
     $admin->assignRole('Materialwart');
 
-    $response = $this->actingAs($admin)->get(route('test-mail', ['email' => 'test@example.com']));
+    $this->actingAs($admin)->get('/test-mail?email=victim@example.com')->assertNotFound();
 
-    $response->assertOk();
+    Mail::assertNothingSent();
 });
 
 test('user editing item A cannot delete attachments belonging to item B (IDOR prevention)', function () {

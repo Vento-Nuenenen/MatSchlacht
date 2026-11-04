@@ -31,7 +31,7 @@ class ItemController extends Controller
      */
     public function index(Request $request): View|Factory
     {
-        $query = Item::query();
+        $query = Item::with('itemGroup', 'attachments');
 
         if ($request->filled('item_group_id')) {
             $query->where('item_group_id', $request->item_group_id);
@@ -125,6 +125,16 @@ class ItemController extends Controller
      */
     public function destroy(Item $item): RedirectResponse
     {
+        if ($item->orderedItems()->exists()) {
+            return back()->with('error', "«{$item->name}» wird in Bestellungen verwendet und kann nicht gelöscht werden.");
+        }
+
+        $item->load('procurements', 'maintenances');
+
+        foreach ([$item, ...$item->procurements, ...$item->maintenances] as $attachable) {
+            $this->attachments->removeAll($attachable);
+        }
+
         $item->delete();
 
         return redirect()->route('items.index')->with('success', 'Material wurde erfolgreich gelöscht.');

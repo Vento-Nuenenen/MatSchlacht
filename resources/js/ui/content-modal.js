@@ -1,7 +1,17 @@
 /**
- * The global #contentModal shows the title and HTML content of the element that opened it
- * (data-bs-title / data-bs-content), e.g. the content list of an item.
+ * The global #contentModal shows the list of the element that opened it (data-content-title,
+ * data-content-lines). The values are inserted as text and can never run as HTML.
  */
+function listItem({ label, text }) {
+    const item = document.createElement('li');
+    const strong = document.createElement('strong');
+
+    strong.textContent = label;
+    item.append(strong, ` ${text}`);
+
+    return item;
+}
+
 export function initContentModal() {
     const modal = document.getElementById('contentModal');
 
@@ -16,9 +26,15 @@ export function initContentModal() {
             return;
         }
 
+        const list = document.createElement('ul');
+
+        list.className = 'list-unstyled mb-0';
+        list.append(
+            ...JSON.parse(trigger.dataset.contentLines || '[]').map(listItem),
+        );
+
         modal.querySelector('.modal-title').textContent =
-            trigger.getAttribute('data-bs-title');
-        modal.querySelector('.modal-body').innerHTML =
-            trigger.getAttribute('data-bs-content');
+            trigger.dataset.contentTitle;
+        modal.querySelector('.modal-body').replaceChildren(list);
     });
 }

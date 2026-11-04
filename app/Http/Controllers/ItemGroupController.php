@@ -97,6 +97,10 @@ class ItemGroupController extends Controller
      */
     public function destroy(ItemGroup $itemGroup): RedirectResponse
     {
+        if ($itemGroup->items()->exists()) {
+            return back()->with('error', "«{$itemGroup->name}» enthält noch Material und kann nicht gelöscht werden.");
+        }
+
         $itemGroup->delete();
 
         return redirect()->route('item-groups.index')->with('success', 'Materialgruppe wurde erfolgreich gelöscht.');

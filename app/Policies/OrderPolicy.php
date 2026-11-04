@@ -21,11 +21,7 @@ class OrderPolicy
      */
     public function view(User $user, Order $order): bool
     {
-        if ($user->can('view orders')) {
-            return true;
-        }
-
-        return $user->can('view own orders') && $order->user_id === $user->id;
+        return $user->can('view orders') && $order->isVisibleTo($user);
     }
 
     /**

@@ -76,7 +76,7 @@ test('it prevents ordering more items than available in stock via mixed items an
         'role_id' => $this->role->id,
         'user_id' => $this->user->id,
         'items' => [
-            $this->item->id => 6, // Total 11 (5 + 6)
+            $this->item->id => 11, // The form submits the collection's 5 plus 6 more
         ],
         'collections' => [
             $collection->id,
@@ -87,8 +87,7 @@ test('it prevents ordering more items than available in stock via mixed items an
     $response = $this->actingAs($this->user)
         ->post(route('orders.store'), $orderData);
 
-    // This might be tricky because we need to decide where the error should be attached
-    $response->assertSessionHasErrors();
+    $response->assertSessionHasErrors('collections');
 });
 
 test('it checks the stock of a draft order per item', function () {
@@ -135,7 +134,7 @@ test('it reports an overstocked item only once when ordering', function () {
         'event_end' => now()->addDays(7)->format('Y-m-d'),
         'role_id' => $this->role->id,
         'user_id' => $this->user->id,
-        'items' => [$this->item->id => 6],
+        'items' => [$this->item->id => 11],
         'collections' => [$collection->id],
         'action' => 'order',
     ]);

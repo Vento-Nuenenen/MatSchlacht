@@ -23,7 +23,6 @@ class OrderedItemFactory extends Factory
             'order_id' => Order::factory(),
             'item_id' => Item::factory(),
             'quantity' => fake()->numberBetween(1, 5),
-            'confirmed' => 0,
             'delivered' => 0,
             'returned' => 0,
             'repair' => 0,

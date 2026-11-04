@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Http;
 use League\Flysystem\Config;
 use League\Flysystem\DirectoryAttributes;
 use League\Flysystem\FileAttributes;
-use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\PathPrefixer;
 use League\Flysystem\StorageAttributes;
 use League\Flysystem\UnableToCheckExistence;
@@ -22,7 +21,6 @@ use League\Flysystem\UnableToDeleteFile;
 use League\Flysystem\UnableToMoveFile;
 use League\Flysystem\UnableToReadFile;
 use League\Flysystem\UnableToRetrieveMetadata;
-use League\Flysystem\UnableToSetVisibility;
 use League\Flysystem\UnableToWriteFile;
 use RuntimeException;
 use Throwable;
@@ -30,7 +28,7 @@ use Throwable;
 /**
  * A Flysystem adapter for WebDAV servers such as Nextcloud, built on the Laravel HTTP client.
  */
-class WebDavAdapter implements FilesystemAdapter
+class WebDavAdapter extends HttpFilesystemAdapter
 {
     protected const PROPFIND_BODY = '<?xml version="1.0" encoding="utf-8"?><d:propfind xmlns:d="DAV:"><d:prop>'
         .'<d:resourcetype/><d:getcontentlength/><d:getlastmodified/><d:getcontenttype/></d:prop></d:propfind>';
@@ -45,6 +43,11 @@ class WebDavAdapter implements FilesystemAdapter
     ) {
         $this->baseUrl = rtrim($baseUrl, '/');
         $this->prefixer = new PathPrefixer(trim($folder, '/'));
+    }
+
+    protected function serviceName(): string
+    {
+        return 'WebDAV';
     }
 
     public function fileExists(string $path): bool
@@ -67,11 +70,6 @@ class WebDavAdapter implements FilesystemAdapter
         }
     }
 
-    public function writeStream(string $path, $contents, Config $config): void
-    {
-        $this->write($path, (string) stream_get_contents($contents), $config);
-    }
-
     public function read(string $path): string
     {
         try {
@@ -79,20 +77,6 @@ class WebDavAdapter implements FilesystemAdapter
         } catch (Throwable $exception) {
             throw UnableToReadFile::fromLocation($path, $exception->getMessage(), $exception);
         }
-    }
-
-    public function readStream(string $path)
-    {
-        $stream = fopen('php://temp', 'w+b');
-
-        if ($stream === false) {
-            throw UnableToReadFile::fromLocation($path, 'Could not open a temporary stream.');
-        }
-
-        fwrite($stream, $this->read($path));
-        rewind($stream);
-
-        return $stream;
     }
 
     public function delete(string $path): void
@@ -120,16 +104,6 @@ class WebDavAdapter implements FilesystemAdapter
         } catch (Throwable $exception) {
             throw UnableToCreateDirectory::atLocation($path, $exception->getMessage(), $exception);
         }
-    }
-
-    public function setVisibility(string $path, string $visibility): void
-    {
-        throw UnableToSetVisibility::atLocation($path, 'Visibility is not supported for WebDAV storage.');
-    }
-
-    public function visibility(string $path): FileAttributes
-    {
-        throw UnableToRetrieveMetadata::visibility($path, 'Visibility is not supported for WebDAV storage.');
     }
 
     public function mimeType(string $path): FileAttributes

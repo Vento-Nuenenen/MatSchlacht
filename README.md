@@ -10,6 +10,7 @@ Die Materialverwaltung der Pfadi Nünenen: Material erfassen, für Lager und Anl
 ## Funktionen
 
 - **Bestellungen:** vom Entwurf über Bestätigung und Ausgabe bis zur Rückgabe, mit Auftrags-, Retouren- und Packliste als PDF
+- **Verfügbarkeit:** Eingereichte, bestätigte und ausgegebene Bestellungen reservieren ihr Material für den Zeitraum; Material in Reparatur zählt nicht als verfügbar
 - **Material:** Materialgruppen, Kollektionen, Inhaltslisten und Datei-Anhänge
 - **Lagerhaltung:** Lagerort › Lagerraum › Lagerregal › Regalebene › Lagerplatz mit Bestand pro Platz und druckbaren Etiketten mit QR-Code
 - **Beschaffung und Wartung:** Beschaffungen mit Belegen, Wartungsprotokoll, Intervalle und Erinnerungsmails

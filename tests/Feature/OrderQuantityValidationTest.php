@@ -38,7 +38,6 @@ test('it prevents returning more items than delivered', function () {
     $order->orderedItems()->create([
         'item_id' => $this->item->id,
         'quantity' => 10,
-        'confirmed' => true,
         'delivered' => true,
         'returned' => 0,
         'repair' => 0,

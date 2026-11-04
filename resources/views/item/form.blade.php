@@ -96,7 +96,7 @@
                             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
                                 <div class="card h-100 shadow-sm">
                                     @if(\Illuminate\Support\Str::endsWith(strtolower($attachment->path), ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']))
-                                        @php($url = app(\App\Services\AttachmentService::class)->url($attachment))
+                                        @php($url = $attachment->url())
                                         @if($url)
                                             <img src="{{ $url }}" class="card-img-top" style="height: 100px; object-fit: cover;">
                                         @else

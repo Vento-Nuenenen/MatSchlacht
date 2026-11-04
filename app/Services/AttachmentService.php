@@ -70,15 +70,6 @@ class AttachmentService
     }
 
     /**
-     * The link to a file. Files are always served through the app, so that every provider works
-     * the same way and the permissions of the attached record are checked.
-     */
-    public function url(Attachment $attachment): string
-    {
-        return route('attachments.show', $attachment);
-    }
-
-    /**
      * The file as inline response, e.g. to show an image or open a PDF in the browser.
      */
     public function response(Attachment $attachment): StreamedResponse
@@ -94,7 +85,20 @@ class AttachmentService
 
         abort_unless($exists, 404);
 
-        return $disk->response($attachment->path, basename($attachment->path));
+        // Uploads are served from the domain of the app: scripts in a file must never run.
+        $headers = [
+            'Content-Security-Policy' => "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+            'X-Content-Type-Options' => 'nosniff',
+            // The stored file names are unique, a file never changes.
+            'Cache-Control' => 'private, max-age=86400',
+        ];
+
+        return $disk->response(
+            $attachment->path,
+            basename($attachment->path),
+            $headers,
+            str_ends_with(strtolower($attachment->path), '.svg') ? 'attachment' : 'inline',
+        );
     }
 
     protected function delete(Attachment $attachment): void

@@ -3,12 +3,10 @@
 namespace App\Services\FileStorage;
 
 use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use League\Flysystem\Config;
 use League\Flysystem\DirectoryAttributes;
 use League\Flysystem\FileAttributes;
-use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\PathPrefixer;
 use League\Flysystem\StorageAttributes;
 use League\Flysystem\UnableToCheckExistence;
@@ -19,7 +17,6 @@ use League\Flysystem\UnableToDeleteFile;
 use League\Flysystem\UnableToMoveFile;
 use League\Flysystem\UnableToReadFile;
 use League\Flysystem\UnableToRetrieveMetadata;
-use League\Flysystem\UnableToSetVisibility;
 use League\Flysystem\UnableToWriteFile;
 use League\MimeTypeDetection\FinfoMimeTypeDetector;
 use RuntimeException;
@@ -31,7 +28,7 @@ use Throwable;
  * Authenticates with the refresh token obtained through «Mit Dropbox verbinden». Single uploads
  * are limited to 150 MB by Dropbox, which is far above the upload limit of the app.
  */
-class DropboxAdapter implements FilesystemAdapter
+class DropboxAdapter extends HttpFilesystemAdapter
 {
     public const API_URL = 'https://api.dropboxapi.com/2';
 
@@ -49,6 +46,11 @@ class DropboxAdapter implements FilesystemAdapter
     ) {
         $folder = trim($folder, '/');
         $this->prefixer = new PathPrefixer($folder === '' ? '/' : '/'.$folder);
+    }
+
+    protected function serviceName(): string
+    {
+        return 'Dropbox';
     }
 
     public function fileExists(string $path): bool
@@ -70,11 +72,6 @@ class DropboxAdapter implements FilesystemAdapter
         }
     }
 
-    public function writeStream(string $path, $contents, Config $config): void
-    {
-        $this->write($path, (string) stream_get_contents($contents), $config);
-    }
-
     public function read(string $path): string
     {
         try {
@@ -82,20 +79,6 @@ class DropboxAdapter implements FilesystemAdapter
         } catch (Throwable $exception) {
             throw UnableToReadFile::fromLocation($path, $exception->getMessage(), $exception);
         }
-    }
-
-    public function readStream(string $path)
-    {
-        $stream = fopen('php://temp', 'w+b');
-
-        if ($stream === false) {
-            throw UnableToReadFile::fromLocation($path, 'Could not open a temporary stream.');
-        }
-
-        fwrite($stream, $this->read($path));
-        rewind($stream);
-
-        return $stream;
     }
 
     public function delete(string $path): void
@@ -127,16 +110,6 @@ class DropboxAdapter implements FilesystemAdapter
         } catch (Throwable $exception) {
             throw UnableToCreateDirectory::atLocation($path, $exception->getMessage(), $exception);
         }
-    }
-
-    public function setVisibility(string $path, string $visibility): void
-    {
-        throw UnableToSetVisibility::atLocation($path, 'Visibility is not supported for Dropbox storage.');
-    }
-
-    public function visibility(string $path): FileAttributes
-    {
-        throw UnableToRetrieveMetadata::visibility($path, 'Visibility is not supported for Dropbox storage.');
     }
 
     public function mimeType(string $path): FileAttributes
@@ -317,30 +290,15 @@ class DropboxAdapter implements FilesystemAdapter
      */
     protected function accessToken(): string
     {
-        $cacheKey = 'file-storage.dropbox.token.'.md5($this->appKey.$this->refreshToken);
-        $token = Cache::get($cacheKey);
-
-        if (is_string($token)) {
-            return $token;
-        }
-
         if ($this->refreshToken === '') {
             throw new RuntimeException('Dropbox ist noch nicht verbunden. Bitte unter Einstellungen «Mit Dropbox verbinden».');
         }
 
-        $response = Http::asForm()->withBasicAuth($this->appKey, $this->appSecret)->post(self::TOKEN_URL, [
-            'grant_type' => 'refresh_token',
-            'refresh_token' => $this->refreshToken,
-        ]);
-
-        $token = $response->json('access_token');
-
-        if (! $response->successful() || ! is_string($token)) {
-            throw new RuntimeException('Anmeldung bei Dropbox fehlgeschlagen: '.($response->json('error_description') ?? $response->status()));
-        }
-
-        Cache::put($cacheKey, $token, max(60, (int) $response->json('expires_in', 14400) - 120));
-
-        return $token;
+        return $this->rememberAccessToken('file-storage.dropbox.token.'.md5($this->appKey.$this->refreshToken), fn (): Response => Http::asForm()
+            ->withBasicAuth($this->appKey, $this->appSecret)
+            ->post(self::TOKEN_URL, [
+                'grant_type' => 'refresh_token',
+                'refresh_token' => $this->refreshToken,
+            ]));
     }
 }

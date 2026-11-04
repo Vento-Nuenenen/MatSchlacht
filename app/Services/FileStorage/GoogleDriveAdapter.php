@@ -4,12 +4,10 @@ namespace App\Services\FileStorage;
 
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use League\Flysystem\Config;
 use League\Flysystem\DirectoryAttributes;
 use League\Flysystem\FileAttributes;
-use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\StorageAttributes;
 use League\Flysystem\UnableToCheckExistence;
 use League\Flysystem\UnableToCopyFile;
@@ -19,7 +17,6 @@ use League\Flysystem\UnableToDeleteFile;
 use League\Flysystem\UnableToMoveFile;
 use League\Flysystem\UnableToReadFile;
 use League\Flysystem\UnableToRetrieveMetadata;
-use League\Flysystem\UnableToSetVisibility;
 use League\Flysystem\UnableToWriteFile;
 use RuntimeException;
 use Throwable;
@@ -31,7 +28,7 @@ use Throwable;
  * "drive.file" and therefore only sees files it created itself, starting with its root folder
  * (default «MatSchlacht») in «Meine Ablage».
  */
-class GoogleDriveAdapter implements FilesystemAdapter
+class GoogleDriveAdapter extends HttpFilesystemAdapter
 {
     public const API_URL = 'https://www.googleapis.com/drive/v3';
 
@@ -64,6 +61,11 @@ class GoogleDriveAdapter implements FilesystemAdapter
         return $this->findOrNull($path, files: true) !== null;
     }
 
+    protected function serviceName(): string
+    {
+        return 'Google Drive';
+    }
+
     public function directoryExists(string $path): bool
     {
         return trim($path, '/') === '' || $this->findOrNull($path, files: false) !== null;
@@ -93,11 +95,6 @@ class GoogleDriveAdapter implements FilesystemAdapter
         }
     }
 
-    public function writeStream(string $path, $contents, Config $config): void
-    {
-        $this->write($path, (string) stream_get_contents($contents), $config);
-    }
-
     public function read(string $path): string
     {
         try {
@@ -107,20 +104,6 @@ class GoogleDriveAdapter implements FilesystemAdapter
         } catch (Throwable $exception) {
             throw UnableToReadFile::fromLocation($path, $exception->getMessage(), $exception);
         }
-    }
-
-    public function readStream(string $path)
-    {
-        $stream = fopen('php://temp', 'w+b');
-
-        if ($stream === false) {
-            throw UnableToReadFile::fromLocation($path, 'Could not open a temporary stream.');
-        }
-
-        fwrite($stream, $this->read($path));
-        rewind($stream);
-
-        return $stream;
     }
 
     public function delete(string $path): void
@@ -157,16 +140,6 @@ class GoogleDriveAdapter implements FilesystemAdapter
         } catch (Throwable $exception) {
             throw UnableToCreateDirectory::atLocation($path, $exception->getMessage(), $exception);
         }
-    }
-
-    public function setVisibility(string $path, string $visibility): void
-    {
-        throw UnableToSetVisibility::atLocation($path, 'Visibility is not supported for Google Drive storage.');
-    }
-
-    public function visibility(string $path): FileAttributes
-    {
-        throw UnableToRetrieveMetadata::visibility($path, 'Visibility is not supported for Google Drive storage.');
     }
 
     public function mimeType(string $path): FileAttributes
@@ -418,32 +391,16 @@ class GoogleDriveAdapter implements FilesystemAdapter
      */
     protected function accessToken(): string
     {
-        $cacheKey = 'file-storage.google-drive.token.'.md5($this->clientId.$this->refreshToken);
-        $token = Cache::get($cacheKey);
-
-        if (is_string($token)) {
-            return $token;
-        }
-
         if ($this->refreshToken === '') {
             throw new RuntimeException('Google Drive ist noch nicht verbunden. Bitte unter Einstellungen «Mit Google verbinden».');
         }
 
-        $response = Http::asForm()->post(self::TOKEN_URL, [
-            'grant_type' => 'refresh_token',
-            'client_id' => $this->clientId,
-            'client_secret' => $this->clientSecret,
-            'refresh_token' => $this->refreshToken,
-        ]);
-
-        $token = $response->json('access_token');
-
-        if (! $response->successful() || ! is_string($token)) {
-            throw new RuntimeException('Anmeldung bei Google fehlgeschlagen: '.($response->json('error_description') ?? $response->status()));
-        }
-
-        Cache::put($cacheKey, $token, max(60, (int) $response->json('expires_in', 3600) - 120));
-
-        return $token;
+        return $this->rememberAccessToken('file-storage.google-drive.token.'.md5($this->clientId.$this->refreshToken), fn (): Response => Http::asForm()
+            ->post(self::TOKEN_URL, [
+                'grant_type' => 'refresh_token',
+                'client_id' => $this->clientId,
+                'client_secret' => $this->clientSecret,
+                'refresh_token' => $this->refreshToken,
+            ]));
     }
 }

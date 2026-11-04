@@ -24,7 +24,7 @@
                         <th scope="col" class="text-center d-none d-sm-table-cell" style="width: 15%; min-width: 75px;">Verfügbar</th>
                         <th scope="col" class="text-center d-none d-sm-table-cell" style="width: 15%; min-width: 75px;">Packungsgrösse</th>
                         <th scope="col" class="text-center" style="width: 15%; min-width: 85px;">Bestellen</th>
-                        @if(isset($order) && isset($order->state) && ($order->state?->equals(\App\States\Order\Delivered::class) || $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class)))
+                        @if(isset($order) && $order->state->isHandedOut())
                             <th scope="col" class="text-center" style="width: 15%; min-width: 85px;">Zurückgegeben</th>
                         @endif
                     </tr>
@@ -34,14 +34,14 @@
                         @php
                             $actualQty = old('items.'.$item->id, $orderItemQuantities->get($item->id, 0));
                             $displayQty = ($item->lot > 1) ? $actualQty / $item->lot : $actualQty;
-                            $maxDisplayQty = ($item->lot > 1) ? floor($item->stock / $item->lot) : $item->stock;
+                            $maxDisplayQty = ($item->lot > 1) ? floor($item->usableStock() / $item->lot) : $item->usableStock();
 
                             $orderedItem = isset($order) && isset($order->orderedItems) ? $order->orderedItems->where('item_id', $item->id)->first() : null;
                             $returnedQty = old('returned.'.$item->id, $orderedItem?->returned ?? ($actualQty > 0 ? $actualQty : 0));
                             $displayReturnedQty = ($item->lot > 1) ? $returnedQty / $item->lot : $returnedQty;
                             $imageAttachments = $item->attachments->filter(fn($a) => \Illuminate\Support\Str::endsWith(strtolower($a->path), ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']));
-                            $imageUrls = $imageAttachments->map(fn ($img) => app(\App\Services\AttachmentService::class)->url($img))->filter();
-                            $isOrderReadonly = isset($order) && isset($order->state) && ($order->state?->equals(\App\States\Order\Delivered::class) || $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class));
+                            $imageUrls = $imageAttachments->map(fn ($img) => $img->url())->filter();
+                            $isOrderReadonly = isset($order) && $order->state->isHandedOut();
                         @endphp
                         <tr class="item-row {{ $actualQty > 0 ? 'table-primary' : '' }}">
                             <td class="item-name py-2">
@@ -56,18 +56,12 @@
                                     <i class="fa fa-file-alt text-muted ms-1 p-1" title="Hat weitere Anhänge"></i>
                                 @endif
 
-                                @if($item->contents->isNotEmpty())
-                                    <i class="fa fa-info-circle text-info ms-1 cursor-pointer p-1"
-                                       data-bs-toggle="modal"
-                                       data-bs-target="#contentModal"
-                                       data-bs-title="Inhaltsliste von {{ $item->name }}"
-                                       data-bs-content="<ul class='list-unstyled mb-0'>@foreach($item->contents as $c)<li><i class='fa fa-check-square-o me-1 small text-muted'></i><strong>{{ $c->quantity }}</strong> {{ $c->name }}</li>@endforeach</ul>"></i>
-                                @endif
+                                @include('components.content-info', ['title' => "Inhaltsliste von {$item->name}", 'lines' => $item->contentLines()])
                                 <div class="small text-body-secondary d-sm-none">
-                                    {{ $item->stock }} verfügbar{{ $item->lot > 1 ? ' · Packung à '.$item->lot : '' }}
+                                    {{ $item->usableStock() }} verfügbar{{ $item->lot > 1 ? ' · Packung à '.$item->lot : '' }}
                                 </div>
                             </td>
-                            <td class="text-center d-none d-sm-table-cell">{{ $item->stock }}</td>
+                            <td class="text-center d-none d-sm-table-cell">{{ $item->usableStock() }}</td>
                             <td class="text-center d-none d-sm-table-cell">{{ $item->lot }}</td>
                             <td class="text-center text-nowrap">
                                 <div class="{{ $isOrderReadonly ? '' : 'qty-stepper' }}">
@@ -81,7 +75,7 @@
                                     class="form-control form-control-sm item-qty-input d-inline-block"
                                     name="items[{{ $item->id }}]"
                                     value="{{ $displayQty }}"
-                                    {{ isset($order) && isset($order->state) && ($order->state?->equals(\App\States\Order\Delivered::class) || $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class)) ? 'readonly' : '' }}
+                                    @readonly($isOrderReadonly)
                                     onchange="updateItemHighlighting(this)"
                                     oninput="enforceQuantityLimits(this)"
                                     data-min-qty="0"
@@ -91,7 +85,7 @@
                                 @endunless
                                 </div>
                             </td>
-                            @if(isset($order) && isset($order->state) && ($order->state?->equals(\App\States\Order\Delivered::class) || $order->state?->equals(\App\States\Order\Returned::class) || $order->state?->equals(\App\States\Order\Archived::class)))
+                            @if(isset($order) && $order->state->isHandedOut())
                                 <td class="text-center">
                                     @if($actualQty > 0)
                                         <input

@@ -61,15 +61,7 @@
                                     <tr>
                                         <td>
                                             <span class="fw-semibold">{{ $orderedItem->item->name }}</span>
-                                            @component_enabled('item_contents')
-                                            @if($orderedItem->item->contents->isNotEmpty())
-                                                <i class="fa fa-info-circle text-info ms-1 cursor-pointer p-1"
-                                                   data-bs-toggle="modal"
-                                                   data-bs-target="#contentModal"
-                                                   data-bs-title="Inhaltsliste von {{ $orderedItem->item->name }}"
-                                                   data-bs-content="<ul class='list-unstyled mb-0'>@foreach($orderedItem->item->contents as $c)<li><i class='fa fa-check-square-o me-1 small text-muted'></i><strong>{{ $c->quantity }}</strong> {{ $c->name }}</li>@endforeach</ul>"></i>
-                                            @endif
-                                            @endcomponent_enabled
+                                            @include('components.content-info', ['title' => "Inhaltsliste von {$orderedItem->item->name}", 'lines' => $orderedItem->item->contentLines()])
                                         </td>
                                         <td class="text-center fw-bold">{{ $orderedItem->quantity }}</td>
                                         @if($order->state->equals(\App\States\Order\Delivered::class) || $order->state->equals(\App\States\Order\Returned::class))

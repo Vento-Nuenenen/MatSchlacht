@@ -20,6 +20,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
 
 class OrderManagementController extends Controller
@@ -55,8 +56,8 @@ class OrderManagementController extends Controller
         $this->authorize('update', $order);
 
         return view('order-management.edit', [
-            'order' => $order->load('orderedItems.item', 'role', 'user'),
-            'items' => Item::with('itemGroup')->orderBy('name')->get(),
+            'order' => $order->load('orderedItems.item', 'role', 'user', 'itemCollections.items'),
+            'items' => Item::with('itemGroup', 'attachments', 'contents')->orderBy('name')->get(),
             'collections' => ItemCollection::with('items')->get(),
         ]);
     }
@@ -83,8 +84,8 @@ class OrderManagementController extends Controller
 
         try {
             $this->orderService->transition($order, $request->input('to'));
-        } catch (ValidationException) {
-            return back()->with('error', 'Ungültiger Statusübergang.');
+        } catch (ValidationException $exception) {
+            return back()->with('error', implode(' ', Arr::flatten($exception->errors())));
         }
 
         return back()->with('success', 'Bestellstatus wurde aktualisiert.');

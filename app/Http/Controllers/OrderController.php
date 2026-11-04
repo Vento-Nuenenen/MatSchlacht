@@ -28,11 +28,12 @@ class OrderController extends Controller
      */
     public function index(): Factory|View
     {
-        $orders = auth()->user()->isPrivileged()
-            ? Order::query()
-            : Order::where('user_id', auth()->id());
+        $orders = Order::visibleTo(auth()->user())
+            ->with('role', 'user', 'orderedItems.item.contents')
+            ->orderBy('event_start')
+            ->get();
 
-        return view('order.index', ['orders' => $orders->orderBy('event_start')->get()]);
+        return view('order.index', ['orders' => $orders]);
     }
 
     /**
@@ -44,7 +45,7 @@ class OrderController extends Controller
             return redirect()->route('orders.manage.edit', $order);
         }
 
-        $order->load(['orderedItems.item.itemGroup', 'itemCollections']);
+        $order->load(['orderedItems.item.itemGroup', 'orderedItems.item.contents', 'itemCollections']);
 
         return view('order.show', compact('order'));
     }
@@ -127,7 +128,7 @@ class OrderController extends Controller
     protected function catalog(): array
     {
         return [
-            'items' => Item::with('itemGroup')->orderBy('name')->get(),
+            'items' => Item::with('itemGroup', 'attachments', 'contents')->orderBy('name')->get(),
             'collections' => app(ComponentManager::class)->isEnabled('item_collections')
                 ? ItemCollection::with('items')->get()
                 : new Collection,

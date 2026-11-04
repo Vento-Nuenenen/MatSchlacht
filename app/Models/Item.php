@@ -16,10 +16,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
     'name',
     'stock',
     'lot',
-    'available',
     'repair',
     'consumable',
-    'item_price_cents',
     'maintenance_interval_months',
 
     'item_group_id',
@@ -134,6 +132,26 @@ class Item extends Model
         }
 
         $this->update(['stock' => (int) $this->stocks()->sum('quantity')]);
+    }
+
+    /**
+     * The stock that can be handed out: material in repair is not available.
+     */
+    public function usableStock(): int
+    {
+        return max(0, $this->stock - $this->repair);
+    }
+
+    /**
+     * The content list for the content dialog.
+     *
+     * @return array<int, array{label: string, text: string}>
+     */
+    public function contentLines(): array
+    {
+        return $this->contents
+            ->map(fn (ItemContent $content): array => ['label' => (string) $content->quantity, 'text' => $content->name])
+            ->all();
     }
 
     /**

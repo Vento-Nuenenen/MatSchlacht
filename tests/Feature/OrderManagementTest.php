@@ -109,7 +109,7 @@ test('a manager updating a delivered order stores returned quantities in units',
     ]);
     $order = managedOrder(Delivered::class);
     $order->orderedItems()->create([
-        'item_id' => $lotItem->id, 'quantity' => 20, 'confirmed' => true,
+        'item_id' => $lotItem->id, 'quantity' => 20,
         'delivered' => true, 'returned' => 0, 'repair' => 0, 'broken' => 0,
     ]);
 
@@ -133,7 +133,7 @@ test('a manager updating an accepted order replaces its items and keeps its stat
     $otherItem = Item::factory()->create(['item_group_id' => $this->item->item_group_id, 'stock' => 100, 'lot' => 1]);
     $order = managedOrder(Accepted::class);
     $order->orderedItems()->create([
-        'item_id' => $this->item->id, 'quantity' => 4, 'confirmed' => false,
+        'item_id' => $this->item->id, 'quantity' => 4,
         'delivered' => false, 'returned' => 0, 'repair' => 0, 'broken' => 0,
     ]);
 
@@ -172,7 +172,7 @@ test('a non-privileged manager is redirected back to the order after updating', 
 test('the order sheet pdf can only be exported for accepted orders', function (string $state, bool $isExportable) {
     $order = managedOrder($state);
     $order->orderedItems()->create([
-        'item_id' => $this->item->id, 'quantity' => 2, 'confirmed' => true,
+        'item_id' => $this->item->id, 'quantity' => 2,
         'delivered' => false, 'returned' => 0, 'repair' => 0, 'broken' => 0,
     ]);
 
@@ -194,7 +194,7 @@ test('the order sheet pdf can only be exported for accepted orders', function (s
 test('the return sheet pdf can only be exported for delivered orders', function (string $state, bool $isExportable) {
     $order = managedOrder($state);
     $order->orderedItems()->create([
-        'item_id' => $this->item->id, 'quantity' => 2, 'confirmed' => true,
+        'item_id' => $this->item->id, 'quantity' => 2,
         'delivered' => true, 'returned' => 0, 'repair' => 0, 'broken' => 0,
     ]);
 
@@ -216,7 +216,7 @@ test('the return sheet pdf can only be exported for delivered orders', function 
 test('the packing list pdf can be exported with and without item contents', function (bool $hasContents) {
     $order = managedOrder(Accepted::class);
     $order->orderedItems()->create([
-        'item_id' => $this->item->id, 'quantity' => 2, 'confirmed' => true,
+        'item_id' => $this->item->id, 'quantity' => 2,
         'delivered' => false, 'returned' => 0, 'repair' => 0, 'broken' => 0,
     ]);
 

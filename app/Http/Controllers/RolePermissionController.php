@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
+use App\Models\Order;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -88,6 +89,10 @@ class RolePermissionController extends Controller
     {
         if ($role->name === 'Materialwart') {
             return redirect()->route('roles.index')->with('error', 'Die Rolle Materialwart kann nicht gelöscht werden.');
+        }
+
+        if (Order::where('role_id', $role->id)->exists()) {
+            return redirect()->route('roles.index')->with('error', "«{$role->name}» hat Bestellungen und kann nicht gelöscht werden.");
         }
 
         $role->delete();

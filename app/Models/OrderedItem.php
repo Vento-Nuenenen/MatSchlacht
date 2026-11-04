@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable([
     'quantity',
-    'confirmed',
     'delivered',
     'returned',
     'repair',

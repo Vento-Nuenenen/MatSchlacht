@@ -1,4 +1,5 @@
 import './bootstrap';
+import { initCollectionPicker } from './ui/collections';
 import { initContentModal } from './ui/content-modal';
 import { initQuantitySteppers } from './ui/quantity-stepper';
 import { initSortableTables, stackTables } from './ui/tables';
@@ -16,4 +17,5 @@ const onReady = (callback) =>
 onReady(() => {
     stackTables();
     initContentModal();
+    initCollectionPicker();
 });

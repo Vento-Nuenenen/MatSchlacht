@@ -21,10 +21,8 @@ class ItemFactory extends Factory
         return [
             'name' => fake()->name(),
             'stock' => fake()->numberBetween(0, 100),
-            'available' => fake()->numberBetween(0, 100),
-            'repair' => fake()->numberBetween(0, 100),
+            'repair' => 0,
             'consumable' => fake()->boolean(),
-            'item_price_cents' => fake()->numberBetween(0, 10000),
             'item_group_id' => ItemGroup::factory(),
         ];
     }

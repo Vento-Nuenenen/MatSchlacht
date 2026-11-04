@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Order;
 use App\Rules\CheckItemStock;
 use App\Rules\CheckReturnedQuantity;
 use App\Rules\RoleInScope;
@@ -26,7 +27,8 @@ class UpdateOrderRequest extends FormRequest
      */
     public function rules(): array
     {
-        $stockRule = new CheckItemStock;
+        $order = $this->route('order');
+        $stockRule = new CheckItemStock($order instanceof Order ? $order : null);
 
         return [
             'event' => 'required|string|max:255',

@@ -4,19 +4,27 @@ namespace App\Rules;
 
 use App\Models\Item;
 use App\Models\ItemCollection;
+use App\Models\Order;
+use App\Services\StockAvailability;
 use Closure;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Translation\PotentiallyTranslatedString;
 
 /**
  * Validates the requested quantities of an order against the item stock.
  *
+ * The order form adds the items of a collection to the item quantities, so a collection
+ * only raises the requested units when the items were not submitted with it.
+ *
  * Use one shared instance for the "items", "items.*" and "collections" attributes:
- * - Drafts ("save") are checked per item and reported on "items.{id}".
- * - Committed orders ("order") are checked once including the collections. Overstocked
- *   items are reported on "collections" when a collection contributes to them, otherwise on "items".
+ * - Drafts ("save") are checked per item against the usable stock and reported on "items.{id}".
+ * - Orders that reserve material ("order", or already submitted ones) are checked once against
+ *   what is left in their period. Items are reported on "collections" when a collection
+ *   contains them, otherwise on "items".
+ * - Orders that are already handed out are not checked, their positions are fixed.
  */
 class CheckItemStock implements DataAwareRule, ValidationRule
 {
@@ -39,6 +47,8 @@ class CheckItemStock implements DataAwareRule, ValidationRule
      */
     protected ?Collection $directItems = null;
 
+    public function __construct(protected ?Order $order = null) {}
+
     /**
      * Set the data under validation.
      *
@@ -60,33 +70,56 @@ class CheckItemStock implements DataAwareRule, ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $isCommitting = ($this->data['action'] ?? null) === 'order';
+        if ($this->order?->state->isHandedOut()) {
+            return;
+        }
+
+        $isReserving = ($this->data['action'] ?? null) === 'order' || $this->order?->state->reservesStock();
 
         if (str_starts_with($attribute, 'items.')) {
-            if (! $isCommitting) {
+            if (! $isReserving) {
                 $this->validateSingleItem($attribute, $value, $fail);
             }
 
             return;
         }
 
-        if (! $isCommitting) {
+        if (! $isReserving) {
             return;
         }
 
         $reportsCollections = $attribute === 'collections';
+        $reserved = $this->reservedUnits();
 
-        foreach ($this->requestedUnits() as $requested) {
+        foreach ($this->requestedUnits() as $itemId => $requested) {
             $item = $requested['item'];
+            $available = app(StockAvailability::class)->availableUnits($item, $reserved->get($itemId, 0));
 
-            if ($requested['fromCollections'] !== $reportsCollections || $requested['units'] <= $item->stock) {
+            if ($requested['fromCollections'] !== $reportsCollections || $requested['units'] <= $available) {
                 continue;
             }
 
             $fail($reportsCollections
-                ? "Durch die Auswahl der Kollektionen wird der Bestand von '{$item->name}' überschritten ({$item->stock} verfügbar, angefordert: {$requested['units']})."
-                : "Vom Artikel '{$item->name}' sind nur noch {$item->stock} Stück verfügbar (angefordert: {$requested['units']}).");
+                ? "Durch die Auswahl der Kollektionen wird der Bestand von '{$item->name}' überschritten ({$available} verfügbar, angefordert: {$requested['units']})."
+                : StockAvailability::shortageMessage($item, $available, $requested['units']));
         }
+    }
+
+    /**
+     * The units other orders reserve in the requested period.
+     *
+     * @return BaseCollection<int, int>
+     */
+    protected function reservedUnits(): BaseCollection
+    {
+        $start = $this->data['event_start'] ?? null;
+        $end = $this->data['event_end'] ?? null;
+
+        if (! is_string($start) || ! is_string($end) || strtotime($start) === false || strtotime($end) === false) {
+            return new BaseCollection;
+        }
+
+        return app(StockAvailability::class)->reservedUnits(array_keys($this->requestedUnits()), $start, $end, $this->order);
     }
 
     /**
@@ -103,8 +136,8 @@ class CheckItemStock implements DataAwareRule, ValidationRule
 
         $units = $item->unitsFor((int) $value);
 
-        if ($units > $item->stock) {
-            $fail("Vom Artikel '{$item->name}' sind nur noch {$item->stock} Stück verfügbar (angefordert: {$units}).");
+        if ($units > $item->usableStock()) {
+            $fail("Vom Artikel '{$item->name}' sind nur noch {$item->usableStock()} Stück verfügbar (angefordert: {$units}).");
         }
     }
 
@@ -117,7 +150,7 @@ class CheckItemStock implements DataAwareRule, ValidationRule
     }
 
     /**
-     * Sum up the requested quantities of direct items and selected collections and convert them into units.
+     * The requested units per item: the submitted quantity, at least what the selected collections need.
      *
      * @return array<int, array{item: Item, units: int, fromCollections: bool}>
      */
@@ -127,15 +160,7 @@ class CheckItemStock implements DataAwareRule, ValidationRule
             return $this->requestedUnits;
         }
 
-        $quantities = [];
-        $fromCollections = [];
-
-        foreach ($this->arrayInput('items') as $itemId => $quantity) {
-            if ((int) $quantity > 0) {
-                $quantities[(int) $itemId] = ($quantities[(int) $itemId] ?? 0) + (int) $quantity;
-            }
-        }
-
+        $collectionUnits = [];
         $collections = ItemCollection::with('items')->findMany($this->arrayInput('collections'))->keyBy('id');
 
         foreach ($this->arrayInput('collections') as $collectionId) {
@@ -148,24 +173,20 @@ class CheckItemStock implements DataAwareRule, ValidationRule
             foreach ($collection->items as $item) {
                 /** @var object{quantity: int} $pivot */
                 $pivot = $item->pivot;
-                $quantities[$item->id] = ($quantities[$item->id] ?? 0) + $pivot->quantity;
-                $fromCollections[$item->id] = true;
+                $collectionUnits[$item->id] = ($collectionUnits[$item->id] ?? 0) + $pivot->quantity;
             }
         }
 
-        $items = Item::findMany(array_keys($quantities))->keyBy('id');
+        $submitted = array_filter(array_map(intval(...), $this->arrayInput('items')), fn (int $quantity): bool => $quantity > 0);
+        $items = Item::findMany(array_keys($submitted + $collectionUnits))->keyBy('id');
         $this->requestedUnits = [];
 
-        foreach ($quantities as $itemId => $quantity) {
-            $item = $items->get($itemId);
-
-            if ($item instanceof Item) {
-                $this->requestedUnits[$itemId] = [
-                    'item' => $item,
-                    'units' => $item->unitsFor($quantity),
-                    'fromCollections' => $fromCollections[$itemId] ?? false,
-                ];
-            }
+        foreach ($items as $itemId => $item) {
+            $this->requestedUnits[$itemId] = [
+                'item' => $item,
+                'units' => max($item->unitsFor($submitted[$itemId] ?? 0), $collectionUnits[$itemId] ?? 0),
+                'fromCollections' => isset($collectionUnits[$itemId]),
+            ];
         }
 
         return $this->requestedUnits;
