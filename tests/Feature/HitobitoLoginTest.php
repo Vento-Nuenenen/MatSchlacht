@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\HitobitoTestController;
 use App\Models\HitobitoAccessRule;
-use App\Models\HitobitoGroupRoleMapping;
 use App\Models\User;
 use App\Services\ComponentManager;
 use App\Services\Hitobito\HitobitoConnector;
@@ -310,12 +309,20 @@ test('hitobito users have no password in the app', function () {
         ->assertDontSee('name="current_password"', false);
 });
 
-test('mappings give the app roles of the hitobito groups', function () {
+/**
+ * A rule that only gives an app role, as the former group role mappings did.
+ */
+function hitobitoRoleRule(array $attributes): HitobitoAccessRule
+{
+    return HitobitoAccessRule::factory()->create(['hitobito_person_id' => null, 'grants_access' => false, ...$attributes]);
+}
+
+test('rules without access give the app roles of the hitobito groups', function () {
     HitobitoAccessRule::factory()->create(['hitobito_person_id' => '42']);
-    HitobitoGroupRoleMapping::factory()->create(['hitobito_group_id' => '7', 'role_name' => 'Wolfsstufe']);
-    HitobitoGroupRoleMapping::factory()->create(['hitobito_group_id' => '9', 'hitobito_role_class' => 'Group::Abteilung::Mitglied', 'role_name' => 'Pfadistufe']);
-    HitobitoGroupRoleMapping::factory()->create(['hitobito_group_id' => '7', 'hitobito_role_class' => 'Group::Abteilung::Mitglied', 'role_name' => 'Abteilungsleitung']);
-    HitobitoGroupRoleMapping::factory()->create(['hitobito_group_id' => '8', 'role_name' => 'Materialwart']);
+    hitobitoRoleRule(['hitobito_group_id' => '7', 'role_name' => 'Wolfsstufe']);
+    hitobitoRoleRule(['hitobito_group_id' => '9', 'hitobito_role_class' => 'Group::Abteilung::Mitglied', 'role_name' => 'Pfadistufe']);
+    hitobitoRoleRule(['hitobito_group_id' => '7', 'hitobito_role_class' => 'Group::Abteilung::Mitglied', 'role_name' => 'Abteilungsleitung']);
+    hitobitoRoleRule(['hitobito_group_id' => '8', 'role_name' => 'Materialwart']);
     fakeHitobitoLogin(hitobitoProfile());
 
     $this->get(route('hitobito.callback'));
@@ -323,9 +330,9 @@ test('mappings give the app roles of the hitobito groups', function () {
     expect(User::sole()->getRoleNames()->sort()->values()->all())->toBe(['Pfadistufe', 'Wolfsstufe']);
 });
 
-test('roles from mappings and access rules are combined', function () {
+test('roles from rules with and without access are combined', function () {
     HitobitoAccessRule::factory()->create(['hitobito_person_id' => '42', 'role_name' => 'Abteilungsleitung']);
-    HitobitoGroupRoleMapping::factory()->create(['hitobito_group_id' => '7', 'role_name' => 'Wolfsstufe']);
+    hitobitoRoleRule(['hitobito_group_id' => '7', 'role_name' => 'Wolfsstufe']);
     fakeHitobitoLogin(hitobitoProfile());
 
     $this->get(route('hitobito.callback'));
@@ -333,8 +340,8 @@ test('roles from mappings and access rules are combined', function () {
     expect(User::sole()->getRoleNames()->sort()->values()->all())->toBe(['Abteilungsleitung', 'Wolfsstufe']);
 });
 
-test('a mapping does not admit anybody', function () {
-    HitobitoGroupRoleMapping::factory()->create(['hitobito_group_id' => '7']);
+test('a rule without access does not admit anybody', function () {
+    hitobitoRoleRule(['hitobito_group_id' => '7', 'role_name' => 'Wolfsstufe']);
     fakeHitobitoLogin(hitobitoProfile());
 
     $this->get(route('hitobito.callback'))->assertRedirect(route('login'));
@@ -343,9 +350,9 @@ test('a mapping does not admit anybody', function () {
     expect(User::count())->toBe(0);
 });
 
-test('a mapping to a deleted role is skipped', function () {
+test('a rule with a deleted role is skipped', function () {
     HitobitoAccessRule::factory()->create(['hitobito_person_id' => '42']);
-    HitobitoGroupRoleMapping::factory()->create(['hitobito_group_id' => '7', 'role_name' => 'Gibt es nicht mehr']);
+    hitobitoRoleRule(['hitobito_group_id' => '7', 'role_name' => 'Gibt es nicht mehr']);
     fakeHitobitoLogin(hitobitoProfile());
 
     $this->get(route('hitobito.callback'))->assertRedirect(route('overwatch'));
@@ -353,35 +360,35 @@ test('a mapping to a deleted role is skipped', function () {
     expect(User::sole()->getRoleNames()->all())->toBe([]);
 });
 
-test('the materialwart manages the mappings', function () {
+test('the materialwart manages rules without access', function () {
     $this->actingAs(User::factory()->create()->assignRole('Materialwart'));
 
-    $this->post(route('hitobito-group-role-mappings.store'), ['hitobito_group_id' => '7', 'role_name' => 'Wolfsstufe'])
-        ->assertRedirect(route('hitobito-group-role-mappings.index'));
-    $mapping = HitobitoGroupRoleMapping::sole();
+    $this->post(route('hitobito-access-rules.store'), ['hitobito_group_id' => '7', 'role_name' => 'Wolfsstufe', 'grants_access' => '0'])
+        ->assertRedirect(route('hitobito-access-rules.index'));
+    $rule = HitobitoAccessRule::sole();
+    expect($rule->grants_access)->toBeFalse();
 
-    $this->get(route('hitobito-group-role-mappings.index'))->assertSuccessful()->assertSee('Wolfsstufe');
-    $this->get(route('hitobito-group-role-mappings.edit', $mapping))->assertSuccessful();
+    $this->get(route('hitobito-access-rules.index'))->assertSuccessful()->assertSee('Nur Rolle');
+    $this->get(route('hitobito-access-rules.edit', $rule))->assertSuccessful();
 
-    $this->put(route('hitobito-group-role-mappings.update', $mapping), ['hitobito_group_id' => '8', 'role_name' => 'Pfadistufe'])
+    $this->put(route('hitobito-access-rules.update', $rule), ['hitobito_group_id' => '8', 'role_name' => 'Pfadistufe', 'grants_access' => '1'])
         ->assertSessionHasNoErrors();
-    expect($mapping->fresh())->hitobito_group_id->toBe('8')->role_name->toBe('Pfadistufe');
-
-    $this->delete(route('hitobito-group-role-mappings.destroy', $mapping));
-    expect(HitobitoGroupRoleMapping::count())->toBe(0);
+    expect($rule->fresh())->hitobito_group_id->toBe('8')->role_name->toBe('Pfadistufe')->grants_access->toBeTrue();
 });
 
-test('a mapping needs a group and an existing app role', function () {
+test('a rule without access needs an app role', function () {
     $this->actingAs(User::factory()->create()->assignRole('Materialwart'))
-        ->post(route('hitobito-group-role-mappings.store'), ['hitobito_group_id' => '', 'role_name' => 'Gibt es nicht'])
-        ->assertSessionHasErrors(['hitobito_group_id', 'role_name']);
+        ->post(route('hitobito-access-rules.store'), ['hitobito_group_id' => '7', 'role_name' => '', 'grants_access' => '0'])
+        ->assertSessionHasErrors(['role_name' => 'Eine Regel ohne Zugang muss eine App-Rolle vergeben.']);
+
+    expect(HitobitoAccessRule::count())->toBe(0);
 });
 
-test('leaders can neither manage mappings nor use the test page', function (string $routeName) {
+test('leaders cannot use the test page', function () {
     $this->actingAs(User::factory()->create()->assignRole('Wolfsstufe'))
-        ->get(route($routeName))
+        ->get(route('hitobito-test.index'))
         ->assertForbidden();
-})->with(['hitobito-group-role-mappings.index', 'hitobito-test.index']);
+});
 
 test('leaders cannot start a test', function () {
     $this->actingAs(User::factory()->create()->assignRole('Wolfsstufe'))
@@ -394,7 +401,7 @@ test('leaders cannot start a test', function () {
 test('a test login shows the data without logging in or creating an account', function () {
     $materialwart = User::factory()->create()->assignRole('Materialwart');
     HitobitoAccessRule::factory()->create(['hitobito_person_id' => '42']);
-    HitobitoGroupRoleMapping::factory()->create(['hitobito_group_id' => '7', 'role_name' => 'Wolfsstufe']);
+    hitobitoRoleRule(['hitobito_group_id' => '7', 'role_name' => 'Wolfsstufe']);
     fakeHitobitoLogin(hitobitoProfile());
 
     $this->actingAs($materialwart)
@@ -504,7 +511,7 @@ test('a pasted link to the sign-in page still points to the instance', function 
  */
 function createLegacyMappingsTable(): void
 {
-    Schema::drop('hitobito_group_role_mappings');
+    Schema::dropIfExists('hitobito_group_role_mappings');
     Schema::create('hitobito_group_role_mappings', function (Blueprint $table) {
         $table->id();
         $table->string('hitobito_group_id')->nullable();
@@ -536,4 +543,28 @@ test('a filled table of the earlier hitobito branch is not replaced', function (
     expect(fn () => hitobitoMigration('create_hitobito_group_role_mappings_table')->up())->toThrow(QueryException::class);
 
     expect(DB::table('hitobito_group_role_mappings')->count())->toBe(1);
+});
+
+test('mappings become rules that do not admit anybody and back', function () {
+    $migration = hitobitoMigration('merge_hitobito_group_role_mappings_into_access_rules');
+    HitobitoAccessRule::factory()->create(['hitobito_person_id' => '42']);
+    $migration->down();
+    DB::table('hitobito_group_role_mappings')->insert(['hitobito_group_id' => '7', 'hitobito_role_class' => 'Group::Woelfe::Einheitsleitung', 'role_name' => 'Wolfsstufe']);
+
+    $migration->up();
+
+    expect(Schema::hasTable('hitobito_group_role_mappings'))->toBeFalse()
+        ->and(HitobitoAccessRule::where('hitobito_group_id', '7')->sole())
+        ->hitobito_role_class->toBe('Group::Woelfe::Einheitsleitung')
+        ->role_name->toBe('Wolfsstufe')
+        ->grants_access->toBeFalse()
+        ->and(HitobitoAccessRule::where('hitobito_person_id', '42')->sole()->grants_access)->toBeTrue();
+
+    hitobitoRoleRule(['hitobito_permission' => 'group_full', 'role_name' => 'Pfadistufe']);
+    $migration->down();
+
+    expect(DB::table('hitobito_group_role_mappings')->pluck('role_name')->all())->toBe(['Wolfsstufe'])
+        ->and(DB::table('hitobito_access_rules')->pluck('hitobito_person_id')->all())->toBe(['42']);
+
+    $migration->up();
 });

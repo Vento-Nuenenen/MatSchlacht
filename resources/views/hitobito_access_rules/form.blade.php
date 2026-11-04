@@ -1,7 +1,7 @@
 @csrf
 
 <div class="card mb-4 shadow-sm">
-    <div class="card-header fw-bold bg-light">Wer wird zugelassen?</div>
+    <div class="card-header fw-bold bg-light">Für wen gilt die Regel?</div>
     <div class="card-body">
         <p class="text-muted small">
             Alle ausgefüllten Felder müssen zutreffen. Gruppe, Rolle und Berechtigung müssen zur selben Hitobito-Rolle einer Person gehören.
@@ -29,11 +29,20 @@
 </div>
 
 <div class="card mb-4 shadow-sm">
-    <div class="card-header fw-bold bg-light">In der App</div>
+    <div class="card-header fw-bold bg-light">Was bewirkt die Regel?</div>
     <div class="card-body">
+        <div class="form-check form-switch mb-3">
+            <input type="hidden" name="grants_access" value="0">
+            <input class="form-check-input" type="checkbox" role="switch" id="grants_access" name="grants_access" value="1"
+                   aria-describedby="grants_access-help" @checked(old('grants_access', $hitobitoAccessRule->grants_access ?? true))>
+            <label class="form-check-label fw-semibold" for="grants_access">Zugang erlauben</label>
+            <div id="grants_access-help" class="form-text">
+                Ausgeschaltet vergibt die Regel nur die App-Rolle. Anmelden kann sich die Person dann nur, wenn eine andere Regel den Zugang erlaubt.
+            </div>
+        </div>
         <div class="row g-3">
             <div class="col-12 col-md-6">
-                <label for="role_name" class="form-label fw-semibold">Zusätzliche App-Rolle <span class="text-muted fw-normal">(optional)</span></label>
+                <label for="role_name" class="form-label fw-semibold">App-Rolle</label>
                 <select class="form-select @error('role_name') is-invalid @enderror" id="role_name" name="role_name">
                     <option value="">Keine Rolle vergeben</option>
                     @foreach($roles as $role)

@@ -3,7 +3,6 @@
 namespace App\Services\Hitobito;
 
 use App\Models\HitobitoAccessRule;
-use App\Models\HitobitoGroupRoleMapping;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as BaseCollection;
 use Spatie\Permission\Models\Role;
@@ -14,7 +13,7 @@ use Spatie\Permission\Models\Role;
 class HitobitoAccess
 {
     /**
-     * The access rules that admit the profile, none means the person is refused.
+     * The rules that apply to the profile.
      *
      * @param  array<string, mixed>  $profile
      * @return Collection<int, HitobitoAccessRule>
@@ -27,28 +26,27 @@ class HitobitoAccess
     }
 
     /**
+     * The rules that admit the profile, none means the person is refused.
+     *
      * @param  array<string, mixed>  $profile
-     * @return Collection<int, HitobitoGroupRoleMapping>
+     * @return Collection<int, HitobitoAccessRule>
      */
-    public function matchingMappings(array $profile): Collection
+    public function admittingRules(array $profile): Collection
     {
-        return HitobitoGroupRoleMapping::all()
-            ->filter(fn (HitobitoGroupRoleMapping $mapping): bool => $mapping->matches($profile))
+        return $this->matchingRules($profile)
+            ->filter(fn (HitobitoAccessRule $rule): bool => $rule->grants_access)
             ->values();
     }
 
     /**
-     * The existing app roles that the mappings and access rules give to the profile.
+     * The existing app roles that the rules give to the profile.
      *
      * @param  array<string, mixed>  $profile
      * @return BaseCollection<int, string>
      */
     public function appRoles(array $profile): BaseCollection
     {
-        $roleNames = $this->matchingMappings($profile)->pluck('role_name')
-            ->merge($this->matchingRules($profile)->pluck('role_name'))
-            ->filter()
-            ->unique();
+        $roleNames = $this->matchingRules($profile)->pluck('role_name')->filter()->unique();
 
         return Role::whereIn('name', $roleNames)->orderBy('name')->pluck('name');
     }

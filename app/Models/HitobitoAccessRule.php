@@ -8,14 +8,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Admits people to the Hitobito login and optionally gives them an app role. All filled
- * criteria have to apply, the group, role and permission even on one and the same Hitobito role.
+ * Admits people to the Hitobito login and/or gives them an app role. All filled criteria
+ * have to apply, the group, role and permission even on one and the same Hitobito role.
  *
  * @property string|null $hitobito_person_id
  * @property string|null $hitobito_group_id
  * @property string|null $hitobito_role_class
  * @property string|null $hitobito_permission
  * @property string|null $role_name
+ * @property bool $grants_access
  * @property string|null $description
  */
 #[Fillable([
@@ -24,12 +25,30 @@ use Illuminate\Database\Eloquent\Model;
     'hitobito_role_class',
     'hitobito_permission',
     'role_name',
+    'grants_access',
     'description',
 ])]
 class HitobitoAccessRule extends Model
 {
     /** @use HasFactory<HitobitoAccessRuleFactory> */
     use HasFactory;
+
+    /**
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'grants_access' => true,
+    ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'grants_access' => 'boolean',
+        ];
+    }
 
     /**
      * Whether the rule applies to a Hitobito profile. A rule without criteria never applies.

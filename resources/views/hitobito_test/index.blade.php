@@ -56,10 +56,10 @@
                                 <dd class="col-sm-9">
                                     @if($result['rules']->isNotEmpty())
                                         <span class="badge bg-success">Zugelassen</span>
-                                        <span class="small text-muted ms-1">{{ $result['rules']->count() }} zutreffende Zugangsregel(n)</span>
+                                        <span class="small text-muted ms-1">{{ $result['rules']->count() }} zutreffende Regel(n) mit Zugang</span>
                                     @else
                                         <span class="badge bg-danger">Abgelehnt</span>
-                                        <span class="small text-muted ms-1">Keine Zugangsregel trifft zu.</span>
+                                        <span class="small text-muted ms-1">Keine Regel mit Zugang trifft zu.</span>
                                     @endif
                                 </dd>
                                 <dt class="col-sm-3">App-Rollen</dt>

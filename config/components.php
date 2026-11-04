@@ -197,7 +197,7 @@ return [
 
     'hitobito_login' => [
         'label' => 'Hitobito-Login',
-        'description' => 'Anmeldung mit einem Hitobito-Konto (z. B. MiData). Zugelassen sind nur Personen, auf die eine Zugangsregel zutrifft.',
+        'description' => 'Anmeldung mit einem Hitobito-Konto (z. B. MiData). Zugelassen sind nur Personen, auf die eine Regel mit Zugang zutrifft.',
         'enabled' => (bool) env('COMPONENT_HITOBITO_LOGIN', false),
         'settings' => [
             'button_label' => [
@@ -223,7 +223,7 @@ return [
             ],
             'sync_group_roles' => [
                 'type' => 'bool',
-                'label' => 'App-Rollen beim Login anhand der Mappings und Zugangsregeln synchronisieren',
+                'label' => 'App-Rollen beim Login anhand der Hitobito-Regeln synchronisieren',
                 'default' => true,
             ],
         ],

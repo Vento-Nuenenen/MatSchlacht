@@ -66,13 +66,12 @@ class HitobitoTestController extends Controller
 
     /**
      * @param  array<string, mixed>  $profile
-     * @return array{rules: mixed, mappings: mixed, appRoles: mixed, isRoleSyncEnabled: bool, account: User|null}
+     * @return array{rules: mixed, appRoles: mixed, isRoleSyncEnabled: bool, account: User|null}
      */
     protected function result(array $profile): array
     {
         return [
-            'rules' => $this->access->matchingRules($profile),
-            'mappings' => $this->access->matchingMappings($profile),
+            'rules' => $this->access->admittingRules($profile),
             'appRoles' => $this->access->appRoles($profile),
             'isRoleSyncEnabled' => (bool) $this->components->setting('hitobito_login', 'sync_group_roles'),
             'account' => User::where('hitobito_id', (string) ($profile['id'] ?? ''))->first()

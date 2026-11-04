@@ -27,7 +27,8 @@ class StoreHitobitoAccessRuleRequest extends FormRequest
             'hitobito_group_id' => ['nullable', 'integer', 'min:1'],
             'hitobito_role_class' => ['nullable', 'string', 'max:255'],
             'hitobito_permission' => ['nullable', 'string', 'max:255'],
-            'role_name' => ['nullable', 'string', 'exists:roles,name'],
+            'role_name' => ['nullable', 'required_if_declined:grants_access', 'string', 'exists:roles,name'],
+            'grants_access' => ['sometimes', 'boolean'],
             'description' => ['nullable', 'string', 'max:255'],
         ];
     }
@@ -39,6 +40,7 @@ class StoreHitobitoAccessRuleRequest extends FormRequest
     {
         return [
             'hitobito_person_id.required_without_all' => 'Gib mindestens eine Personen-ID, Gruppen-ID, Rolle oder Berechtigung an.',
+            'role_name.required_if_declined' => 'Eine Regel ohne Zugang muss eine App-Rolle vergeben.',
         ];
     }
 
@@ -53,6 +55,7 @@ class StoreHitobitoAccessRuleRequest extends FormRequest
             'hitobito_role_class' => 'Hitobito-Rolle',
             'hitobito_permission' => 'Hitobito-Berechtigung',
             'role_name' => 'App-Rolle',
+            'grants_access' => 'Zugang erlauben',
             'description' => 'Beschreibung',
         ];
     }

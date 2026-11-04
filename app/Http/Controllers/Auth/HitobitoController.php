@@ -54,7 +54,7 @@ class HitobitoController extends Controller
             return redirect()->route('hitobito-test.index')->with(HitobitoTestController::RESULT_KEY, $profile);
         }
 
-        if ($this->access->matchingRules($profile)->isEmpty()) {
+        if ($this->access->admittingRules($profile)->isEmpty()) {
             Log::info('Hitobito login refused, no access rule applies.', [
                 'hitobito_id' => $hitobitoUser->getId(),
                 'role_classes' => array_column(is_array($profile['roles'] ?? null) ? $profile['roles'] : [], 'role_class'),

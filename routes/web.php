@@ -8,7 +8,6 @@ use App\Http\Controllers\AzureGroupRoleMappingController;
 use App\Http\Controllers\ComponentSettingController;
 use App\Http\Controllers\FileStorageConnectionController;
 use App\Http\Controllers\HitobitoAccessRuleController;
-use App\Http\Controllers\HitobitoGroupRoleMappingController;
 use App\Http\Controllers\HitobitoTestController;
 use App\Http\Controllers\ItemCollectionController;
 use App\Http\Controllers\ItemContentController;
@@ -95,7 +94,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('azure-group-role-mappings', AzureGroupRoleMappingController::class)->except(['show'])->middleware('component:azure_login');
     Route::middleware('component:hitobito_login')->group(function () {
         Route::resource('hitobito-access-rules', HitobitoAccessRuleController::class)->except(['show']);
-        Route::resource('hitobito-group-role-mappings', HitobitoGroupRoleMappingController::class)->except(['show']);
         Route::get('/hitobito-test', [HitobitoTestController::class, 'index'])->name('hitobito-test.index');
         Route::post('/hitobito-test', [HitobitoTestController::class, 'start'])->name('hitobito-test.start');
     });
