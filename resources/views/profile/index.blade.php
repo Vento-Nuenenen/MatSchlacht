@@ -27,7 +27,12 @@
 
                     <hr class="my-4" />
 
-                    @if($user->isExternalUser())
+                    @if(\App\Http\Controllers\ImpersonationController::isImpersonating())
+                        <div class="alert alert-warning">
+                            <i class="fa fa-user-secret me-1"></i>
+                            {{ __('Im Testmodus kann das Passwort nicht geändert werden.') }}
+                        </div>
+                    @elseif($user->isExternalUser())
                         <div class="alert alert-info">
                             <i class="fa fa-info-circle me-1"></i>
                             {{ __('Da du mit einem externen Konto angemeldet bist, kannst du dein Passwort hier nicht ändern. Bitte verwalte dein Passwort in deinem Microsoft 365 Profil.') }}

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\EnsureComponentEnabled;
 use App\Http\Middleware\EnsureUserIsActive;
+use App\Http\Middleware\PreventDuringImpersonation;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -29,6 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
             'component' => EnsureComponentEnabled::class,
+            'not-impersonating' => PreventDuringImpersonation::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

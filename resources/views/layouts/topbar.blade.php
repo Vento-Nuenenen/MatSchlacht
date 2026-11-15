@@ -32,6 +32,12 @@
             </div>
             @include('layouts.language-switch')
             <div class="dropdown-divider"></div>
+            @if(\App\Http\Controllers\ImpersonationController::isImpersonating())
+                <form method="POST" action="{{ route('impersonation.leave') }}">
+                    @csrf
+                    <button type="submit" class="dropdown-item"><i class="fa fa-user-secret fa-fw me-2"></i>{{ __('Zurück zu meinem Konto') }}</button>
+                </form>
+            @endif
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="dropdown-item text-danger"><i class="fa fa-arrow-right-from-bracket fa-fw me-2"></i>{{ __('Abmelden') }}</button>

@@ -49,6 +49,9 @@
             @include('layouts.sidebar')
 
             <div class="app-main">
+                @if(\App\Http\Controllers\ImpersonationController::isImpersonating())
+                    @include('layouts.impersonation-banner')
+                @endif
                 @include('layouts.topbar')
 
                 <main id="main-content" class="app-content">

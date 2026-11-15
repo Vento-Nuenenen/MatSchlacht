@@ -55,6 +55,18 @@ class UserPolicy
     }
 
     /**
+     * Determine whether the user can sign in as the given user to see the app through
+     * their eyes. Only privileged accounts can, and never as another privileged account.
+     */
+    public function impersonate(User $user, User $model): bool
+    {
+        return $user->isPrivileged()
+            && $user->id !== $model->id
+            && $model->aktiv
+            && ! $model->isPrivileged();
+    }
+
+    /**
      * Determine whether the user can restore the model.
      */
     public function restore(User $user, User $model): bool

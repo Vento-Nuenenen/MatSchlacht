@@ -220,6 +220,38 @@ body.has-app-shell {
     letter-spacing: 0.02em;
 }
 
+// Impersonation (test mode) banner
+
+.app-impersonation-banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    padding: calc(0.5rem + var(--app-safe-top)) 1rem 0.5rem;
+    color: #3d2b00;
+    background: var(--bs-warning);
+    font-size: 0.9rem;
+
+    @media (min-width: 576px) {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    @media (min-width: 1400px) {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+
+    .btn {
+        --bs-btn-color: #3d2b00;
+        --bs-btn-border-color: #3d2b00;
+        --bs-btn-hover-color: var(--bs-warning);
+        --bs-btn-hover-bg: #3d2b00;
+        --bs-btn-hover-border-color: #3d2b00;
+    }
+}
+
 // Topbar
 
 .app-topbar {

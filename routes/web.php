@@ -9,6 +9,7 @@ use App\Http\Controllers\ComponentSettingController;
 use App\Http\Controllers\FileStorageConnectionController;
 use App\Http\Controllers\HitobitoAccessRuleController;
 use App\Http\Controllers\HitobitoTestController;
+use App\Http\Controllers\ImpersonationController;
 use App\Http\Controllers\ItemCollectionController;
 use App\Http\Controllers\ItemContentController;
 use App\Http\Controllers\ItemController;
@@ -54,6 +55,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('users', UserController::class)->except(['show']);
     Route::post('users/{user}/password-reset', [UserController::class, 'sendResetLink'])->name('users.password-reset')->middleware('component:password_login');
+    Route::post('users/{user}/impersonate', [ImpersonationController::class, 'start'])->name('users.impersonate');
+    Route::post('impersonation/leave', [ImpersonationController::class, 'stop'])->name('impersonation.leave');
     Route::post('item-groups/reorder', [ItemGroupController::class, 'reorder'])->name('item-groups.reorder');
     Route::resource('item-groups', ItemGroupController::class)->except(['show']);
     Route::resource('items', ItemController::class);
@@ -103,7 +106,7 @@ Route::middleware('auth')->group(function () {
     Route::get('attachments/{attachment}', [AttachmentController::class, 'show'])->name('attachments.show');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/locale', [ProfileController::class, 'updateLocale'])->name('profile.locale.update');
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update')->middleware('not-impersonating');
     Route::get('/settings/components', [ComponentSettingController::class, 'index'])->name('settings.components.index');
     Route::put('/settings/components', [ComponentSettingController::class, 'update'])->name('settings.components.update');
     Route::get('/settings/order-workflow', [OrderWorkflowController::class, 'edit'])->name('settings.order-workflow.edit');

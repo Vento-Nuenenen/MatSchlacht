@@ -114,6 +114,8 @@ Einheiten sind zugleich Rollen: Sie bestimmen, was ihre Mitglieder dürfen.
 
 ![Einheiten mit ihren Berechtigungen](images/rollen.png)
 
+Materialwarte können sich in der Benutzerliste mit **Als Benutzer anmelden** als ein anderer Benutzer anmelden, um zu prüfen, was dieser sieht und darf. Ein Band oben zeigt den Testmodus an, **Zurück zu meinem Konto** beendet ihn. Im Testmodus wird so gehandelt, als wäre man dieser Benutzer, nur das Passwort lässt sich nicht ändern. Andere Materialwarte und deaktivierte Konten sind ausgenommen.
+
 ## Einstellungen
 
 Die meisten Funktionen sind Komponenten, die sich unter **Einstellungen** ein- und ausschalten und konfigurieren lassen. Dort werden auch die Hauptfarbe, die Anmeldemethoden und der Dateispeicher gewählt.

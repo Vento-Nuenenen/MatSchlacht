@@ -133,8 +133,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Implicitly grant "Materialwart" role all permissions
+        // Implicitly grant "Materialwart" role all permissions. Impersonation depends on the
+        // target user too (never another Materialwart), so it is always left to the policy.
         Gate::before(function ($user, $ability) {
+            if ($ability === 'impersonate') {
+                return null;
+            }
+
             return $user->hasRole('Materialwart') ? true : null;
         });
 

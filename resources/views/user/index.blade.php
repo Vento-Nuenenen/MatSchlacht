@@ -69,6 +69,15 @@
                                                         </form>
                                                     @endif
 
+                                                    @can('impersonate', $user)
+                                                        <form action="{{ route('users.impersonate', $user->id) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-outline-primary btn-sm" title="{{ __('Die App so sehen und nutzen, wie dieser Benutzer') }}">
+                                                                <i class="fa fa-user-secret me-1"></i>{{ __('Als Benutzer anmelden') }}
+                                                            </button>
+                                                        </form>
+                                                    @endcan
+
                                                     @can('delete users')
                                                         @include('components.delete', [
                                                             'route' => 'users.destroy',
