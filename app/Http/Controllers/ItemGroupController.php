@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReorderItemGroupsRequest;
 use App\Http\Requests\StoreItemGroupRequest;
 use App\Http\Requests\UpdateItemGroupRequest;
 use App\Models\ItemGroup;
@@ -9,7 +10,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ItemGroupController extends Controller
 {
@@ -45,14 +46,6 @@ class ItemGroupController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(ItemGroup $itemGroup): void
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(ItemGroup $itemGroup): Factory|View
@@ -73,21 +66,16 @@ class ItemGroupController extends Controller
     /**
      * Update the positions of the item groups.
      */
-    public function reorder(Request $request): JsonResponse
+    public function reorder(ReorderItemGroupsRequest $request): JsonResponse
     {
-        $this->authorize('create', ItemGroup::class);
-
-        $validated = $request->validate([
-            'positions' => ['required', 'array'],
-            'positions.*' => ['integer', 'exists:item_groups,id'],
-        ]);
-
         /** @var array<int, int> $positions */
-        $positions = $validated['positions'];
+        $positions = $request->validated('positions');
 
-        foreach ($positions as $position => $id) {
-            ItemGroup::where('id', $id)->update(['position' => $position + 1]);
-        }
+        DB::transaction(function () use ($positions): void {
+            foreach ($positions as $position => $id) {
+                ItemGroup::where('id', $id)->update(['position' => $position + 1]);
+            }
+        });
 
         return response()->json(['success' => true]);
     }

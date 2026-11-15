@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Services\OrderWorkflow;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -67,5 +68,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'edit own orders', 'delete own orders',
             ]);
         }
+
+        // Who may move orders through their states follows from the permissions above.
+        app(OrderWorkflow::class)->applyDefaults();
     }
 }

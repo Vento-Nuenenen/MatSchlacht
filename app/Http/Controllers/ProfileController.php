@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateLocaleRequest;
+use App\Http\Requests\UpdatePasswordRequest;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Password;
 
 class ProfileController extends Controller
 {
@@ -25,36 +23,19 @@ class ProfileController extends Controller
     /**
      * Change the language of the user.
      */
-    public function updateLocale(Request $request): RedirectResponse
+    public function updateLocale(UpdateLocaleRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'locale' => ['required', Rule::in(array_keys(config('app.available_locales')))],
-        ]);
-
-        $request->user()->update($validated);
+        $request->user()->update($request->validated());
 
         return back();
     }
 
     /**
-     * Update the user's password.
-     *
-     * @return RedirectResponse
+     * Update the user's password. The model hashes it.
      */
-    public function updatePassword(Request $request)
+    public function updatePassword(UpdatePasswordRequest $request): RedirectResponse
     {
-        if ($request->user()->isExternalUser()) {
-            return back()->with('error', __('Benutzer mit externem Login können ihr Passwort hier nicht ändern.'));
-        }
-
-        $validated = $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', Password::defaults(), 'confirmed'],
-        ]);
-
-        $request->user()->update([
-            'password' => Hash::make($validated['password']),
-        ]);
+        $request->user()->update(['password' => $request->validated('password')]);
 
         return back()->with('success', __('Passwort erfolgreich aktualisiert.'));
     }

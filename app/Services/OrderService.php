@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\OrderedItem;
+use App\Models\User;
 use App\States\Order\Accepted;
 use App\States\Order\Committed;
 use App\States\Order\Delivered;
@@ -18,6 +19,7 @@ class OrderService
     public function __construct(
         protected StockAvailability $availability,
         protected ComponentManager $components,
+        protected OrderWorkflow $workflow,
     ) {}
 
     /**
@@ -31,16 +33,25 @@ class OrderService
     ];
 
     /**
-     * Create a new order from the order form.
+     * Create a new order from the order form. Submitting it right away needs the same
+     * permission as submitting a draft.
      *
      * @param  array<string, mixed>  $data
+     *
+     * @throws ValidationException
      */
-    public function createOrder(array $data): Order
+    public function createOrder(array $data, User $actor): Order
     {
-        return DB::transaction(function () use ($data): Order {
+        return DB::transaction(function () use ($data, $actor): Order {
+            $state = $this->stateForAction($data['action'] ?? null) ?? Stored::class;
+
+            if ($state !== Stored::class && ! $this->workflow->allowsBetween($actor, new Order($this->orderAttributes($data)), Stored::class, $state)) {
+                throw $this->transitionNotAllowed();
+            }
+
             $order = Order::create([
                 ...$this->orderAttributes($data),
-                'state' => $this->stateForAction($data['action'] ?? null) ?? Stored::class,
+                'state' => $state,
             ]);
 
             $this->syncPositions($order, $data);
@@ -60,16 +71,21 @@ class OrderService
      *
      * @throws ValidationException
      */
-    public function updateOrder(Order $order, array $data): Order
+    public function updateOrder(Order $order, array $data, User $actor): Order
     {
-        return DB::transaction(function () use ($order, $data): Order {
+        return DB::transaction(function () use ($order, $data, $actor): Order {
             $order->update($this->orderAttributes($data));
             $this->syncPositions($order, $data);
 
             $targetState = $this->stateForAction($data['action'] ?? null);
 
-            if ($targetState !== null && ! $order->state->equals($targetState)) {
-                $this->transition($order, $targetState);
+            if ($targetState === null || $order->state->equals($targetState)) {
+                return $order;
+            }
+
+            // Saving only turns the order back into a draft for those who may do so.
+            if ($targetState !== Stored::class || $this->workflow->allows($actor, $order, $targetState)) {
+                $this->transition($order, $targetState, $actor);
             }
 
             return $order;
@@ -98,15 +114,21 @@ class OrderService
     }
 
     /**
-     * Transition an order to another state, respecting the configured state machine. An order
-     * that starts to reserve material needs it to be available, handing out records the quantities.
+     * Transition an order to another state, respecting the state machine and its configuration:
+     * the transition has to be enabled and the acting user needs to be allowed to perform it.
+     * An order that starts to reserve material needs it to be available, handing out records
+     * the quantities.
      *
      * @throws ValidationException
      */
-    public function transition(Order $order, mixed $targetState): void
+    public function transition(Order $order, mixed $targetState, User $actor): void
     {
         if (! is_string($targetState) || ! $order->state->canTransitionTo($targetState)) {
             throw ValidationException::withMessages(['state' => __('Ungültiger Statusübergang.')]);
+        }
+
+        if (! $this->workflow->allows($actor, $order, $targetState)) {
+            throw $this->transitionNotAllowed();
         }
 
         DB::transaction(function () use ($order, $targetState): void {
@@ -125,6 +147,11 @@ class OrderService
                 $order->orderedItems()->update(['delivered' => 0]);
             }
         });
+    }
+
+    protected function transitionNotAllowed(): ValidationException
+    {
+        return ValidationException::withMessages(['state' => __('Dieser Statusübergang ist nicht erlaubt.')]);
     }
 
     /**

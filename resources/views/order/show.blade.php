@@ -74,12 +74,15 @@
 
                         <div class="d-flex flex-column flex-sm-row justify-content-between gap-2 mt-4">
                             <a href="{{ route('orders.index') }}" class="btn btn-secondary">{{ __('Zurück zur Übersicht') }}</a>
-                            @component_enabled('item_contents')
-                                <a href="{{ route('orders.manage.contents-pdf', $order) }}" class="btn btn-info text-white"
-                                   target="_blank">
-                                    <i class="fa fa-file-pdf me-1"></i> {{ __('Packliste PDF') }}
-                                </a>
-                            @endcomponent_enabled
+                            <div class="d-flex flex-wrap gap-2">
+                                @include('components.order-transitions', ['order' => $order])
+                                @component_enabled('item_contents')
+                                    <a href="{{ route('orders.manage.contents-pdf', $order) }}" class="btn btn-info text-white"
+                                       target="_blank">
+                                        <i class="fa fa-file-pdf me-1"></i> {{ __('Packliste PDF') }}
+                                    </a>
+                                @endcomponent_enabled
+                            </div>
                         </div>
                     </div>
                 </div>

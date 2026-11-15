@@ -25,6 +25,7 @@ use Spatie\Permission\Traits\HasRoles;
     'email',
     'password',
     'locale',
+    'aktiv',
 ])]
 #[Hidden([
     'password',
@@ -36,6 +37,15 @@ class User extends Authenticatable implements HasLocalePreference
     use HasFactory, HasRoles, Notifiable;
 
     /**
+     * Matches the default of the column, for accounts that were just created.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'aktiv' => true,
+    ];
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -45,6 +55,7 @@ class User extends Authenticatable implements HasLocalePreference
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'aktiv' => 'boolean',
         ];
     }
 
@@ -141,6 +152,29 @@ class User extends Authenticatable implements HasLocalePreference
     public function canActForUser(User $user): bool
     {
         return $this->isPrivileged() || $this->roles->intersect($user->roles)->isNotEmpty();
+    }
+
+    /**
+     * Whether this user may change the account of the given user. Privileged accounts are
+     * out of reach for everybody else, even when they share a role.
+     */
+    public function canManageUser(User $user): bool
+    {
+        return $this->isPrivileged() || (! $user->isPrivileged() && $this->canActForUser($user));
+    }
+
+    /**
+     * The roles to give the target user: the selected ones, plus those the target has
+     * outside of the scope of this user. These are not part of the form of this user.
+     *
+     * @param  array<int, string>  $roleNames
+     * @return array<int, string>
+     */
+    public function rolesIncludingUnmanaged(User $target, array $roleNames): array
+    {
+        $unmanagedRoles = $target->roles->pluck('name')->diff($this->scopedRoles()->pluck('name'));
+
+        return [...$roleNames, ...$unmanagedRoles->values()];
     }
 
     public function isAzureUser(): bool

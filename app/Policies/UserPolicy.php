@@ -35,7 +35,7 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        return $user->can('edit users');
+        return $user->can('edit users') && $user->canManageUser($model);
     }
 
     /**
@@ -43,7 +43,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        return $user->can('delete users') && $user->id !== $model->id;
+        return $user->can('delete users') && $user->id !== $model->id && $user->canManageUser($model);
     }
 
     /**
@@ -51,7 +51,7 @@ class UserPolicy
      */
     public function sendResetLink(User $user, User $model): bool
     {
-        return $user->can('edit users');
+        return $user->can('edit users') && $user->canManageUser($model);
     }
 
     /**

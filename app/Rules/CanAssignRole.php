@@ -19,7 +19,7 @@ class CanAssignRole implements ValidationRule
         $user = auth()->user();
 
         // Materialwart can assign any role
-        if ($user->hasRole('Materialwart')) {
+        if ($user->isPrivileged()) {
             return;
         }
 

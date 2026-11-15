@@ -43,3 +43,15 @@ test('regular user cannot reorder item groups', function () {
 
     $response->assertForbidden();
 });
+
+test('reordering item groups needs the permission to edit them', function (string $permission, int $status) {
+    $this->user->givePermissionTo($permission);
+    $group = ItemGroup::factory()->create();
+
+    $this->actingAs($this->user)
+        ->post(route('item-groups.reorder'), ['positions' => [$group->id]])
+        ->assertStatus($status);
+})->with([
+    'edit' => ['edit itemgroups', 200],
+    'create only' => ['create itemgroups', 403],
+]);

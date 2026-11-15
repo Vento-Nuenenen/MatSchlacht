@@ -70,7 +70,7 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request): RedirectResponse
     {
-        $this->orderService->createOrder($request->validated());
+        $this->orderService->createOrder($request->validated(), $request->user());
 
         return redirect()->route('orders.index')->with('success', __('Neue Bestellung wurde erfolgreich erstellt.'));
     }
@@ -106,7 +106,7 @@ class OrderController extends Controller
      */
     public function update(UpdateOrderRequest $request, Order $order): RedirectResponse
     {
-        $this->orderService->updateOrder($order, $request->validated());
+        $this->orderService->updateOrder($order, $request->validated(), $request->user());
 
         return redirect()->route('orders.index')->with('success', __('Bestellung wurde erfolgreich aktualisiert.'));
     }

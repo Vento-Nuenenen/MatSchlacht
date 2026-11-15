@@ -51,7 +51,7 @@ class FileStorageConnectionController extends Controller
         }
 
         if ($request->filled('error') || ! $request->filled('code')) {
-            return $settings->with('error', __('Die Verbindung zu :label wurde nicht erlaubt: ', ['label' => $provider->label()]).($request->query('error_description') ?? $request->query('error') ?? 'kein Code erhalten'));
+            return $settings->with('error', __('Die Verbindung zu :label wurde nicht erlaubt: ', ['label' => $provider->label()]).($request->query('error_description') ?? $request->query('error') ?? __('kein Code erhalten')));
         }
 
         try {
@@ -60,7 +60,7 @@ class FileStorageConnectionController extends Controller
             return $settings->with('error', __('Verbindung zu :label fehlgeschlagen: :getmessage', ['label' => $provider->label(), 'getmessage' => $exception->getMessage()]));
         }
 
-        return $settings->with('success', "{$provider->label()} ist verbunden.");
+        return $settings->with('success', __(':label ist verbunden.', ['label' => $provider->label()]));
     }
 
     protected function redirectUri(FileStorageProvider $provider): string

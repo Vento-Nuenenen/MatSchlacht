@@ -36,7 +36,7 @@ class ServiceTest extends TestCase
             'user_id' => $user->id,
             'role_id' => $role->id,
             'items' => [$item->id => 15],
-        ]);
+        ], $user);
 
         $this->assertInstanceOf(Order::class, $order);
         $this->assertEquals('Service Test', $order->event);
@@ -59,7 +59,7 @@ class ServiceTest extends TestCase
             'user_id' => $user->id,
             'role_id' => $role->id,
             'items' => [$item1->id => 10],
-        ]);
+        ], $user);
 
         $service->updateOrder($order, [
             'event' => 'Updated',
@@ -68,7 +68,7 @@ class ServiceTest extends TestCase
             'user_id' => $user->id,
             'role_id' => $role->id,
             'items' => [$item2->id => 5],
-        ]);
+        ], $user);
 
         $order->refresh();
         $this->assertEquals('Updated', $order->event);

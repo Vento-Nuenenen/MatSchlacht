@@ -7,9 +7,8 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Password;
 use Illuminate\View\View;
-use Password;
-use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -37,14 +36,7 @@ class UserController extends Controller
      */
     public function create(): Factory|View
     {
-        $user = auth()->user();
-        if ($user->isPrivileged()) {
-            $roles = Role::all();
-        } else {
-            $roles = $user->roles;
-        }
-
-        return view('user.create', compact('roles'));
+        return view('user.create', ['roles' => auth()->user()->scopedRoles()]);
     }
 
     /**
@@ -54,8 +46,9 @@ class UserController extends Controller
     {
         $user = User::create($request->validated());
 
-        // Assign selected roles (if any)
-        $user->syncRoles($request->input('roles', []));
+        /** @var array<int, string> $roles */
+        $roles = $request->validated('roles', []);
+        $user->syncRoles($roles);
 
         if (! $user->isExternalUser()) {
             Password::broker()->sendResetLink(['email' => $user->email]);
@@ -81,26 +74,11 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(User $user): void
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(User $user): Factory|View
     {
-        $currentUser = auth()->user();
-        if ($currentUser->isPrivileged()) {
-            $roles = Role::all();
-        } else {
-            $roles = $currentUser->roles;
-        }
-
-        return view('user.edit', compact('user', 'roles'));
+        return view('user.edit', ['user' => $user, 'roles' => auth()->user()->scopedRoles()]);
     }
 
     /**
@@ -110,8 +88,9 @@ class UserController extends Controller
     {
         $user->update($request->validated());
 
-        // Sync roles assignment (empty clears all)
-        $user->syncRoles($request->input('roles', []));
+        /** @var array<int, string> $roles */
+        $roles = $request->validated('roles', []);
+        $user->syncRoles(auth()->user()->rolesIncludingUnmanaged($user, $roles));
 
         return redirect()->route('users.index')->with('success', __('Benutzer wurde erfolgreich aktualisiert.'));
     }

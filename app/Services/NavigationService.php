@@ -63,7 +63,8 @@ class NavigationService
                         $this->components->isEnabled('hitobito_login') && $user->can('manage hitobito access')),
                     $this->item(__('Hitobito-Test'), 'fa-vial', 'hitobito-test.index', ['hitobito-test.*'], null,
                         $this->components->isEnabled('hitobito_login') && $user->can('manage hitobito access')),
-                    $this->item(__('Einstellungen'), 'fa-sliders', 'settings.components.index', ['settings.*'], null, $user->can('manage settings')),
+                    $this->item(__('Bestellablauf'), 'fa-diagram-next', 'settings.order-workflow.edit', ['settings.order-workflow.*'], null, $user->can('manage settings')),
+                    $this->item(__('Einstellungen'), 'fa-sliders', 'settings.components.index', ['settings.components.*', 'settings.file-storage.*'], null, $user->can('manage settings')),
                 ],
             ],
         ];

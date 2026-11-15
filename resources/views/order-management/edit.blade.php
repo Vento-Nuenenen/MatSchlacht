@@ -31,77 +31,7 @@
                                 </a>
                             @endif
 
-                            @if($order->state->canTransitionTo('stored'))
-                                <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    <input type="hidden" name="to" value="stored" />
-                                    <button type="submit" class="btn btn-outline-danger">{{ __('Ablehnen (zu Entwurf)') }}</button>
-                                </form>
-                            @endif
-
-                            @if($order->state->canTransitionTo('accepted'))
-                                @if($order->state->equals(\App\States\Order\Committed::class))
-                                    <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline transition-form">
-                                        @csrf
-                                        <input type="hidden" name="to" value="accepted">
-                                        <button type="submit" class="btn btn-primary">{{ __('Akzeptieren') }}</button>
-                                    </form>
-                                @else
-                                    <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline transition-form">
-                                        @csrf
-                                        <input type="hidden" name="to" value="accepted">
-                                        <button type="submit" class="btn btn-outline-danger">{{ __('Rückgängig (Ausgeben)') }}</button>
-                                    </form>
-                                @endif
-                            @endif
-
-                            @if($order->state->canTransitionTo('committed'))
-                                @if($order->state->equals(\App\States\Order\Stored::class))
-                                    <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline transition-form">
-                                        @csrf
-                                        <input type="hidden" name="to" value="committed">
-                                        <button type="submit" class="btn btn-primary">{{ __('Bestellen') }}</button>
-                                    </form>
-                                @else
-                                    <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline transition-form">
-                                        @csrf
-                                        <input type="hidden" name="to" value="committed">
-                                        <button type="submit" class="btn btn-outline-danger">{{ __('Rückgängig (Akzeptieren)') }}</button>
-                                    </form>
-                                @endif
-                            @endif
-
-                            @if($order->state->canTransitionTo('delivered'))
-                                @if($order->state->equals(\App\States\Order\Accepted::class))
-                                    <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline transition-form">
-                                        @csrf
-                                        <input type="hidden" name="to" value="delivered">
-                                        <button type="submit" class="btn btn-info text-white">{{ __('Ausgeben') }}</button>
-                                    </form>
-                                @else
-                                    <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline transition-form">
-                                        @csrf
-                                        <input type="hidden" name="to" value="delivered">
-                                        <button type="submit" class="btn btn-outline-danger">{{ __('Rückgängig (Zurückerhalten)') }}</button>
-                                    </form>
-                                @endif
-                            @endif
-
-                            @if($order->state->canTransitionTo('returned'))
-                                <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline transition-form">
-                                    @csrf
-                                    <input type="hidden" name="to" value="returned">
-                                    <button type="submit" class="btn btn-secondary">{{ __('Zurückerhalten') }}</button>
-                                </form>
-                            @endif
-
-                            @if($order->state->canTransitionTo('archived'))
-                                <form action="{{ route('orders.manage.transition', $order) }}" method="POST" class="d-inline transition-form">
-                                    @csrf
-                                    <input type="hidden" name="to" value="archived">
-                                    <button type="submit" class="btn btn-danger">{{ __('Archivieren/Stornieren') }}</button>
-                                </form>
-                            @endif
+                            @include('components.order-transitions', ['order' => $order, 'formClass' => 'transition-form'])
                         </div>
 
                         <hr />

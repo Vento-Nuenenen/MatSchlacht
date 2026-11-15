@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Order;
 use App\Models\User;
+use App\Services\OrderWorkflow;
 use App\States\Order\Stored;
 
 class OrderPolicy
@@ -83,11 +84,20 @@ class OrderPolicy
     }
 
     /**
+     * Determine whether the user can move the order to the given state, as configured
+     * for their units in the order workflow settings.
+     */
+    public function transition(User $user, Order $order, string $to): bool
+    {
+        return app(OrderWorkflow::class)->allows($user, $order, $to);
+    }
+
+    /**
      * Determine whether the user can manage the order (via OrderManagementController).
      */
     public function manage(User $user): bool
     {
-        return $user->can('edit orders');
+        return $user->can('manage orders') || $user->can('edit orders');
     }
 
     /**
@@ -95,7 +105,7 @@ class OrderPolicy
      */
     public function export(User $user, Order $order): bool
     {
-        return $user->can('edit orders');
+        return $this->manage($user);
     }
 
     /**
@@ -103,6 +113,6 @@ class OrderPolicy
      */
     public function exportReturn(User $user, Order $order): bool
     {
-        return $user->can('edit orders');
+        return $this->manage($user);
     }
 }

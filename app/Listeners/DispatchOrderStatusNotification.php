@@ -5,14 +5,14 @@ namespace App\Listeners;
 use App\Jobs\SendOrderStatusNotification;
 use App\Models\Order;
 use App\Services\ComponentManager;
-use App\States\Order\Accepted;
-use App\States\Order\Committed;
+use App\Services\OrderWorkflow;
 use Spatie\ModelStates\Events\StateChanged;
 
 class DispatchOrderStatusNotification
 {
     /**
-     * Notify the orderer and the material responsibles when an order was committed or accepted.
+     * Notify the orderer and the material responsibles about the transitions that are
+     * configured to send a mail.
      */
     public function handle(StateChanged $event): void
     {
@@ -20,15 +20,14 @@ class DispatchOrderStatusNotification
             return;
         }
 
-        $components = app(ComponentManager::class);
+        $initialState = $event->initialState;
+        $finalState = $event->finalState;
 
-        if (! $components->isEnabled('order_notifications') || ! $components->setting('order_notifications', 'notify_on_status_change')) {
+        if ($initialState === null || $finalState === null || ! app(ComponentManager::class)->isEnabled('order_notifications')) {
             return;
         }
 
-        $finalState = $event->finalState;
-
-        if ($finalState instanceof Committed || $finalState instanceof Accepted) {
+        if (app(OrderWorkflow::class)->sendsMail($initialState::getMorphClass(), $finalState::getMorphClass())) {
             SendOrderStatusNotification::dispatch($event->model, $finalState::getMorphClass());
         }
     }

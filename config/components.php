@@ -174,17 +174,12 @@ return [
 
     'order_notifications' => [
         'label' => 'Mail-Benachrichtigungen',
-        'description' => 'E-Mails bei neuen Bestellungen und Statuswechseln.',
+        'description' => 'E-Mails bei neuen Bestellungen und Statuswechseln. Bei welchen Statuswechseln eine Mail verschickt wird, legt der Bestellablauf fest.',
         'enabled' => (bool) env('COMPONENT_ORDER_NOTIFICATIONS', true),
         'settings' => [
             'notify_on_created' => [
                 'type' => 'bool',
                 'label' => 'Bei neuer Bestellung benachrichtigen',
-                'default' => true,
-            ],
-            'notify_on_status_change' => [
-                'type' => 'bool',
-                'label' => 'Bei Statuswechsel (abgeschickt / angenommen) benachrichtigen',
                 'default' => true,
             ],
             'material_responsibles' => [

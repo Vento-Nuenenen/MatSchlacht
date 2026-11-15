@@ -26,7 +26,8 @@
         </div>
 
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="aktiv" name="aktiv" {{ old('aktiv', $user->aktiv ?? false) ? 'checked' : '' }}>
+            <input type="hidden" name="aktiv" value="0">
+            <input type="checkbox" class="form-check-input" id="aktiv" name="aktiv" value="1" {{ old('aktiv', $user->aktiv ?? true) ? 'checked' : '' }}>
             <label class="form-check-label fw-semibold" for="aktiv">{{ __('Aktiv') }}</label>
         </div>
     </div>

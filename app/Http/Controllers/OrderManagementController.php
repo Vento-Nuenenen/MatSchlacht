@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TransitionOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Item;
 use App\Models\ItemCollection;
@@ -19,7 +20,6 @@ use App\States\Order\Stored;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
@@ -33,8 +33,6 @@ class OrderManagementController extends Controller
      */
     public function index(): View
     {
-        $this->authorize('manage', Order::class);
-
         $ordersByState = [];
 
         foreach ([Stored::class, Committed::class, Accepted::class, Delivered::class, Returned::class] as $state) {
@@ -65,8 +63,6 @@ class OrderManagementController extends Controller
      */
     public function edit(Order $order): View
     {
-        $this->authorize('update', $order);
-
         return view('order-management.edit', [
             'order' => $order->load('orderedItems.item', 'role', 'user', 'itemCollections.items'),
             'items' => Item::with('itemGroup', 'attachments', 'contents')->orderBy('name')->get(),
@@ -79,8 +75,6 @@ class OrderManagementController extends Controller
      */
     public function update(UpdateOrderRequest $request, Order $order): RedirectResponse
     {
-        $this->authorize('update', $order);
-
         $this->orderService->updateManagedOrder($order, $request->validated());
 
         if (auth()->user()->isPrivileged()) {
@@ -90,12 +84,16 @@ class OrderManagementController extends Controller
         return redirect()->route('orders.manage.edit', $order)->with('success', __('Bestellung wurde erfolgreich aktualisiert.'));
     }
 
-    public function transition(Request $request, Order $order): RedirectResponse
+    /**
+     * Move the order to another state. Open to everybody whose unit may perform the transition,
+     * also without access to the order management.
+     */
+    public function transition(TransitionOrderRequest $request, Order $order): RedirectResponse
     {
-        $this->authorize('update', $order);
+        $this->authorize('transition', [$order, $request->validated('to')]);
 
         try {
-            $this->orderService->transition($order, $request->input('to'));
+            $this->orderService->transition($order, $request->validated('to'), $request->user());
         } catch (ValidationException $exception) {
             return back()->with('error', implode(' ', Arr::flatten($exception->errors())));
         }

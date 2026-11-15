@@ -12,6 +12,7 @@ use App\Services\ComponentManager;
 use App\Services\FileStorage\SftpAdapter;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\Config;
 use phpseclib4\Net\SFTP;
@@ -170,4 +171,51 @@ test('the sftp adapter creates missing folders and works below its root', functi
         ->and($adapter->fileExists('items/zelt.jpg'))->toBeTrue();
 
     $adapter->delete('items/zelt.jpg');
+});
+
+test('invalid names of a user are rejected instead of reaching the database', function (mixed $firstname) {
+    $user = User::factory()->create();
+
+    $this->actingAs($this->materialwart)
+        ->put(route('users.update', $user), ['firstname' => $firstname, 'lastname' => 'Muster', 'email' => $user->email])
+        ->assertSessionHasErrors('firstname');
+})->with([
+    'too long' => [str_repeat('a', 256)],
+    'array' => [['Max']],
+]);
+
+test('an input field called user does not replace the edited user', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($this->materialwart)
+        ->put(route('users.update', $user), ['firstname' => 'Max', 'lastname' => 'Muster', 'email' => $user->email, 'user' => 'x'])
+        ->assertSessionHasNoErrors();
+});
+
+test('users can change their password', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->put(route('profile.password.update'), [
+            'current_password' => 'password',
+            'password' => 'ein-neues-passwort',
+            'password_confirmation' => 'ein-neues-passwort',
+        ])
+        ->assertSessionHas('success');
+
+    expect(Hash::check('ein-neues-passwort', $user->fresh()->password))->toBeTrue();
+});
+
+test('users of an external login cannot set a password', function () {
+    $user = User::factory()->create(['azure_id' => 'azure-id', 'password' => null]);
+
+    $this->actingAs($user)
+        ->put(route('profile.password.update'), [
+            'current_password' => 'password',
+            'password' => 'ein-neues-passwort',
+            'password_confirmation' => 'ein-neues-passwort',
+        ])
+        ->assertForbidden();
+
+    expect($user->fresh()->password)->toBeNull();
 });

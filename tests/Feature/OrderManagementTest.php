@@ -241,3 +241,25 @@ test('only users allowed to edit orders can export the order sheet', function ()
         ->get(route('orders.manage.order-pdf', $order))
         ->assertForbidden();
 });
+
+test('an orderer cannot use the management routes for their own draft', function (string $method, string $route) {
+    $order = managedOrder(Stored::class);
+
+    $this->actingAs($this->orderer)
+        ->{$method}(route($route, $order), ['to' => 'archived'])
+        ->assertForbidden();
+
+    expect($order->fresh()->state)->toBeInstanceOf(Stored::class);
+})->with([
+    'edit' => ['get', 'orders.manage.edit'],
+    'update' => ['put', 'orders.manage.update'],
+    'transition' => ['post', 'orders.manage.transition'],
+]);
+
+test('a transition needs a target state', function () {
+    $order = managedOrder(Committed::class);
+
+    $this->actingAs($this->materialwart)
+        ->post(route('orders.manage.transition', $order))
+        ->assertSessionHasErrors('to');
+});

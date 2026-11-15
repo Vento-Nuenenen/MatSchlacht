@@ -54,7 +54,9 @@
                 <a href="{{ route('orders.index') }}" class="btn btn-secondary order-2 order-sm-1">{{ __('Abbrechen') }}</a>
                 <div class="d-flex flex-column flex-sm-row gap-2 order-1 order-sm-2">
                     <button type="submit" class="btn btn-success" name="action" value="save">{{ __('Bestellung speichern') }}</button>
-                    <button type="submit" class="btn btn-primary" name="action" value="order">{{ __('Bestellung senden') }}</button>
+                    @if(app(\App\Services\OrderWorkflow::class)->isPerformableBy(auth()->user(), 'stored', 'committed'))
+                        <button type="submit" class="btn btn-primary" name="action" value="order">{{ __('Bestellung senden') }}</button>
+                    @endif
                 </div>
             </div>
         </form>

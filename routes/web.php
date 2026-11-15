@@ -20,11 +20,13 @@ use App\Http\Controllers\LabelController;
 use App\Http\Controllers\MaintenanceOverviewController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderManagementController;
+use App\Http\Controllers\OrderWorkflowController;
 use App\Http\Controllers\OverwatchController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\StorageUnitController;
 use App\Http\Controllers\UserController;
+use App\Models\Order;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/overwatch');
@@ -50,10 +52,10 @@ Route::middleware('component:hitobito_login')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/overwatch', [OverwatchController::class, 'index'])->name('overwatch');
 
-    Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class)->except(['show']);
     Route::post('users/{user}/password-reset', [UserController::class, 'sendResetLink'])->name('users.password-reset')->middleware('component:password_login');
     Route::post('item-groups/reorder', [ItemGroupController::class, 'reorder'])->name('item-groups.reorder');
-    Route::resource('item-groups', ItemGroupController::class);
+    Route::resource('item-groups', ItemGroupController::class)->except(['show']);
     Route::resource('items', ItemController::class);
     Route::resource('item-collections', ItemCollectionController::class)->middleware('component:item_collections');
     Route::middleware('component:item_contents')->group(function () {
@@ -83,12 +85,14 @@ Route::middleware('auth')->group(function () {
         Route::delete('item-maintenances/{itemMaintenance}', [ItemMaintenanceController::class, 'destroy'])->name('items.maintenances.destroy');
     });
     Route::resource('orders', OrderController::class);
-    Route::get('/manage/orders', [OrderManagementController::class, 'index'])->name('orders.manage');
-    Route::get('/manage/orders/{order}/edit', [OrderManagementController::class, 'edit'])->name('orders.manage.edit');
+    Route::middleware('can:manage,'.Order::class)->group(function () {
+        Route::get('/manage/orders', [OrderManagementController::class, 'index'])->name('orders.manage');
+        Route::get('/manage/orders/{order}/edit', [OrderManagementController::class, 'edit'])->name('orders.manage.edit');
+        Route::put('/manage/orders/{order}', [OrderManagementController::class, 'update'])->name('orders.manage.update');
+    });
+    Route::post('/manage/orders/{order}/transition', [OrderManagementController::class, 'transition'])->name('orders.manage.transition');
     Route::get('/manage/orders/{order}/order-pdf', [OrderManagementController::class, 'exportOrderPdf'])->name('orders.manage.order-pdf');
     Route::get('/manage/orders/{order}/return-pdf', [OrderManagementController::class, 'exportReturnPdf'])->name('orders.manage.return-pdf');
-    Route::put('/manage/orders/{order}', [OrderManagementController::class, 'update'])->name('orders.manage.update');
-    Route::post('/manage/orders/{order}/transition', [OrderManagementController::class, 'transition'])->name('orders.manage.transition');
     Route::resource('roles', RolePermissionController::class);
     Route::resource('azure-group-role-mappings', AzureGroupRoleMappingController::class)->except(['show'])->middleware('component:azure_login');
     Route::middleware('component:hitobito_login')->group(function () {
@@ -102,6 +106,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::get('/settings/components', [ComponentSettingController::class, 'index'])->name('settings.components.index');
     Route::put('/settings/components', [ComponentSettingController::class, 'update'])->name('settings.components.update');
+    Route::get('/settings/order-workflow', [OrderWorkflowController::class, 'edit'])->name('settings.order-workflow.edit');
+    Route::put('/settings/order-workflow', [OrderWorkflowController::class, 'update'])->name('settings.order-workflow.update');
     Route::post('/settings/file-storage/test', [ComponentSettingController::class, 'testFileStorage'])->name('settings.file-storage.test');
     Route::get('/settings/file-storage/{provider}/connect', [FileStorageConnectionController::class, 'connect'])->name('settings.file-storage.connect');
     Route::get('/settings/file-storage/{provider}/callback', [FileStorageConnectionController::class, 'callback'])->name('settings.file-storage.callback');

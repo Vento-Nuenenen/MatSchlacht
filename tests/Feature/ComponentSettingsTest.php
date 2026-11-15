@@ -211,7 +211,7 @@ test('uploads are ignored when attachments are disabled', function () {
 
 test('no order created mail is sent when the notification is turned off', function (bool $isComponentEnabled, bool $notifyOnCreated) {
     Mail::fake();
-    configureComponent('order_notifications', $isComponentEnabled, ['notify_on_created' => $notifyOnCreated, 'notify_on_status_change' => true]);
+    configureComponent('order_notifications', $isComponentEnabled, ['notify_on_created' => $notifyOnCreated]);
 
     Order::factory()->create(['user_id' => $this->leader->id, 'role_id' => $this->role->id]);
 
@@ -221,9 +221,9 @@ test('no order created mail is sent when the notification is turned off', functi
     'option disabled' => [true, false],
 ]);
 
-test('no status mail is dispatched when status notifications are turned off', function () {
+test('no status mail is dispatched when the order notifications are disabled', function () {
     Queue::fake();
-    configureComponent('order_notifications', true, ['notify_on_created' => true, 'notify_on_status_change' => false]);
+    configureComponent('order_notifications', false, ['notify_on_created' => true]);
     $order = Order::factory()->create(['user_id' => $this->leader->id, 'role_id' => $this->role->id, 'state' => Committed::class]);
 
     $this->actingAs($this->materialwart)
@@ -238,7 +238,6 @@ test('the status mail goes to the material responsibles from the settings', func
     config(['mail.material_responsibles' => 'env@example.com']);
     configureComponent('order_notifications', true, [
         'notify_on_created' => true,
-        'notify_on_status_change' => true,
         'material_responsibles' => 'lager@example.com',
     ]);
     $order = Order::factory()->create(['user_id' => $this->leader->id, 'role_id' => $this->role->id, 'state' => Accepted::class]);

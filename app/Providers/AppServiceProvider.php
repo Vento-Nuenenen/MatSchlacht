@@ -26,6 +26,7 @@ use App\Services\FileStorage\GoogleDriveAdapter;
 use App\Services\FileStorage\SftpAdapter;
 use App\Services\FileStorage\SharePointAdapter;
 use App\Services\FileStorage\WebDavAdapter;
+use App\Services\OrderWorkflow;
 use App\Services\ThemeService;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Filesystem\FilesystemAdapter;
@@ -53,6 +54,7 @@ class AppServiceProvider extends ServiceProvider
         // Scoped, so that a long running queue worker sees changed settings with its next job.
         $this->app->scoped(ComponentManager::class);
         $this->app->scoped(FileStorageManager::class);
+        $this->app->scoped(OrderWorkflow::class);
         $this->app->scoped(ThemeService::class);
     }
 

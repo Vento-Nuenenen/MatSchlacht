@@ -199,10 +199,10 @@ test('handing out records the quantities and undoing it clears them', function (
     $order = orderWithItem($this->item, 4, Accepted::class);
     $service = app(OrderService::class);
 
-    $service->transition($order, 'delivered');
+    $service->transition($order, 'delivered', $this->materialwart);
     expect($order->orderedItems()->sole()->delivered)->toBe(4);
 
-    $service->transition($order->fresh(), 'accepted');
+    $service->transition($order->fresh(), 'accepted', $this->materialwart);
     expect($order->orderedItems()->sole()->delivered)->toBe(0);
 });
 
