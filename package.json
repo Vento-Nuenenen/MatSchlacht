@@ -17,7 +17,7 @@
         "axios": "^1.21.0",
         "bootstrap": "^5.3.8",
         "concurrently": "^10.0.6",
-        "eslint": "^9.39.5",
+        "eslint": "^10.14.0",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-import": "^2.32.0",
         "laravel-vite-plugin": "^3.2",
