@@ -13,7 +13,7 @@
     "devDependencies": {
         "@eslint/js": "^9.39.5",
         "@popperjs/core": "^2.11.8",
-        "@stylistic/eslint-plugin": "^5.10.0",
+        "@stylistic/eslint-plugin": "^6.0.1",
         "axios": "^1.21.0",
         "bootstrap": "^5.3.8",
         "concurrently": "^10.0.6",
