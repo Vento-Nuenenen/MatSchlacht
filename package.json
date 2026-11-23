@@ -11,19 +11,19 @@
         "lint:check": "eslint ."
     },
     "devDependencies": {
-        "@eslint/js": "^9.39.5",
+        "@eslint/js": "^10.0.0",
         "@popperjs/core": "^2.11.8",
-        "@stylistic/eslint-plugin": "^5.10.0",
-        "axios": "^1.21.0",
-        "bootstrap": "^5.3.8",
-        "concurrently": "^10.0.6",
-        "eslint": "^9.39.5",
+        "@stylistic/eslint-plugin": "^6.0.1",
+        "axios": "^1.21.1",
+        "bootstrap": "^5.3.9",
+        "concurrently": "^10.0.7",
+        "eslint": "^10.0.0",
         "eslint-config-prettier": "^10.1.8",
-        "eslint-plugin-import": "^2.32.0",
+        "eslint-plugin-import-x": "^4.17.1",
         "laravel-vite-plugin": "^3.2",
-        "playwright": "^1.64.1",
-        "prettier": "^3.9.10",
-        "sass": "^1.108.1",
-        "vite": "^8.3.7"
+        "playwright": "^1.65.1",
+        "prettier": "^3.10.1",
+        "sass": "^1.108.2",
+        "vite": "^8.3.8"
     }
 }

@@ -50,7 +50,7 @@ MatSchlacht baut auf Laravel 13 und Bootstrap 5 auf. Die Tabellen zeigen die dir
 | [concurrently](https://www.npmjs.com/package/concurrently) | Mehrere Prozesse für `composer dev` | MIT |
 | [eslint](https://www.npmjs.com/package/eslint) | JavaScript-Prüfung | MIT |
 | [eslint-config-prettier](https://www.npmjs.com/package/eslint-config-prettier) | Abstimmung von ESLint und Prettier | MIT |
-| [eslint-plugin-import](https://www.npmjs.com/package/eslint-plugin-import) | Prüfung von Importen | MIT |
+| [eslint-plugin-import-x](https://www.npmjs.com/package/eslint-plugin-import-x) | Prüfung von Importen | MIT |
 | [laravel-vite-plugin](https://www.npmjs.com/package/laravel-vite-plugin) | Vite-Anbindung für Laravel | MIT |
 | [playwright](https://www.npmjs.com/package/playwright) | Browser für die End-to-End-Tests | Apache-2.0 |
 | [prettier](https://www.npmjs.com/package/prettier) | Code-Formatierung | MIT |
